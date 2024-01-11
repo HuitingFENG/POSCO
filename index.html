@@ -1,16 +1,49 @@
 <!DOCTYPE html>
 <html lang="fr">
 
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project POSCO</title>
+  <link rel="icon" href="/assets/images/icon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="/assets/images/icon.png" type="image/x-icon">
+  <title>Projet POSCO</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
   <script src="/js/main.js" defer></script>
 </head>
 
 
+
 <body>
+
+  <header class="bg-gray-800 text-white p-4 md:py-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <!-- Logo -->
+        <div class="flex items-center">
+            <img src="/assets/images/icon.png" alt="Logo" class="h-16 mr-3">
+            <span class="font-bold text-xl">Projet POSCO</span>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav>
+            <ul class="flex space-x-20">
+                <li><a href="questionnaire.html" class="hover:text-gray-300"><i class="fas fa-clipboard fa-lg mr-2"></i>Questionnaire</a></li>
+                <li><a href="resultat.html" class="hover:text-gray-300"><i class="fas fa-chart-bar fa-lg mr-2"></i>Résultat</a></li>
+                <li><a href="actions.html" class="hover:text-gray-300"><i class="fas fa-lightbulb fa-lg mr-2"></i>Actions</a></li>
+            </ul>
+        </nav>
+
+        <!-- User Profile -->
+        <div class="flex items-center">
+            <!-- <img src="path_to_profile_picture.jpg" alt="User" class="h-8 w-8 rounded-full mr-2"> -->
+            <i class="fas fa-user-circle fa-2x mr-2"></i>
+            <span>Profil</span>
+        </div>
+    </div>
+  </header>
+
+
 
   <div id="myModal">
     <span id="closeButton" style="cursor: pointer; float: right;">&times;</span>
@@ -18,7 +51,7 @@
       <h1 class="text-lg font-bold text-center text-red-500">Questionnaire</h1>
     </div>
   
-    <!-- Your simplified questionnaire content goes here -->
+
     <label for="number1">A quelle distance (en km) habitez vous d'Efrei ?</label>
     <input type="number" id="number1" required><br>
 
@@ -38,6 +71,16 @@
     <button id="retryButton">Réessayer</button>
   </div>
 
+
+
+
+
+  <div class="footer">
+    This is a footer.
+  </div>
+
 </body>
+
+
 
 </html>
