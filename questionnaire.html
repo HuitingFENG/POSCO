@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plugin Questionnaire</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    /* Add any necessary styles for your questionnaire here */
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    button {
+      margin-top: 10px;
+    }
+  </style>
+  <!-- Include the external JavaScript file -->
+  <script src="questionnaire.js" defer></script>
+</head>
+
+<body>
+
+  <div id="myModal">
+    <span id="closeButton" style="cursor: pointer; float: right;">&times;</span>
+    <h2>Questionnaire</h2>
+    <!-- Your simplified questionnaire content goes here -->
+    <label for="number1">A quelle distance (en km) habitez vous d'Efrei ?</label>
+    <input type="number" id="number1" required><br>
+
+    <label for="transportMode">Comment vous déplacez-vous :</label>
+    <select id="transportMode">
+      <option value="3">Voiture</option>
+      <option value="2">Transport en commun</option>
+      <option value="0">À pied</option>
+    </select><br>
+
+    <label for="meatFrequency">Combien de fois par semaine mangez-vous de la viande ?</label>
+    <input type="number" id="meatFrequency" required><br>
+
+    <button id="calculateButton">Calculer</button>
+    <p id="error" style="color: red;"></p>
+    <p>Résultat : <span id="result"></span></p>
+    <button id="retryButton">Réessayer</button>
+  </div>
+
+</body>
+
+</html>
