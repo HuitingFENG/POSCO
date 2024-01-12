@@ -3,7 +3,7 @@ const mysql = require('mysql2');
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '',
+  password: '',  // insert password if needed
   database: 'posco'
 });
 
@@ -14,3 +14,4 @@ const connection = mysql.createConnection({
  */
 
 module.exports = connection;
+
