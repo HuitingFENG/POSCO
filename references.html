@@ -1,1 +1,163 @@
-references
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/assets/images/icon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="/assets/images/icon.png" type="image/x-icon">
+  <title>Projet POSCO</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <script src="/js/main.js" defer></script>
+</head>
+
+<body>
+  <!-- header -->
+  <header class="bg-gray-800 text-white p-4 md:py-4 h-25">
+    <div class="container mx-auto flex justify-between items-center">
+        <div class="flex items-center">
+            <a href="index.html"><img src="/assets/images/icon.png" alt="Projet Logo" class="h-16 mr-3"></a>
+            <a href="index.html"><span class="font-bold text-xl">Projet POSCO</span></a>
+        </div>
+        <nav>
+            <ul class="flex space-x-10">
+                <li><a href="index.html" class="hover:text-gray-300"><i class="fas fa-clipboard fa-lg mr-2"></i>Questionnaire</a></li>
+                <li><a href="references.html" class="hover:text-gray-300"><i class="fas fa-chart-bar fa-lg mr-2"></i>Références</a></li>
+                <li><a href="actions.html" class="hover:text-gray-300"><i class="fas fa-lightbulb fa-lg mr-2"></i>Actions</a></li>
+            </ul>
+        </nav>
+        <div class="flex items-center">
+            <i class="fas fa-user-circle fa-2x mr-2"></i>
+            <a href="index.html"><span>Profil</span></a>
+        </div>
+    </div>
+  </header>
+
+
+  <div id="content" class="h-auto min-h-screen mt-25 mb-25 p-10 m-10 border-4 border-dashed border-blue-100">
+    <div class="container mx-auto mt-5">
+        <table id="emissionsTable" class="min-w-full leading-normal shadow-lg">
+            <thead>
+                <tr>
+                    <th class="px-5 py-3 border-b-2 border-gray-300 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border text-center">
+                        Destination
+                    </th>
+                    <th class="px-5 py-3 border-b-2 border-gray-300 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border text-center">
+                        Moyen de transport
+                    </th>
+                    <th class="px-5 py-3 border-b-2 border-gray-300 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border text-center">
+                        Empreinte carbone (en kgCO2e/personne) - Un aller
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+  </div>
+
+
+  <!-- footer -->
+  <footer class="bg-gray-800 text-white p-4 h-100">
+    <div class="container mx-auto flex justify-between">
+        <div class="w-1/4 items-center flex flex-col p-4">
+            <img src="/assets/images/efrei.png" alt="Efrei Logo" class="h-14 mb-4">
+            <div>
+              <p>&copy; 2024</p>
+            </div>
+        </div>
+        <div class="w-1/4 p-2">
+            <h3 class="text-lg font-bold p-1 mb-3"><i class="fas fa-envelope mr-4"></i>Contactez-nous :</h3>
+            <ul class="p-1 items-center">
+              <p>Email : projet.posco@efrei.fr</p>
+              <p>Tél : +01 23 45 67 89</p>
+            </ul>
+        </div>
+        <div class="w-1/2 p-2">
+            <h3 class="text-lg font-bold p-1 mb-2"><i class="fas fa-globe mr-3"></i>Aller au plus loin :</h3>
+            <ul>
+                <li><a href="https://nosgestesclimat.fr" class="hover:text-gray-300">Nos Gestes Climat - ADEME</a></li>
+                <li><a href="https://www.myclimate.org/fr-ch/" class="hover:text-gray-300">Myclimate - Shape our future</a></li>
+                <li><a href="https://offset.climateneutralnow.org/footprintcalc" class="hover:text-gray-300">United Nations - Plate forme de compensation carbone</a></li>
+            </ul>
+        </div>
+    </div>
+  </footer>
+
+
+<script>
+  
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var countryEmissions = {
+        stokeontrent: { train: 4.4, bus: 22, avion: 129, voiture: 159 },
+        pologne: { train: 10, bus: 46, avion: 229, voiture: 338 },
+        hongrie: { train: 10, bus: 44, avion: 224, voiture: 326 },
+        tcheque: { train: 8, bus: 41, avion: 207, voiture: 306 },
+        montreal: { train: 0, bus: 0, avion: 835, voiture: 0 },
+        malaisie: { train: 0, bus: 0, avion: 1581, voiture: 0 },
+        afrique: { train: 0, bus: 0, avion: 2767, voiture: 0 },
+        toronto: { train: 0, bus: 0, avion: 910, voiture: 0 },
+        etatsunis: { train: 0, bus: 0, avion: 1380, voiture: 0 },
+        portsmouth: { train: 3.7, bus: 17, avion: 76, voiture: 122 },
+        tallinn: { train: 16, bus: 75, avion: 332, voiture: 557 },
+        vilnius: { train: 13, bus: 62, avion: 303, voiture: 456 },
+        espagne: { train: 11, bus: 53, avion: 260, voiture: 391 },
+    };
+
+
+    var countryFullName = {
+        stokeontrent: 'Stoke-on-Trent, Angleterre',
+        pologne: 'Cravovie, Pologne',
+        hongrie: 'Budapest, Hongrie',
+        tcheque: 'Ostrava, République Tchèque',
+        montreal: 'Montréal, Canada',
+        malaisie: 'Kuala Lumpur, Malaisie',
+        afrique: 'Le Cap, Afrique du Sud',
+        toronto: 'Toronto, Canada',
+        etatsunis: 'Irvine, Etats-Unis',
+        portsmouth: 'Portsmouth, Angleterre',
+        tallinn: 'Tallinn, Estonie',
+        vilnius: 'Vilnius, Lituanie',
+        espagne: 'Malaga, Espagne',
+    }
+
+    function createTable(data) {
+      var table = document.getElementById('emissionsTable');
+
+      for (var country in data) {
+        var countryName = countryFullName[country];
+
+        for (var transport in data[country]) {
+          if (data[country][transport] > 0) { // Only if emission is greater than 0
+            var row = table.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            //cell1.textContent = country;
+            cell1.textContent = countryName;
+            cell2.textContent = transport.charAt(0).toUpperCase() + transport.slice(1);
+            cell3.textContent = data[country][transport];
+            cell1.className = 'border text-center';
+            cell2.className = 'border text-center';
+            cell3.className = 'border text-center';
+          }
+        }
+      }
+      var rows = table.getElementsByTagName('tr');
+        for(var i = 0; i < rows.length; i++){
+        // rows are 0-indexed, so even rows are odd indices
+        if(i % 2 !== 0) {
+            rows[i].className = 'bg-gray-100';
+        }
+      }
+    }
+
+    createTable(countryEmissions);
+  });
+
+</script> 
+
+</body>
+</html>

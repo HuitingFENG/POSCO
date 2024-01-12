@@ -11,7 +11,7 @@
     Jimmy SHI
 
 
-        if (results[i] == "angleterre" || results[i] == "pologne" || results[i] == "hongrie" || results[i] == "tcheque") {
+        if (results[i] == "stokeontrent" || results[i] == "pologne" || results[i] == "hongrie" || results[i] == "tcheque") {
           total += parseInt(countryEmissions.results[i].results[i], 10) || 0;
           break;
         } else {
