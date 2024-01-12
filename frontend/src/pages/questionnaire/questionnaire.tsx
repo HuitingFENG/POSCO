@@ -1,15 +1,15 @@
 import React from 'react';
 import Header from '../../components/header';
 import Footer from '../../components/footer';
-import Body from '../../components/body';
+import Question from '../../components/question';
 
 const Questionnaire: React.FC = () => {
     return (
       <>
       <main>
         <Header />
-        {/* <Body /> */}
         questionnaire
+        <Question />
       </main><Footer />
       </>
     );
