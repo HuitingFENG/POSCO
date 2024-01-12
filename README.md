@@ -12,7 +12,7 @@
     Jihen JEMAI
     Jimmy SHI
 
-### Technologies:
+### Stack chosen:
 
     Frontend: React, Chakra UI, Tailwind CSS
     Backend: Nodes.js, Express, Typescript
