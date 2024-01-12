@@ -1,7 +1,7 @@
 import React from "react";
 import { Box,Flex,Link,Text,Image,Button,Stack,Center,Icon } from "@chakra-ui/react";
 import {Link as RouterLink, BrowserRouter as Router, Routes, Route, } from "react-router-dom";
-import { FaQuestionCircle, FaBook, FaCog, FaUser, FaMobileAlt, FaPhone, FaComment, FaEnvelope } from "react-icons/fa";
+import { FaQuestionCircle, FaBook, FaCog, FaUser, FaMobileAlt, FaPhone, FaComment, FaEnvelope, FaRegCommentDots } from "react-icons/fa";
 import { AiOutlineCopyright, AiOutlineMail } from "react-icons/ai";
 import { FiLink } from "react-icons/fi";
 import { GiEarthAmerica } from "react-icons/gi";
@@ -18,7 +18,7 @@ const Footer = () => {
         </Flex>
 
         <Flex justify="space-between" align="center" flexDirection="column" gap={3}>
-          <Text fontWeight="bold" fontSize="2xl" color="white" pb={3}><Icon as={FaComment} boxSize={8} mr={4} />Contactez-nous :</Text>
+          <Text fontWeight="bold" fontSize="2xl" color="white" pb={3}><Icon as={FaRegCommentDots} boxSize={8} mr={4} />Contactez-nous :</Text>
           <Text fontWeight="bold" fontSize="md" color="white"><Icon as={AiOutlineMail} boxSize={4} mr={2} />Email : projet.posco@efrei.net </Text>
           <Text fontWeight="bold" fontSize="md" color="white"><Icon as={FaPhone} boxSize={4} mr={2} />Téléphone : +01 23 45 67 89</Text>
         </Flex>
