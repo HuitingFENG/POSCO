@@ -11,3 +11,10 @@
     Jimmy SHI
 
 
+        if (results[i] == "angleterre" || results[i] == "pologne" || results[i] == "hongrie" || results[i] == "tcheque") {
+          total += parseInt(countryEmissions.results[i].results[i], 10) || 0;
+          break;
+        } else {
+          total += parseInt(countryEmissions.results[i].avion, 10) || 0;
+          break;
+        }
