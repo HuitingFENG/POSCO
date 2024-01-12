@@ -3,7 +3,7 @@ import Header from '../../components/header';
 import Footer from '../../components/footer';
 import Body from '../../components/body';
 
-const Actions: React.FC = () => {
+const Home: React.FC = () => {
     return (
       <>
       <main>
@@ -14,4 +14,4 @@ const Actions: React.FC = () => {
     );
   };
   
-  export default Actions;
+  export default Home;
