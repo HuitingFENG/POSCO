@@ -6,7 +6,7 @@ chrome.runtime.onInstalled.addListener(function () {
       type: 'popup', // Use 'popup' type for a small window
       width: 600,    // Set the width as needed
       height: 400,   // Set the height as needed
-      url: 'questionnaire.html' // Load the HTML file
+      url: 'index.html' // Load the HTML file
     });
   });
 });

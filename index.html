@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,38 +12,33 @@
   <script src="/js/main.js" defer></script>
 </head>
 
-
-
 <body>
-
   <!-- header -->
-  <header class="bg-gray-800 text-white p-4 md:py-4">
+  <header class="bg-gray-800 text-white p-4 md:py-4 h-25">
     <div class="container mx-auto flex justify-between items-center">
         <div class="flex items-center">
-            <img src="/assets/images/icon.png" alt="Projet Logo" class="h-16 mr-3">
-            <span class="font-bold text-xl">Projet POSCO</span>
+            <a href="index.html"><img src="/assets/images/icon.png" alt="Projet Logo" class="h-16 mr-3"></a>
+            <a href="index.html"><span class="font-bold text-xl">Projet POSCO</span></a>
         </div>
         <nav>
             <ul class="flex space-x-20">
-                <li><a href="questionnaire.html" class="hover:text-gray-300"><i class="fas fa-clipboard fa-lg mr-2"></i>Questionnaire</a></li>
+                <li><a href="index.html" class="hover:text-gray-300"><i class="fas fa-clipboard fa-lg mr-2"></i>Questionnaire</a></li>
                 <li><a href="references.html" class="hover:text-gray-300"><i class="fas fa-chart-bar fa-lg mr-2"></i>Références</a></li>
                 <li><a href="actions.html" class="hover:text-gray-300"><i class="fas fa-lightbulb fa-lg mr-2"></i>Actions</a></li>
             </ul>
         </nav>
         <div class="flex items-center">
             <i class="fas fa-user-circle fa-2x mr-2"></i>
-            <span>Profil</span>
+            <a href="index.html"><span>Profil</span></a>
         </div>
     </div>
   </header>
 
-
-
   <!-- content -->
-  <div id="myModal">
+<!--   <div id="myModal">
     <span id="closeButton" style="cursor: pointer; float: right;">&times;</span>
     <div class="container mx-auto p-4">
-      <h1 class="text-lg font-bold text-center text-red-500">Questionnaire</h1>
+      <h1 class="text-3xl font-bold text-center text-blue-500">Questionnaire</h1>
     </div>
   
 
@@ -65,20 +59,17 @@
     <p id="error" style="color: red;"></p>
     <p>Résultat : <span id="result"></span></p>
     <button id="retryButton">Réessayer</button>
-  </div>
+  </div> -->
 
-
-  <div id="content" class="p-5">
-    <button onclick="suivant()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
+  <div id="content" class="h-auto min-h-screen mt-25 mb-25 pt-10">
+<!--     <button onclick="suivant()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
       <span>Suivant</span>
       <i class="fas fa-arrow-right ml-2"></i>
-    </button>
+    </button> -->
   </div>
 
-
-
   <!-- footer -->
-  <footer class="bg-gray-800 text-white p-4">
+  <footer class="bg-gray-800 text-white p-4 h-100">
     <div class="container mx-auto flex justify-between">
         <div class="w-1/4 items-center flex flex-col p-4">
             <img src="/assets/images/efrei.png" alt="Efrei Logo" class="h-14 mb-4">
@@ -105,19 +96,53 @@
   </footer>
 
 
-
-
-
 <script>
   var questions = [
-      '<div class="flex flex-col items-center"><p class="mb-4">Question 1 : A quelle distance (en km) habitez-vous d\'Efrei ?</p> <button onclick="loadNextQuestion()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"><span>Suivant</span><i class="fas fa-arrow-right ml-2"></i></button></div>',
-      '<div class="flex flex-col items-center"><p class="mb-4">Question 2 : Comment vous déplacez-vous pour vous y rendre ?</p> <button onclick="loadNextQuestion()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"><span>Suivant</span><i class="fas fa-arrow-right ml-2"></i></button></div>',
-      '<div class="flex flex-col items-center"><p class="mb-4">Question 3 : Combien de fois par semaine mangez-vous de la viande ?</p> <button onclick="loadNextQuestion()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"><span>Suivant</span><i class="fas fa-arrow-right ml-2"></i></button></div>',
-      '<div class="flex flex-col items-center"><p class="mb-4">Question 4 : Quelle destination envisagez-vous pour la mobilité L3 ?</p> <button onclick="loadNextQuestion()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"><span>Suivant</span><i class="fas fa-arrow-right ml-2"></i></button></div>',
-      '<div class="flex flex-col items-center"><p class="mb-4">Question 5 : Par quels moyens comptez-vous y aller ?</p> <button onclick="loadNextQuestion()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"><span>Suivant</span><i class="fas fa-arrow-right ml-2"></i></button></div>',
+      '<div class="flex flex-col items-center"><p class="mb-4">Question 1 : A quelle distance (en km) habitez-vous d\'Efrei ?</p> <input type="number" id="answer1" class="border border-blue-500 rounded mb-4"/> <button onclick="loadNextQuestion()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"><span>Suivant</span><i class="fas fa-arrow-right ml-2"></i></button></div>',
+      '<div class="flex flex-col items-center"><p class="mb-4">Question 2 : Comment vous déplacez-vous pour vous y rendre ?</p> <select id="answer2" class="mb-4"><option value="voiture">Voiture</option><option value="avion">Avion</option><option value="transport">Transport en commun</option><option value="pied">A pied</option></select> <button onclick="loadNextQuestion()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"><span>Suivant</span><i class="fas fa-arrow-right ml-2"></i></button></div>',
+      '<div class="flex flex-col items-center"><p class="mb-4">Question 3 : Combien de fois par semaine mangez-vous de la viande ?</p> <input type="number" id="answer3" class="border border-blue-500 rounded mb-4"/>  <button onclick="loadNextQuestion()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"><span>Suivant</span><i class="fas fa-arrow-right ml-2"></i></button></div>',
+      '<div class="flex flex-col items-center"><p class="mb-4">Question 4 : Quelle destination envisagez-vous pour la mobilité L3 ?</p> <select id="answer4" class="mb-4"><option value="angleterre">Angleterre</option><option value="pologne">Pologne</option><option value="hongrie">Hongrie</option><option value="tcheque">République Tchèque</option><option value="montreal">Montréal, Canada</option><option value="toronto">Toronto, Canada</option><option value="malaisie">Malaisie</option><option value="afrique">Afrique du Sud</option><option value="etatsunis">Etats-Unis</option></select><button onclick="loadNextQuestion()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"><span>Suivant</span><i class="fas fa-arrow-right ml-2"></i></button></div>',
+      '<div class="flex flex-col items-center"><p class="mb-4">Question 5 : Par quels moyens comptez-vous y aller ?</p> <select id="answer5" class="mb-5"><option value="train">Train</option><option value="bus">Bus</option><option value="avion">Avion</option><option value="voiture">Voiture</option></select> <button onclick="loadNextQuestion()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"><span>Envoyer</span><i class="fas fa-paper-plane ml-2"></i></button></div>',
   ];
-
   var currentQuestionIndex = 0;
+  const results = [];
+
+  function loadNextQuestion() {
+    if (currentQuestionIndex > 0) {
+      var answer = document.getElementById('answer' + currentQuestionIndex);
+      if (answer) {
+          results[currentQuestionIndex - 1] = answer.value;
+      }
+    }
+
+    if (currentQuestionIndex < questions.length) {
+        if (currentQuestionIndex == 4 && (results[currentQuestionIndex - 1] == "montreal" || results[currentQuestionIndex - 1] == "toronto" || results[currentQuestionIndex - 1] == "malaisie" || results[currentQuestionIndex - 1] == "afrique" || results[currentQuestionIndex - 1] == "etatsunis")) {
+          var result = calculateResult(results);
+          document.getElementById('content').innerHTML = '<div class="flex flex-col items-center"><p class="mb-4">Résultat de votre carbon emission : ' + result + ' kg </p> <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"><a href="index.html"><span>Réessayer</span><i class="fas fa-redo ml-2"></i></a></button></div>';
+        } else {
+          document.getElementById('content').innerHTML = questions[currentQuestionIndex];
+          currentQuestionIndex++;
+        }
+    } else {
+        var result = calculateResult(results);
+        document.getElementById('content').innerHTML = '<div class="flex flex-col items-center"><p class="mb-4">Résultat de votre carbon emission : ' + result + ' kg </p> <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"><a href="index.html"><span>Réessayer</span><i class="fas fa-redo ml-2"></i></a></button></div>';
+    }
+  }
+
+  function calculateResult(results) {
+    var total = 0;
+    var resultsList = '';
+
+    for (var i = 0; i < results.length; i++) {
+        total += parseInt(results[i], 10) || 0;
+        resultsList += 'Question ' + (i + 1) + ': ' + results[i] + '\n';
+    }
+
+    document.getElementById('content').innerHTML += '<p>Réponses:</p><pre>' + resultsList + '</pre>';
+    console.log('List of Results:\n' + resultsList);
+
+    return total;
+  }
 
   function suivant() {
     var contentDiv = document.getElementById('content');
@@ -139,18 +164,8 @@
     }
   }
 
-  function loadNextQuestion() {
-    if (currentQuestionIndex < questions.length) {
-        document.getElementById('content').innerHTML = questions[currentQuestionIndex];
-        currentQuestionIndex++;
-    } else {
-        document.getElementById('content').innerHTML = '<div class="flex flex-col items-center"><p class="mb-4">Merci ! Vous avez fini le questionnaire. </p> <button onclick="retry()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"><span>Réessayer</span><i class="fas fa-redo ml-2"></i></button></div>';
-    }
-  }
-
   window.onload = loadNextQuestion;
 </script> 
-
 
 </body>
 </html>
