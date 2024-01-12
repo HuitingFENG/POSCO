@@ -8,7 +8,8 @@ const Actions: React.FC = () => {
       <>
       <main>
         <Header />
-        <Body />
+        {/* <Body /> */}
+        actions
       </main><Footer />
       </>
     );

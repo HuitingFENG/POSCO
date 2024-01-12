@@ -7,7 +7,7 @@ const Header = () => {
 
   return (
     <Flex p={4} align="center" justify="space-between" bg="#0C2340">
-        <Flex justify="space-between" gap={10}>
+        <Flex justify="space-between" gap={10} p={1}>
             <Link as={RouterLink} to="/"><Image src="../../../assets/icon.png" alt="icon.png" boxSize="100px" /></Link>
             <Flex align="center" justify="center">
                 <Text fontWeight="bold" fontSize="2xl" color="white">Projet POSCO</Text>

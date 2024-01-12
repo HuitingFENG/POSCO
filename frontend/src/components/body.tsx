@@ -4,9 +4,8 @@ import {Link as RouterLink, BrowserRouter as Router, Routes, Route, } from "reac
 import { FaQuestionCircle, FaBook, FaCog, FaUser } from "react-icons/fa";
 
 const Body = () => {
-
   return (
-    <Flex p={4} align="center" justify="space-between" bg="#dddddd" height={600}>
+    <Flex p={4} align="center" justify="space-between" bg="#dddddd" pb="10">
         Body
     </Flex>
   );

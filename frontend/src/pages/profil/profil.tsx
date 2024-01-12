@@ -8,7 +8,8 @@ const Profil: React.FC = () => {
       <>
       <main>
         <Header />
-        <Body />
+        {/* <Body /> */}
+        profil
       </main><Footer />
       </>
     );

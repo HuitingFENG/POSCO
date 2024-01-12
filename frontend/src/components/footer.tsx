@@ -9,7 +9,7 @@ import { GiEarthAmerica } from "react-icons/gi";
 const Footer = () => {
 
   return (
-    <Flex p={10} align="center" justify="space-between" bg="#0C2340">
+    <Flex p={10} align="center" justify="space-between" bg="#0C2340" as="footer" position="fixed" bottom="0" width="100%" left="0">
         <Flex justify="space-between"  align="center" flexDirection="column" gap={4}>
             <Link as={RouterLink} to="/"><Image src="../../../assets/efrei.png" alt="efrei.png" w="150px" /></Link>
             <Flex align="center" justify="center">

@@ -8,7 +8,8 @@ const References: React.FC = () => {
       <>
       <main>
         <Header />
-        <Body />
+        {/* <Body /> */}
+        references
       </main><Footer />
       </>
     );
