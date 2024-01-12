@@ -1,6 +1,8 @@
-# Efrei Paris M2 Engineering Projet: POSCO
+# Efrei Paris M2 Engineering Projet POSCO
 
-### Goal: calculate carbon emission
+### Goal: 
+    
+    Calculate carbon emission for students' exchange studies on EFREI Paris
 
 ### Contributors: 
 
@@ -10,11 +12,8 @@
     Jihen JEMAI
     Jimmy SHI
 
+### Technologies:
 
-        if (results[i] == "stokeontrent" || results[i] == "pologne" || results[i] == "hongrie" || results[i] == "tcheque") {
-          total += parseInt(countryEmissions.results[i].results[i], 10) || 0;
-          break;
-        } else {
-          total += parseInt(countryEmissions.results[i].avion, 10) || 0;
-          break;
-        }
+    Frontend: React, Chakra UI, Tailwind CSS
+    Backend: Nodes.js, Express, Typescript
+    Database: MySQL
