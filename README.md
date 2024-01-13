@@ -25,11 +25,8 @@
 
     
     cd backend
-
     npm i
-
     npm run dev
-
     cd ..
 
 - run frontend service
