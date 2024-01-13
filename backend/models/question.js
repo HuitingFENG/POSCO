@@ -15,6 +15,8 @@ Question.init({
     type: DataTypes.STRING,
     allowNull: false
   },
+  type: DataTypes.STRING,
+  options: DataTypes.JSON
 }, {
   sequelize,
   modelName: 'question',
@@ -22,3 +24,4 @@ Question.init({
 });
 
 module.exports = Question;
+

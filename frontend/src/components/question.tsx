@@ -1,10 +1,12 @@
-import React from "react";
 import { Box,Flex,Link,Text,Image,Button,Stack,Center,Icon,Input } from "@chakra-ui/react";
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { FaArrowLeft, FaArrowRight, FaPaperPlane } from 'react-icons/fa';
 
 interface Question {
     id: number;
     question_text: string;
+    type: string;
+    options?: string[];
 }
 
 const Question = () => {
@@ -13,6 +15,11 @@ const Question = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [responses, setResponses] = useState<string[]>([]);
     const [submissionComplete, setSubmissionComplete] = useState(false);
+    const [value, setValue] = useState(0);
+    const maxValue = 100
+    const minValue = 0
+    const stepValue = 1
+
 
     useEffect(() => {
         fetch('http://localhost:3001/api/questions')
@@ -27,6 +34,54 @@ const Question = () => {
             });
     }, []);
 
+    const renderInputField = (question: Question) => {
+        switch (question.type) {
+          case 'text':
+            // return <Input width="500px" type="text" value={responses[currentQuestionIndex] || ''} onChange={handleResponseChange} />;
+            return (
+                <Flex >
+                    {question.options?.map((option, idx) => (
+                        <Button 
+                            key={idx}
+                            onClick={() => handleResponseChange({ target: { value: option } } as React.ChangeEvent<HTMLInputElement>)}
+                            style={{ margin: '5px' }}
+                        >
+                            {option}
+                        </Button>
+                    ))}
+                </Flex>
+            );
+          case 'number':
+            return <Input width="250px" type="number" value={responses[currentQuestionIndex] || ''} onChange={handleResponseChange} min={minValue} max={maxValue} step={stepValue} />;
+/*             return (
+                <Flex alignItems="center" justify="space-between">
+                    <button onClick={handleDecrement}>▼</button>
+                    <input 
+                        type="number"
+                        value={responses[currentQuestionIndex] || ''}
+                        onChange={handleResponseChange}
+                    />
+                    <button onClick={handleIncrement}>▲</button>
+                </Flex>
+            ); */
+          case 'mcq':
+            return (
+              <Stack>
+                {question.options?.map((option, idx) => (
+                    <Button
+                        key={idx}
+                        onClick={() => handleResponseChange({ target: { value: option } } as React.ChangeEvent<HTMLInputElement>)} 
+                    >
+                        {option}
+                    </Button>
+                ))}
+              </Stack>
+            );
+          default:
+            return null;
+        }
+    };
+
     const handleResponseChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newResponses = [...responses];
         newResponses[currentQuestionIndex] = event.target.value;
@@ -35,8 +90,8 @@ const Question = () => {
 
     const sendResponses = () => {
         const formattedResponses = responses.map((answer, index) => ({
-            userId: 1, // Replace with actual user ID
-            questionId: questions[index].id, // Replace with the question ID
+            userId: 1, 
+            questionId: questions[index].id, 
             answer: answer
         }));
 
@@ -77,29 +132,18 @@ const Question = () => {
                 <Flex flex="2" m={10} width="80%" bgColor="#dddddd" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Questionnaire</Text>
                     <Text fontWeight="bold" fontSize="xl"> {currentQuestionIndex+1}. {questions[currentQuestionIndex]?.question_text}</Text>
-                    <Input border="2px" borderColor="gray"
-                        value={responses[currentQuestionIndex] || ''} 
-                        onChange={handleResponseChange} 
-                    />
-
-                    <Flex gap={10}>
+                    {renderInputField(questions[currentQuestionIndex])}
+                    <Flex gap={200} justify="space-between">
                         {currentQuestionIndex < questions.length - 1 ? (
                             <>
-                            <Button
-                                width="100px"
-                                onClick={() => setCurrentQuestionIndex(prevIndex => Math.max(prevIndex - 1, 0))}
-                                disabled={currentQuestionIndex === 0}
-                                >
-                                Précédent
+                            <Button bgColor="#003153" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={() => setCurrentQuestionIndex(prevIndex => Math.max(prevIndex - 1, 0))} disabled={currentQuestionIndex === 0}>
+                                <FaArrowLeft size="24px" color="white" />Précédent
                             </Button>
-
-                            <Button width="100px" onClick={() => setCurrentQuestionIndex(prevIndex => prevIndex + 1)}>
-                                    Suivant
-                                </Button></>
+                            <Button bgColor="#003153" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={() => setCurrentQuestionIndex(prevIndex => prevIndex + 1)}>
+                                Suivant<FaArrowRight size="24px" color="white" />
+                            </Button></>
                         ) : (
-                            <Button width="100px" onClick={sendResponses}>
-                                Envoyer
-                            </Button>
+                            <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={sendResponses}>Envoyer<FaPaperPlane size="24px" color="white" /></Button>
                         )}
                     </Flex>
                 </Flex>

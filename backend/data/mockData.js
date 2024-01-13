@@ -1,12 +1,3 @@
-
-const questionsList = [
-    { question_text: "A quelle distance (en km) habitez-vous d\'Efrei ?" },
-    { question_text: "Comment vous déplacez-vous pour vous y rendre ?" },
-    { question_text: "Combien de fois par semaine mangez-vous de la viande ?" },
-    { question_text: "Quelle destination envisagez-vous pour la mobilité L3 ?" },
-    { question_text: "Par quels moyens comptez-vous y aller ?" },
-];
-  
 const countryEmissions = [
     {code:"stokeontrent", location:"Stoke-on-Trent, Angleterre", train: 4.4, bus: 22, avion: 129, voiture:159},
     {code:"pologne", location:"Cravovie, Pologne", train: 10, bus: 46, avion: 229, voiture: 338 },
@@ -23,6 +14,19 @@ const countryEmissions = [
     {code:"espagne", location:"Malaga, Espagne", train: 11, bus: 53, avion: 260, voiture: 391 },
 ];
 
+
+const locationOptions = countryEmissions.map(item => item.location);
+
+
+const questionsList = [
+    { question_text: "A quelle distance (en km) habitez-vous d\'Efrei ?", type: "number", options: [] },
+    { question_text: "Comment vous déplacez-vous pour vous y rendre ?" , type: "text", options: ["train", "bus", "metro", "voiture", "a pied"]},
+    { question_text: "Combien de fois par semaine mangez-vous de la viande ?" , type: "number", options: []},
+    { question_text: "Quelle destination envisagez-vous pour la mobilité L3 ?", type: "mcq", options: locationOptions },
+    { question_text: "Par quels moyens comptez-vous y aller ?" , type: "text", options: ["train", "bus", "avion", "voiture"]},
+];
+  
+
 const responsesList = [
 ];
 
@@ -35,6 +39,8 @@ const usersList = [
 
 module.exports = {
     questionsList,
+    countryEmissions,
     responsesList,
     usersList,
 };
+
