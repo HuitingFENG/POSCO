@@ -4,7 +4,9 @@ const db = require('./config/db');
 const sequelize = require('./config/sequelize');
 const Question = require('./models/question'); 
 const questionRoutes = require('./routes/questionRoutes'); 
+const cors = require('cors');
 
+app.use(cors());
 app.use(express.json());
 
 /* // Connect to the database
@@ -23,5 +25,7 @@ sequelize.sync({ force: false }).then(() => {
 });
 
 app.use('/api/questions', questionRoutes);
+
+
 
 module.exports = app;
