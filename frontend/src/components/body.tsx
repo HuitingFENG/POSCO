@@ -13,7 +13,7 @@ const Body = () => {
         <Flex flexDirection="column" width="80%" gap={10} p={10} mt={4} > 
           <Flex flexDirection="column" gap={5} align="center" justify="space-around">
             <Text fontWeight="bold" fontSize="4xl" color="black">Le Calculateur d'Empreinte Carbone d'EFREI Paris</Text>
-            <Text fontWeight="bold" fontSize="sm" color="black">Dotée d’un réseau largement ouvert sur le monde, notre école EFREI Paris a la capacité de rayonner sur l’ensemble des continents et de proposer des mobilités universitaires internationales dans 93 prestigieuses institutions partenaires dans 40 pays.</Text>
+            <Text fontWeight="bold" fontSize="sm" color="black">Dotée d’un réseau largement ouvert sur le monde, l'école EFREI Paris a la capacité de rayonner sur l’ensemble des continents et de proposer des mobilités universitaires internationales dans 93 prestigieuses institutions partenaires dans 40 pays.</Text>
             <Text fontWeight="bold" fontSize="sm" color="black">La mobilité internationale est obligatoire dans le cadre du programme Ingénieur de l’Efrei. Les élèves ingénieur sous statut étudiant ont l’obligation d’effectuer deux périodes de mobilité à l’international, dont une période d’un semestre. Les élèves ingénieur en filière apprentissage doivent effectuer une mobilité à l’international.</Text>
             </Flex>
           <Flex  align="center" justify="space-between" flexDirection="row" mt={5} border="4px" borderColor="#0C2340" borderStyle="dashed" p={10}> 

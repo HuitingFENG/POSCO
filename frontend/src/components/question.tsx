@@ -12,13 +12,8 @@ const Question = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [responses, setResponses] = useState<string[]>([]);
+    const [submissionComplete, setSubmissionComplete] = useState(false);
 
-/*     const responseToSend = {
-        userId: 1, // Replace with actual user ID
-        questionId: questions[currentQuestionIndex].id, // Assuming each question has an ID
-        answer: responses[currentQuestionIndex]
-    }; */
-    
     useEffect(() => {
         fetch('http://localhost:3001/api/questions')
             .then(response => response.json())
@@ -61,6 +56,9 @@ const Question = () => {
         .then(data => {
           console.log("Sending formatted responses:", formattedResponses);
           console.log('Success:', data);
+          setResponses([]);
+          setSubmissionComplete(true);
+          setCurrentQuestionIndex(0);
         })
         .catch((error) => {
           console.error('Error:', error);
@@ -107,10 +105,12 @@ const Question = () => {
                 </Flex>
             )}
 
-            <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
-                <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Vos Réponses :</Text>
-                
-            </Flex>
+            {submissionComplete &&(
+                <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
+                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre résultat : 150 kg </Text>
+                    <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous avoir envoyer vos réponses !</Text>
+                </Flex>
+            )}
         </Flex>
     );
 };
