@@ -15,6 +15,7 @@ const Question = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [responses, setResponses] = useState<string[]>([]);
     const [submissionComplete, setSubmissionComplete] = useState(false);
+    const [inputError, setInputError] = useState(false);
     const [value, setValue] = useState(0);
     const maxValue = 100
     const minValue = 0
@@ -52,7 +53,15 @@ const Question = () => {
                 </Flex>
             );
           case 'number':
-            return <Input width="250px" type="number" value={responses[currentQuestionIndex] || ''} onChange={handleResponseChange} min={minValue} max={maxValue} step={stepValue} />;
+            return  <Input width="250px" type="number" value={responses[currentQuestionIndex] || ''} onChange={handleResponseChange} min={minValue} max={maxValue} step={stepValue} isInvalid={inputError} /> 
+                   
+            /* return (
+                <Flex>
+                    <Input width="250px" type="number" value={responses[currentQuestionIndex] || ''} onChange={handleResponseChange} min={minValue} max={maxValue} step={stepValue} isInvalid={inputError} /> 
+                    {inputError && <Text color="red.500">Please enter a valid number</Text>}
+                </Flex>
+            );  */
+            
 /*             return (
                 <Flex alignItems="center" justify="space-between">
                     <button onClick={handleDecrement}>▼</button>
@@ -86,7 +95,27 @@ const Question = () => {
         const newResponses = [...responses];
         newResponses[currentQuestionIndex] = event.target.value;
         setResponses(newResponses);
-    };
+    }; 
+
+/*     const handleResponseChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { value, type } = event.target;
+        const newResponses = [...responses];
+    
+        if (type === 'number') {
+            if (value === '' || !isNaN(Number(value))) {
+                setInputError(false);
+                const newResponses = [...responses];
+                newResponses[currentQuestionIndex] = value;
+                setResponses(newResponses);
+            } else {
+                setInputError(true);
+            }
+        } else {
+            newResponses[currentQuestionIndex] = value;
+            setResponses(newResponses);
+        } 
+    }; */
+    
 
     const sendResponses = () => {
         const formattedResponses = responses.map((answer, index) => ({
