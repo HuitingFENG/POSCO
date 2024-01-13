@@ -2,8 +2,7 @@
 
 const sequelize = require('../config/sequelize');
 const Question = require('../models/question');
-const { questionsList } = require('../data/mockData'); // Path to your questions list
-
+const { questionsList } = require('../data/mockData');
 
 sequelize.sync().then(() => {
     Question.destroy({
@@ -21,5 +20,4 @@ sequelize.sync().then(() => {
         console.error("Error inserting questions:", error);
     });
 });
-
 

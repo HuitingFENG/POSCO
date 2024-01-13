@@ -11,14 +11,14 @@ const Question = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [responses, setResponses] = useState<string[]>([]);
+
     const handleResponseChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newResponses = [...responses];
         newResponses[currentQuestionIndex] = event.target.value;
         setResponses(newResponses);
     };
+
     const sendResponses = () => {
-        // Send `responses` to your backend
-        // Example POST request (adjust URL and request body as needed)
         fetch('http://localhost:3001/api/responses', {
           method: 'POST',
           headers: {
@@ -34,13 +34,11 @@ const Question = () => {
         })
         .then(data => {
           console.log('Success:', data);
-          // Handle success - maybe navigate to a thank you page or show a message
         })
         .catch((error) => {
           console.error('Error:', error);
-          // Handle errors - show an error message to the user
         });
-      };
+    };
 
 
     useEffect(() => {
@@ -84,12 +82,21 @@ const Question = () => {
                 <Flex gap={10}>
                     
                     {currentQuestionIndex < questions.length - 1 ? (
-                        <><Button width="100px"
+                        <>{/* <Button width="100px"
                             onClick={() => setCurrentQuestionIndex(prevIndex => prevIndex - 1)}
                             disabled={currentQuestionIndex >= questions.length + 1}
                         >
                             Prédédent
-                        </Button><Button width="100px" onClick={() => setCurrentQuestionIndex(prevIndex => prevIndex + 1)}>
+                        </Button> */}
+                        <Button
+                            width="100px"
+                            onClick={() => setCurrentQuestionIndex(prevIndex => Math.max(prevIndex - 1, 0))}
+                            disabled={currentQuestionIndex === 0}
+                            >
+                            Précédent
+                        </Button>
+
+                        <Button width="100px" onClick={() => setCurrentQuestionIndex(prevIndex => prevIndex + 1)}>
                                 Suivant
                             </Button></>
                     ) : (

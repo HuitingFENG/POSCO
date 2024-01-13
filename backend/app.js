@@ -2,9 +2,11 @@ const express = require('express');
 const app = express();
 const db = require('./config/db');
 const sequelize = require('./config/sequelize');
+const cors = require('cors');
 const Question = require('./models/question'); 
 const questionRoutes = require('./routes/questionRoutes'); 
-const cors = require('cors');
+const responseRoutes = require('./routes/responseRoutes');
+
 
 app.use(cors());
 app.use(express.json());
@@ -25,7 +27,6 @@ sequelize.sync({ force: false }).then(() => {
 });
 
 app.use('/api/questions', questionRoutes);
-
-
+app.use('/api/responses', responseRoutes); 
 
 module.exports = app;

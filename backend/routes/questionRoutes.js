@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const Question = require('../models/question'); // Adjust the path as necessary
+const Question = require('../models/question'); 
 
 router.get('/', async (req, res) => {
     try {
