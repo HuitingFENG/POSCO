@@ -8,7 +8,6 @@ const Questionnaire: React.FC = () => {
       <>
       <main>
         <Header />
-        questionnaire
         <Question />
       </main><Footer />
       </>

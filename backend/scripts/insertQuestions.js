@@ -2,19 +2,17 @@
 
 const sequelize = require('../config/sequelize');
 const Question = require('../models/question');
-// const questionsList = require('./path/to/questionsData'); // Path to your questions list
-const questionsList = [
-    { question_text: "What is your first question?" },
-    { question_text: "What is your second question?" },
-    { question_text: "What is your third question?" },
-    { question_text: "What is your fourth question?" },
-    { question_text: "What is your fifth question?" },
-];
+const { questionsList } = require('../data/mockData'); // Path to your questions list
+
 
 sequelize.sync().then(() => {
-    Promise.all(
-        questionsList.map(question => Question.create(question))
-    )
+    Question.destroy({
+        where: {},
+        truncate: true 
+    })
+    .then(() => {
+        return Promise.all(questionsList.map(question => Question.create(question)));
+    })
     .then(() => {
         console.log("All questions have been inserted successfully");
         sequelize.close(); 
