@@ -78,7 +78,7 @@ const Question = () => {
             {isQuestionAvailable && (
                 <Flex flex="2" m={10} width="80%" bgColor="#dddddd" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Questionnaire</Text>
-                    <Text fontWeight="bold" fontSize="xl">{questions[currentQuestionIndex]?.question_text}</Text>
+                    <Text fontWeight="bold" fontSize="xl"> {currentQuestionIndex+1}. {questions[currentQuestionIndex]?.question_text}</Text>
                     <Input border="2px" borderColor="gray"
                         value={responses[currentQuestionIndex] || ''} 
                         onChange={handleResponseChange} 
@@ -107,8 +107,8 @@ const Question = () => {
                 </Flex>
             )}
 
-            <Flex flex="3" border="2px" borderColor="black" p={10} bgColor="skyblue">
-                Vos Réponses :
+            <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
+                <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Vos Réponses :</Text>
                 
             </Flex>
         </Flex>

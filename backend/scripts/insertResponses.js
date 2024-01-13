@@ -5,7 +5,11 @@ const Response = require('../models/response');
 const { responsesList } = require('../data/mockData'); 
 
 sequelize.sync().then(() => {
-    Response.destroy({ where: {}, truncate: true })
+    Response.destroy({ where: {
+        userId: null,
+        questionId: null,
+        answer: null
+    }, truncate: true })
         .then(() => {
             return Promise.all(responsesList.map(response => Response.create(response)));
         })
