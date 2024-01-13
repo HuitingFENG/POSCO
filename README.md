@@ -23,6 +23,7 @@
 - locate on the root of this project
 - run backend service
 
+### Steps:
     
     cd backend
     npm i
