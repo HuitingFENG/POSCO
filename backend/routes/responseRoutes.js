@@ -29,9 +29,15 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
+  console.log("Received data:", req.body);
   try {
-    const newResponse = await Response.create(req.body);
-    res.status(201).json(newResponse);
+    /* const newResponse = await Response.create(req.body);
+    res.status(201).json(newResponse); */
+    const responses = req.body.responses; // Extract the responses array
+    for (const response of responses) {
+      await Response.create(response);
+    }
+    res.status(201).json({ message: "Responses saved successfully" });
   } catch (error) {
     console.error('Error saving response:', error);
     res.status(500).send('Internal Server Error');

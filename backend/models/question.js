@@ -6,12 +6,15 @@ const sequelize = require('../config/sequelize');
 class Question extends Model {}
 
 Question.init({
-  // Define columns
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   question_text: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  // Add more columns as needed
 }, {
   sequelize,
   modelName: 'question',
