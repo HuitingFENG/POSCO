@@ -9,7 +9,7 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 
 const Body = () => {
   return (
-    <Flex p={10} align="center" justify="space-between" flexDirection="column" gap={10}>
+    <Flex /* height="2000px" */ p={10} align="center" justify="space-between" flexDirection="column" gap={10}>
         <Flex flexDirection="column" width="80%" gap={10} p={10} mt={4} > 
           <Flex flexDirection="column" gap={5} align="center" justify="space-around">
             <Text fontWeight="bold" fontSize="4xl" color="black">Le Calculateur d'Empreinte Carbone d'EFREI Paris</Text>
@@ -26,18 +26,30 @@ const Body = () => {
           </Flex>
         </Flex>
 
-        <Flex>
+{/*         <Flex>
           <Box width="1000px" height="480px" boxShadow="lg">
             <iframe
+                src="https://www.google.com/maps/d/embed?mid=14Srngj75VBAmMrIY6QAcIOuo2laUwLJc&ehbc=2E312F"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
+            ></iframe>
+          </Box>
+        </Flex> */}
+
+        <Flex width="1000px" height="480px">
+          <iframe
               src="https://www.google.com/maps/d/embed?mid=14Srngj75VBAmMrIY6QAcIOuo2laUwLJc&ehbc=2E312F"
               width="100%"
               height="100%"
               style={{ border: 0 }}
               allowFullScreen={true}
               loading="lazy"
-            ></iframe>
-          </Box>
+          ></iframe>
         </Flex>
+
     </Flex>
   );
 };

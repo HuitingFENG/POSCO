@@ -1,15 +1,15 @@
 import React from 'react';
 import Header from '../../components/header';
 import Footer from '../../components/footer';
-import Body from '../../components/body';
+import ReferencesData from '../../components/referencesData';
 
 const References: React.FC = () => {
     return (
       <>
       <main>
         <Header />
-        {/* <Body /> */}
-        references
+        {/* <References /> */}
+        <ReferencesData />
       </main><Footer />
       </>
     );
