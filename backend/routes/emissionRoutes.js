@@ -30,6 +30,21 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.get('/user/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const emission = await Emission.findAll({ where: { userId: userId } });
+        if (emission) {
+            res.json(emission);
+        } else {
+            res.status(404).send('emission not found');
+        }
+    } catch (error) {
+        console.error('Error fetching emission:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 router.post('/', async (req, res) => {
     try {
         const { userId, responsesList } = req.body;

@@ -21,7 +21,7 @@ const Question = () => {
     const maxValue = 100
     const minValue = 0
     const stepValue = 1
-    const countryByAvion = ["Montréal, Canada", "Kuala Lumpur, Malaisie", "Le Cap, Afrique du Sud", "Toronto, Canada", "Irvine, Etats-Unis"]
+    // const countryByAvion = ["Montréal, Canada", "Kuala Lumpur, Malaisie", "Le Cap, Afrique du Sud", "Toronto, Canada", "Irvine, Etats-Unis"]
 
 
     useEffect(() => {
@@ -142,13 +142,15 @@ const Question = () => {
         .then(data => {
           console.log("Sending formatted responses:", formattedResponses);
           console.log("TEST:", formattedResponses[4].answer);
-          if (countryByAvion.includes(formattedResponses[4].answer)) {
+          console.log('Success:', data);
+          /* if (countryByAvion.includes(formattedResponses[4].answer)) {
             setTotalEmission(100);
             setTotalEmission(parseFloat(formattedResponses[0].answer));
           } else {
             setTotalEmission(50);
-          }
-          console.log('Success:', data);
+          } */
+          
+          
           setResponses([]);
           setSubmissionComplete(true);
           setCurrentQuestionIndex(0);
@@ -201,6 +203,9 @@ const Question = () => {
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre résultat : {totalEmission} </Text>
                     <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous avoir envoyer vos réponses !</Text>
                     {/* <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button> */}
+                
+
+
                 </Flex>
             )}
         </Flex>
