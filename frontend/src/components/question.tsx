@@ -144,6 +144,7 @@ const Question = () => {
           console.log("TEST:", formattedResponses[4].answer);
           if (countryByAvion.includes(formattedResponses[4].answer)) {
             setTotalEmission(100);
+            setTotalEmission(parseFloat(formattedResponses[0].answer));
           } else {
             setTotalEmission(50);
           }
