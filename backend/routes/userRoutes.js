@@ -14,9 +14,12 @@ router.get('/', async (req, res) => {
     }
 });
 
+
+
 router.get('/:id', async (req, res) => {
     try {
-        const user = await User.findOne(req.params.id);
+        const id = req.params.id;
+        const user = await User.findAll({ where: { id: id }, order: [['createdAt', 'DESC']] });
         if (user) {
             res.json(user);
         } else {
@@ -31,7 +34,7 @@ router.get('/:id', async (req, res) => {
 router.get('/user/:userId', async (req, res) => {
     try {
         const userId = req.params.userId;
-        const user = await User.findAll({ where: { userId: userId }, order: [['createdAt', 'DESC']] });
+        const user = await User.findOne({ where: { userId: userId }, order: [['createdAt', 'DESC']] });
         if (user) {
             res.json(user);
         } else {
@@ -48,12 +51,20 @@ router.post('/signup', async (req, res) => {
 
     try {
         // Ensure that the user doesn't already exist
-        const existingUser = await User.findOne({ email });
+       /*  const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).send('User already exists');
-        }
+        } */
         // const newUser = await User.create(req.body);
-        const newUser = await User.create({ name, email, password });
+/*         const lastUser = await User.find().sort({ userId: -1 }).limit(1);
+        const nextUserId = lastUser.length === 0 ? 1 : lastUser[0].userId + 1;
+        const newUser = await User.create({ userId: nextUserId, name, email, password }); */
+
+        const lastUser = await User.findAll({ order: [['userId', 'DESC']] });
+        const nextUserId = lastUser ? lastUser.userId + 1 : 1;
+        const newUser = await User.create({ userId: nextUserId, name, email, password });
+
+        // const newUser = await User.create({ name, email, password });
         res.status(201).json(newUser);
     } catch (error) {
         console.error('Error creating user:', error);
@@ -63,9 +74,11 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
+    console.log("TEST email and password from backend: ", email, password);
 
     try {
-        const user = await User.findOne({ email: email });
+        console.log('TEST Email:', email);
+        const user = await User.findOne({ where: { email: email }});
         if (user && user.password === password) { 
           res.status(200).send({ message: 'Login successful' });
         } else {

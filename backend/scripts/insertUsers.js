@@ -1,4 +1,4 @@
-// insertusers.js
+// insertUsers.js
 
 const sequelize = require('../config/sequelize');
 const User = require('../models/user');
