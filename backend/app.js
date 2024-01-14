@@ -7,6 +7,7 @@ const Question = require('./models/question');
 const questionRoutes = require('./routes/questionRoutes'); 
 const responseRoutes = require('./routes/responseRoutes');
 const emissionRoutes = require('./routes/emissionRoutes');
+const referenceRoutes = require('./routes/referenceRoutes');
 
 app.use(cors());
 app.use(express.json());
@@ -28,7 +29,7 @@ sequelize.sync({ force: false }).then(() => {
 app.use('/api/questions', questionRoutes);
 app.use('/api/responses', responseRoutes); 
 app.use('/api/emissions', emissionRoutes); 
-
+app.use('/api/references', referenceRoutes); 
 
 
 module.exports = app;
