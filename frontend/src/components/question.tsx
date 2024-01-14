@@ -9,6 +9,16 @@ interface Question {
     options?: string[];
 }
 
+interface Emission {
+    id: number;
+    userId: number;
+    responsesList: number[];
+    totalEmissions: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+
 const Question = () => {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -149,11 +159,22 @@ const Question = () => {
           } else {
             setTotalEmission(50);
           } */
+          const userId = 1;
+          return fetch(`http://localhost:3001/api/emissions/user/${userId}`);
           
-          
-          setResponses([]);
-          setSubmissionComplete(true);
-          setCurrentQuestionIndex(0);
+          /* setResponses([]);
+          setSubmissionComplete(true); 
+          setCurrentQuestionIndex(0); */
+        })
+        .then(response => response.json())
+        .then(emissionData => {
+            const latestEmission = emissionData.reduce((latest: Emission, current: Emission) => {
+                return (new Date(latest.createdAt) > new Date(current.createdAt)) ? latest : current;
+            });
+            setResponses([]);
+            setTotalEmission(latestEmission.totalEmissions);
+            setSubmissionComplete(true);
+            setCurrentQuestionIndex(0);
         })
         .catch((error) => {
           console.error('Error:', error);
@@ -200,7 +221,7 @@ const Question = () => {
 
             {submissionComplete && (
                 <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
-                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre résultat : {totalEmission} </Text>
+                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre Emission de Carbon Estimée : {totalEmission} kg</Text>
                     <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous avoir envoyer vos réponses !</Text>
                     {/* <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button> */}
                 

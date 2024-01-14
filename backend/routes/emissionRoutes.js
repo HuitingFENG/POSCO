@@ -33,7 +33,7 @@ router.get('/:id', async (req, res) => {
 router.get('/user/:userId', async (req, res) => {
     try {
         const userId = req.params.userId;
-        const emission = await Emission.findAll({ where: { userId: userId } });
+        const emission = await Emission.findAll({ where: { userId: userId }, order: [['createdAt', 'DESC']] });
         if (emission) {
             res.json(emission);
         } else {
