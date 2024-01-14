@@ -33,15 +33,22 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   console.log("Received data:", req.body);
   try {
-    /* const newResponse = await Response.create(req.body);
-    res.status(201).json(newResponse); */
-    const responses = req.body.responses; // Extract the responses array
+    const responses = req.body.responses; 
+    let responseInstances = [];
+
     for (const response of responses) {
-      await Response.create(response);
+    //   await Response.create(response);
+    const newResponse = await Response.create(response);
+      responseInstances.push(newResponse);
      /*  console.log("TEST: ", responses[4].answer); */
     }
+    const responseIds = responseInstances.map(instance => instance.id);
     const total = calculation(responses, countryEmissions);
-    const savedTotal = await Emission.create(total);
+    const savedTotal = await Emission.create({
+        userId: responses[0].userId, 
+        responsesList: responseIds, 
+        totalEmissions: total 
+    });
     console.log("TEST savedTotal: ", savedTotal)
     res.status(201).json({ message: "Responses saved successfully" });
   } catch (error) {
@@ -82,43 +89,33 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-
 module.exports = router;
-
-
-
-
 
 function calculation(responses, countryEmissions) {
     let total = 0;
     const questionIdAnswerCountry = 5;
     const questionIdAnswerTransport = 4;
+    const questionIdList = [];
 
     responses.forEach(response => {
-        // total += response.value; 
         console.log('TEST calculation: ', response);
-        // total++;
+        userId = response.userId;
+        // questionIdList.push(response.questionId);
     });
-    
-    for (const response of responses) {
-        console.log("TEST response answer: ", response.answer);
-    }
+    console.log("TEST userId: ", userId);
 
-    console.log("TEST questionIdAnswerCountry: ", responses.find(response => response.questionId === questionIdAnswerCountry).answer);
-    console.log("TEST questionIdAnswerTransport: ", responses.find(response => response.questionId === questionIdAnswerTransport).answer);
+/*     for (const response of responses) {
+        console.log("TEST response answer: ", response.answer);
+    } */
+
     const checkLocation = responses.find(response => response.questionId === questionIdAnswerCountry).answer;
     const checkTransport = responses.find(response => response.questionId === questionIdAnswerTransport).answer;
 
     countryEmissions.forEach(item => {
-        console.log('TEST countryEmissions: ', item);
+/*         console.log('TEST countryEmissions: ', item);
         console.log('TEST countryEmissions location: ', item.location);
-        console.log('TEST countryEmissions avion: ', item.avion);
-        // console.log('TEST countryEmissions: ', item);
+        console.log('TEST countryEmissions avion: ', item.avion); */
         if (item.location == checkLocation){
-           /*  if (item.includes(checkTransport)){
-                total = item.checkTransport;
-                console.log("TEST total: ", total);
-            } */
             if (item[checkTransport] !== undefined) {
                 total = item[checkTransport];
             }
@@ -128,3 +125,4 @@ function calculation(responses, countryEmissions) {
     console.log("TEST total: ", total);
     return total;
 } 
+
