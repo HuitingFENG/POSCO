@@ -18,15 +18,14 @@ const ReferencesData = () => {
     fetch("http://localhost:3001/api/references/")
       .then(response => response.json())
       .then((data) => {
-
-        setCountryEmissions(data);
+        const sortedData = data.sort((a: { location: string; }, b: { location: string; }) => a.location.localeCompare(b.location));
+        setCountryEmissions(sortedData);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []); 
   
-
   return (
     <Flex height="2800px" p={10} align="center" justify="space-between" flexDirection="column" gap={10}>
         <Flex flexDirection="column" width="80%" gap={10} p={10} mt={4} > 
