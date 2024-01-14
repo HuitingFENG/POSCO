@@ -18,7 +18,6 @@ interface Emission {
     updatedAt: string;
 }
 
-
 const Question = () => {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -31,8 +30,6 @@ const Question = () => {
     const maxValue = 100
     const minValue = 0
     const stepValue = 1
-    // const countryByAvion = ["Montréal, Canada", "Kuala Lumpur, Malaisie", "Le Cap, Afrique du Sud", "Toronto, Canada", "Irvine, Etats-Unis"]
-
 
     useEffect(() => {
         fetch('http://localhost:3001/api/questions')
@@ -66,25 +63,6 @@ const Question = () => {
             );
           case 'number':
             return  <Input width="250px" type="number" value={responses[currentQuestionIndex] || ''} onChange={handleResponseChange} min={minValue} max={maxValue} step={stepValue} isInvalid={inputError} /> 
-                   
-            /* return (
-                <Flex>
-                    <Input width="250px" type="number" value={responses[currentQuestionIndex] || ''} onChange={handleResponseChange} min={minValue} max={maxValue} step={stepValue} isInvalid={inputError} /> 
-                    {inputError && <Text color="red.500">Please enter a valid number</Text>}
-                </Flex>
-            );  */
-            
-/*             return (
-                <Flex alignItems="center" justify="space-between">
-                    <button onClick={handleDecrement}>▼</button>
-                    <input 
-                        type="number"
-                        value={responses[currentQuestionIndex] || ''}
-                        onChange={handleResponseChange}
-                    />
-                    <button onClick={handleIncrement}>▲</button>
-                </Flex>
-            ); */
           case 'mcq':
             return (
               <Stack>
@@ -153,15 +131,8 @@ const Question = () => {
           console.log("Sending formatted responses:", formattedResponses);
           console.log("TEST:", formattedResponses[4].answer);
           console.log('Success:', data);
-          /* if (countryByAvion.includes(formattedResponses[4].answer)) {
-            setTotalEmission(100);
-            setTotalEmission(parseFloat(formattedResponses[0].answer));
-          } else {
-            setTotalEmission(50);
-          } */
           const userId = 1;
           return fetch(`http://localhost:3001/api/emissions/user/${userId}`);
-          
           /* setResponses([]);
           setSubmissionComplete(true); 
           setCurrentQuestionIndex(0); */
@@ -224,9 +195,6 @@ const Question = () => {
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre Emission de Carbon Estimée : {totalEmission} kg</Text>
                     <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous avoir envoyer vos réponses !</Text>
                     {/* <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button> */}
-                
-
-
                 </Flex>
             )}
         </Flex>
