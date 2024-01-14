@@ -94,9 +94,9 @@ module.exports = router;
 
 function calculation(responses, countryEmissions) {
     let total = 0;
-    const questionIdAnswerCountry = 4;
-    const questionIdAnswerTransport = 5;
-    const questionIdList = [];
+    const questionIdAnswerCountry = 7;
+    const questionIdAnswerTransport = 8;
+    // const questionIdList = [];
 
     responses.forEach(response => {
         console.log('TEST calculation: ', response);

@@ -17,15 +17,22 @@ const countryEmissions = [
 const locationOptions = countryEmissions.map(item => item.location);
 
 
-// category: 1 => questions pour la vie quoditienne d'un individu
-// category: 2 => questions pour la mobilite d'un etudiant
+// category: 1 => Questions sur empreinte carbone personnelle  
+// category: 2 => Questions sur la mobilité
 const questionsList = [
-    { id: 1, category: 1, question_text: "A quelle distance (en km) habitez-vous d\'Efrei ?", type: "number", options: [] },
-    { id: 2, category: 1, question_text: "Comment vous déplacez-vous pour vous y rendre ?" , type: "text", options: ["Train", "Bus", "Metro", "Voiture", "A pied"]},
-    { id: 3, category: 1, question_text: "Combien de fois par semaine mangez-vous de la viande ?" , type: "number", options: []},
-    { id: 4, category: 2, question_text: "Quelle destination envisagez-vous pour la mobilité L3 ?", type: "mcq", options: locationOptions },
-    { id: 5, category: 2, question_text: "Par quels moyens comptez-vous y aller ?" , type: "text", options: ["Train", "Bus", "Avion", "Voiture"]},
+    { id: 1, category: 1, question_text: "En quelle année êtes-vous ?", type: "text", options: ["L1", "L2", "L3", "M1", "M2"] },
+    { id: 2, category: 1, question_text: "A quelle distance (en km) habitez-vous d\'Efrei ?", type: "number", options: [] },
+    { id: 3, category: 1, question_text: "Comment vous déplacez-vous pour vous y rendre ?" , type: "text", options: ["Voiture", "Train TGV", "Train normal", "Bus", "A pied"]},
+    { id: 4, category: 1, question_text: "Combien de fois par semaine mangez-vous de la viande ?", type: "number", options: []},
+    { id: 5, category: 1, question_text: "De quelle viande s’agit-il ?" , type: "text", options: ["Poulet", "Porc", "Volaille", "Boeuf", "Poisson"]},
+    { id: 6, category: 2, question_text: "Quelle destination envisagez-vous pour la mobilité L3 ?", type: "mcq", options: locationOptions },
+    { id: 7, category: 2, question_text: "Par quels moyens comptez-vous y aller ?" , type: "text", options: ["Train", "Bus", "Avion", "Voiture"]},
+    { id: 8, category: 2, question_text: "Envisagez-vous de réaliser un autre voyage depuis votre destination de mobilité ?" , type: "text", options: ["Oui", "Non"]},
+    { id: 9, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
+    { id: 10, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: ["Train", "Bus", "Avion", "Voiture"]},
 ];
+
+
   
 const responsesList = [];
 
@@ -38,9 +45,46 @@ const usersList = [
 
 const emissionsList = [];
 
+
+
+/*
+Empreinte carbone par type de transport : 
+Avion : 215g de CO2 par km parcouru 
+Voiture : 125g par km par passager 
+TGV : 2.4g CO2 par km 
+Train normal : 29.4g par km 
+Bus : 110g par km
+
+Viande : Empreinte carbone pour 100g de protéine  
+Poulet : 5700g de CO2 
+Porc : 7600g de CO2 
+Volaille : 5700g de CO2 
+Boeuf : 49900g de CO2 
+*/
+
+/* Nombre de voyage maison-efrei :  
+Pour un an : 40 semaines de cours x 4 jours de présentiel x (aller+retour) → 40 x 7 x 4 x2 = 2440 
+ */
+
+const consummationEmissions = [
+    {consummationId: 1, category: 1, name: "Avion", number: 0.215}, // category: 1 => transport  category: 2 => food
+    {consummationId: 2, category: 1, name: "Voiture", number: 0.125},
+    {consummationId: 3, category: 1, name: "Train TGV", number: 0.0024},
+    {consummationId: 4, category: 1, name: "Train normal", number: 0.0294},
+    {consummationId: 5, category: 1, name: "Bus", number: 0.11},
+    {consummationId: 6, category: 1, name: "A pied", number: 0},
+    {consummationId: 7, category: 2, name: "Poulet", number: 5.7},
+    {consummationId: 8, category: 2, name: "Porc", number: 7.6},
+    {consummationId: 9, category: 2, name: "Volaille", number: 5.7},
+    {consummationId: 10, category: 2, name: "Boeuf", number: 49.9},
+    {consummationId: 11, category: 2, name: "Poisson", number: 5}, // 5 est non reel
+]
+
+
 module.exports = {
     questionsList,
     countryEmissions,
+    consummationEmissions,
     responsesList,
     usersList,
     emissionsList

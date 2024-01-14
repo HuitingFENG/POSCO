@@ -12,6 +12,17 @@ const Signup = () => {
     const navigate = useNavigate();
 
     const sendUser = () => {
+        if (!name.trim() || !email.trim() || !password.trim()) {
+            toast({
+                title: 'Erreur',
+                description: 'Veuillez remplir tous les champs.',
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+            });
+            return; 
+        }
+
         fetch('http://localhost:3001/api/users/signup', {
             method: 'POST',
             headers: {

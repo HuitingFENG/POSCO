@@ -193,7 +193,9 @@ const Question = () => {
 
             {submissionComplete && (
                 <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
-                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre Emission de Carbon Estimée : {totalEmission} kg</Text>
+                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre Emission de Carbon Estimée au total : {totalEmission} kg</Text>
+                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre Emprunte Carbone pour la mobilité envisagée : {totalEmission} kg</Text>
+                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre Emprunte Carbone Personnelle : {totalEmission} kg</Text>
                     <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous avoir envoyer vos réponses !</Text>
                     {/* <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button> */}
                 </Flex>

@@ -6,7 +6,10 @@ const sequelize = require('../config/sequelize');
 class User extends Model {}
 
 User.init({
-  userId: DataTypes.INTEGER,
+  userId: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,  
+  },
   name: DataTypes.STRING,
   email: DataTypes.STRING,
   password: DataTypes.STRING
