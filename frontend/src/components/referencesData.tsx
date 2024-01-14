@@ -1,7 +1,8 @@
 import React from "react";
 import { Box,Flex,Link,Text,Image,Button,Stack,Center,Icon, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import {Link as RouterLink, BrowserRouter as Router, Routes, Route, } from "react-router-dom";
-
+// const { countryEmissions } = require('../../backend/data/mockData');
+// import { countryEmissions } from '../../backend/data/mockData';
 
 interface EmissionData {
   code: string;
@@ -28,6 +29,8 @@ const ReferencesData = () => {
     {code:"vilnius", location:"Vilnius, Lituanie", Train: 13, Bus: 62, Avion: 303, Voiture: 456 },
     {code:"espagne", location:"Malaga, Espagne", Train: 11, Bus: 53, Avion: 260, Voiture: 391 },
   ];
+
+  const CountryEmissions: EmissionData[] = countryEmissions;
 
   return (
     <Flex height="2800px" p={10} align="center" justify="space-between" flexDirection="column" gap={10}>
