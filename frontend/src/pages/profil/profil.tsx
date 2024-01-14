@@ -12,11 +12,10 @@ const Profil: React.FC = () => {
       <main>
         <Header />
         <UserProfil />
-        <Flex gap={20} flexDirection="column" justify="space-between" align="center">
+{/*         <Flex gap={20} flexDirection="column" justify="space-between" align="center">
           <Signup />
           <Login />
-        </Flex>
-        
+        </Flex> */}
         
       </main><Footer />
       </>

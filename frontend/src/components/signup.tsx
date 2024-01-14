@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, VStack, useToast } from '@chakra-ui/react';
+import { FaUserPlus } from "react-icons/fa";
 
 
 const Signup = () => {
@@ -60,7 +61,7 @@ const Signup = () => {
     return (
         <VStack spacing={4} as="form" onSubmit={handleSubmit}>
             <Input 
-                placeholder="Name"
+                placeholder="Nom"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
             />
@@ -70,12 +71,12 @@ const Signup = () => {
                 onChange={(e) => setEmail(e.target.value)}
             />
             <Input 
-                placeholder="Password"
+                placeholder="Mot de Passe"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            <Button colorScheme="blue" type="submit">S'inscrire</Button>
+            <Button colorScheme="blue" type="submit" leftIcon={<FaUserPlus />}>S'inscrire</Button>
         </VStack>
     );
 };
