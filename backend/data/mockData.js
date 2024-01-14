@@ -14,33 +14,34 @@ const countryEmissions = [
     {code:"espagne", location:"Malaga, Espagne", train: 11, bus: 53, avion: 260, voiture: 391 },
 ];
 
-
 const locationOptions = countryEmissions.map(item => item.location);
-
 
 const questionsList = [
     { question_text: "A quelle distance (en km) habitez-vous d\'Efrei ?", type: "number", options: [] },
-    { question_text: "Comment vous déplacez-vous pour vous y rendre ?" , type: "text", options: ["train", "bus", "metro", "voiture", "a pied"]},
+    { question_text: "Comment vous déplacez-vous pour vous y rendre ?" , type: "text", options: ["Train", "Bus", "Metro", "Voiture", "A pied"]},
     { question_text: "Combien de fois par semaine mangez-vous de la viande ?" , type: "number", options: []},
     { question_text: "Quelle destination envisagez-vous pour la mobilité L3 ?", type: "mcq", options: locationOptions },
-    { question_text: "Par quels moyens comptez-vous y aller ?" , type: "text", options: ["train", "bus", "avion", "voiture"]},
+    { question_text: "Par quels moyens comptez-vous y aller ?" , type: "text", options: ["Train", "Bus", "Avion", "Voiture"]},
 ];
   
-
-const responsesList = [
-];
-
+const responsesList = [];
 
 const usersList = [
-    { name: "John Doe", email: "john@example.com" },
-    { name: "Jane Doe", email: "jane@example.com" },
+    { name: "admin", email: "admin@efrei.fr", password: "admin" },
+    { name: "student1", email: "student1@efrei.net", password: "student1" },
+    { name: "student2", email: "student2@efrei.net", password: "student2" },
+    { name: "student3", email: "student3@efrei.net", password: "student3" },
 ];
 
+const emissionsList = [
+
+];
 
 module.exports = {
     questionsList,
     countryEmissions,
     responsesList,
     usersList,
+    emissionsList
 };
 

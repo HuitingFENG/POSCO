@@ -15,11 +15,13 @@ const Question = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [responses, setResponses] = useState<string[]>([]);
     const [submissionComplete, setSubmissionComplete] = useState(false);
+    // const [retakeTest, setRetakeTest] = useState(false);
     const [inputError, setInputError] = useState(false);
-    const [value, setValue] = useState(0);
+    const [totalEmission, setTotalEmission] = useState(0);
     const maxValue = 100
     const minValue = 0
     const stepValue = 1
+    const countryByAvion = ["Montréal, Canada", "Kuala Lumpur, Malaisie", "Le Cap, Afrique du Sud", "Toronto, Canada", "Irvine, Etats-Unis"]
 
 
     useEffect(() => {
@@ -139,6 +141,12 @@ const Question = () => {
         })
         .then(data => {
           console.log("Sending formatted responses:", formattedResponses);
+          console.log("TEST:", formattedResponses[4].answer);
+          if (countryByAvion.includes(formattedResponses[4].answer)) {
+            setTotalEmission(100);
+          } else {
+            setTotalEmission(50);
+          }
           console.log('Success:', data);
           setResponses([]);
           setSubmissionComplete(true);
@@ -149,6 +157,11 @@ const Question = () => {
         });
     };
 
+   /*  const retake = () => {
+        setSubmissionComplete(false);
+        setRetakeTest(true);
+    };
+ */
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -173,15 +186,20 @@ const Question = () => {
                             </Button></>
                         ) : (
                             <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={sendResponses}>Envoyer<FaPaperPlane size="24px" color="white" /></Button>
+                            /* <Flex flexDirection="row" justify="space-between" align="center" gap={200}>
+                                {submissionComplete && (<Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={sendResponses}>Envoyer<FaPaperPlane size="24px" color="white" /></Button>)}
+                                {!submissionComplete && (<Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button>)}
+                            </Flex> */
                         )}
                     </Flex>
                 </Flex>
             )}
 
-            {submissionComplete &&(
+            {submissionComplete && (
                 <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
-                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre résultat : 150 kg </Text>
+                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre résultat : {totalEmission} </Text>
                     <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous avoir envoyer vos réponses !</Text>
+                    {/* <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button> */}
                 </Flex>
             )}
         </Flex>

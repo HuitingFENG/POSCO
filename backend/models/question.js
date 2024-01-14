@@ -20,7 +20,6 @@ Question.init({
 }, {
   sequelize,
   modelName: 'question',
-  // additional options
 });
 
 module.exports = Question;
