@@ -35,7 +35,8 @@ const Question = () => {
         fetch('http://localhost:3001/api/questions')
             .then(response => response.json())
             .then(data => {
-                setQuestions(data);
+                const sortedData = data.sort((a: {id: number; }, b: {id: number; }) => a.id - b.id);
+                setQuestions(sortedData);
                 setIsLoading(false);
             })
             .catch(error => {

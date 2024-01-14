@@ -33,9 +33,7 @@ const usersList = [
     { name: "student3", email: "student3@efrei.net", password: "student3" },
 ];
 
-const emissionsList = [
-
-];
+const emissionsList = [];
 
 module.exports = {
     questionsList,
