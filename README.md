@@ -14,9 +14,9 @@
 
 ### Stack chosen:
 
-    Frontend: React, Chakra UI, Tailwind CSS, Typescript
-    Backend: Node.js, Express, Sequelize
-    Database: MySQL
+    Frontend: React, Chakra UI, Tailwind CSS, TypeScript
+    Backend: Node.js, Express
+    Database: MySQL(Sequelize)
 
 
 ### Steps:

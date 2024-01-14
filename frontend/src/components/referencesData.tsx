@@ -47,7 +47,6 @@ const ReferencesData = () => {
                 <Tbody>
                   {countryEmissions.map((emission, index) => {
                     const transportModes = Object.keys(emission).filter(key => key !== 'location' && key !== 'code' && key !== 'id' && key !== 'createdAt' && key !== 'updatedAt' && emission[key as keyof EmissionData] !== 0);
-
                     /* return transportModes.map((mode) => (
                       <Tr key={emission.code + mode}>
                         {transportModes.indexOf(mode) === 0 && (
@@ -70,14 +69,11 @@ const ReferencesData = () => {
                         <Td isNumeric align="center" >{emission[mode as keyof EmissionData]}</Td>
                       </Tr>
                     ));
-
                   })}
-
                 </Tbody>
               </Table>
             </Box>
           </Flex>
-
         </Flex>
     </Flex>
   );
