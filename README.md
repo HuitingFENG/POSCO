@@ -21,7 +21,7 @@
 
 ### Steps:
 - locate on the root of this project
-- run backend service
+- run backend
 ###
 
     cd backend
@@ -29,7 +29,7 @@
     npm run dev
     cd ..
 
-- run frontend service
+- run frontend
 ###
 
     cd frontend
@@ -37,12 +37,12 @@
     npm start
     cd ..
 
-- check the frontend's url on terminal, a type of html file means ok
+- check the frontend's url on terminal, and a type of html file displayed means ok
 ###
 
     curl http://localhost:3000/    
 
-- check the backend's url on terminal, a list of questions means ok
+- check the backend's url on terminal, and a list of questions displayed means ok
 ###
 
     curl http://localhost:3001/api/questions
