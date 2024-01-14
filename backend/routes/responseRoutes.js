@@ -6,6 +6,7 @@ const Response = require('../models/response');
 const Emission = require('../models/emission');
 const { countryEmissions } = require('../data/mockData');
 
+
 router.get('/', async (req, res) => {
     try {
         const responses = await Response.findAll();
@@ -75,7 +76,7 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try {
-        const result = await Question.destroy({
+        const result = await Response.destroy({
             where: { id: req.params.id }
         });
         if (result) {
@@ -93,8 +94,8 @@ module.exports = router;
 
 function calculation(responses, countryEmissions) {
     let total = 0;
-    const questionIdAnswerCountry = 5;
-    const questionIdAnswerTransport = 4;
+    const questionIdAnswerCountry = 4;
+    const questionIdAnswerTransport = 5;
     const questionIdList = [];
 
     responses.forEach(response => {

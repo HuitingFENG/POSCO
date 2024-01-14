@@ -3,8 +3,6 @@
 const express = require('express');
 const router = express.Router();
 const Emission = require('../models/emission'); 
-const { calculateEmissions } = require('../utils/emissionsCalculator');
-
 
 router.get('/', async (req, res) => {
     try {

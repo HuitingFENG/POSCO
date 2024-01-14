@@ -39,9 +39,10 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
+    const { id } = req.params;
     try {
         const updatedQuestion = await Question.update(req.body, {
-            where: { id: req.params.id }
+            where: { id:  id }
         });
         if (updatedQuestion[0]) {
             res.send('Question updated successfully');

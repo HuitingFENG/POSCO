@@ -16,21 +16,24 @@ const countryEmissions = [
 
 const locationOptions = countryEmissions.map(item => item.location);
 
+
+// category: 1 => questions pour la vie quoditienne d'un individu
+// category: 2 => questions pour la mobilite d'un etudiant
 const questionsList = [
-    { question_text: "A quelle distance (en km) habitez-vous d\'Efrei ?", type: "number", options: [] },
-    { question_text: "Comment vous déplacez-vous pour vous y rendre ?" , type: "text", options: ["Train", "Bus", "Metro", "Voiture", "A pied"]},
-    { question_text: "Combien de fois par semaine mangez-vous de la viande ?" , type: "number", options: []},
-    { question_text: "Quelle destination envisagez-vous pour la mobilité L3 ?", type: "mcq", options: locationOptions },
-    { question_text: "Par quels moyens comptez-vous y aller ?" , type: "text", options: ["Train", "Bus", "Avion", "Voiture"]},
+    { id: 1, category: 1, question_text: "A quelle distance (en km) habitez-vous d\'Efrei ?", type: "number", options: [] },
+    { id: 2, category: 1, question_text: "Comment vous déplacez-vous pour vous y rendre ?" , type: "text", options: ["Train", "Bus", "Metro", "Voiture", "A pied"]},
+    { id: 3, category: 1, question_text: "Combien de fois par semaine mangez-vous de la viande ?" , type: "number", options: []},
+    { id: 4, category: 2, question_text: "Quelle destination envisagez-vous pour la mobilité L3 ?", type: "mcq", options: locationOptions },
+    { id: 5, category: 2, question_text: "Par quels moyens comptez-vous y aller ?" , type: "text", options: ["Train", "Bus", "Avion", "Voiture"]},
 ];
   
 const responsesList = [];
 
 const usersList = [
-    { name: "admin", email: "admin@efrei.fr", password: "admin" },
-    { name: "student1", email: "student1@efrei.net", password: "student1" },
-    { name: "student2", email: "student2@efrei.net", password: "student2" },
-    { name: "student3", email: "student3@efrei.net", password: "student3" },
+    { userId: 0, name: "admin", email: "admin@efrei.fr", password: "admin" },
+    { userId: 1, name: "student1", email: "student1@efrei.net", password: "student1" },
+    { userId: 2, name: "student2", email: "student2@efrei.net", password: "student2" },
+    { userId: 3, name: "student3", email: "student3@efrei.net", password: "student3" },
 ];
 
 const emissionsList = [];
