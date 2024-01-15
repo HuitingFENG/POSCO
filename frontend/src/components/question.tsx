@@ -211,20 +211,38 @@ const Question = () => {
     
 
     const handleNextClick = () => {
-        const responseToQ8 = responses[7]; // Assuming question IDs start from 1 and array indexes from 0
+        const responseToQ8 = responses[7]; 
+        const responseToQ6 = responses[5];
+        const countryOnlyEnAvion = ["Montréal, Canada", "Kuala Lumpur, Malaisie", "Le Cap, Afrique du Sud", "Toronto, Canada", "Irvine, Etats-Unis"];
     
-        console.log("Response to Question 8:", responseToQ8); // For debugging
+        console.log("Response to Question 8:", responseToQ8); 
+        console.log("Response to Question 6:", responseToQ6); 
     
-        // Your logic based on the response to question 8
-        if (responseToQ8 === 'Non') {
-            // Perform actions based on the response
-            console.log("TEST user chooses NON for question 8.");
-            setCurrentQuestionIndex(prevIndex => questions.length - 1);
-            setCloseQuestionnaire(true);
-            
-        } else {
+        if (countryOnlyEnAvion.includes(responseToQ6)) {
+            console.log("TEST user's option for question 6 (countryOnlyEnAvion): ", responseToQ6);
+            const newResponses = [...responses];
+            newResponses[6] = "Avion";
+            setResponses(newResponses);
+            setCurrentQuestionIndex(prevIndex => prevIndex + 1); 
+            if (responseToQ8 === 'Non') {
+                console.log("TEST user chooses NON for question 8.");
+                setCurrentQuestionIndex(prevIndex => questions.length - 2);
+                setCloseQuestionnaire(true);
+            } else if (responseToQ8 === 'Oui') {
+                setCurrentQuestionIndex(prevIndex => prevIndex - 1); 
+            }
             setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-        }
+        } else {
+            console.log("TEST user's option for question 6 (not countryOnlyEnAvion): ", responseToQ6);
+            // setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+            
+            if (responseToQ8 === 'Non') {
+                console.log("TEST user chooses NON for question 8.");
+                setCurrentQuestionIndex(prevIndex => questions.length - 2);
+                setCloseQuestionnaire(true);
+            } 
+            setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+        }  
     };
 
 
