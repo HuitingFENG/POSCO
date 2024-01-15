@@ -24,6 +24,7 @@ const Question = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [responses, setResponses] = useState<string[]>([]);
     const [submissionComplete, setSubmissionComplete] = useState(false);
+    const [closeQuestionnaire, setCloseQuestionnaire] = useState(false);
     // const [retakeTest, setRetakeTest] = useState(false);
     const [inputError, setInputError] = useState(false);
     const [totalEmission, setTotalEmission] = useState(0);
@@ -93,7 +94,9 @@ const Question = () => {
 
     const handleResponseChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newResponses = [...responses];
+        console.log("TEST newResponses: ", newResponses);
         newResponses[currentQuestionIndex] = event.target.value;
+        console.log("TEST newResponses[currentQuestionIndex] ", newResponses[currentQuestionIndex]);
         setResponses(newResponses);
     }; 
 
@@ -156,13 +159,13 @@ const Question = () => {
             const latestEmission = emissionData.reduce((latest: Emission, current: Emission) => {
                 return (new Date(latest.createdAt) > new Date(current.createdAt)) ? latest : current;
             });
-            // setResponses([]);
+            setResponses([]);
             setTotalEmission(latestEmission.totalEmissions);
             setTotalConsummationEmissions(latestEmission.totalConsummationEmissions);
             setTotalCountryEmissions(latestEmission.totalCountryEmissions);
             console.log('Submission complete');
             setSubmissionComplete(true);
-            // setCurrentQuestionIndex(0);
+            setCurrentQuestionIndex(0);
         })
         .catch((error) => {
           console.error('Error:', error);
@@ -205,7 +208,24 @@ const Question = () => {
 
     const isQuestionAvailable = questions.length > 0 && questions[currentQuestionIndex];
 
+    
 
+    const handleNextClick = () => {
+        const responseToQ8 = responses[7]; // Assuming question IDs start from 1 and array indexes from 0
+    
+        console.log("Response to Question 8:", responseToQ8); // For debugging
+    
+        // Your logic based on the response to question 8
+        if (responseToQ8 === 'Non') {
+            // Perform actions based on the response
+            console.log("TEST user chooses NON for question 8.");
+            setCurrentQuestionIndex(prevIndex => questions.length - 1);
+            setCloseQuestionnaire(true);
+            
+        } else {
+            setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+        }
+    };
 
 
     return (
@@ -213,17 +233,30 @@ const Question = () => {
             {isQuestionAvailable && (
                 <Flex flex="2" m={10} width="80%" bgColor="#dddddd" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Questionnaire</Text>
-                    <Text fontWeight="bold" fontSize="xl"> {currentQuestionIndex+1}. {questions[currentQuestionIndex]?.question_text}</Text>
-                    {renderInputField(questions[currentQuestionIndex])}
+                    {(currentQuestionIndex <= questions.length - 1 && !closeQuestionnaire) ?  (
+                        <>
+                        <Text fontWeight="bold" fontSize="xl"> {currentQuestionIndex+1}. {questions[currentQuestionIndex]?.question_text}</Text>
+                        {renderInputField(questions[currentQuestionIndex])}
+                        </>
+                    ) : (
+                        // <Text>Etes-vous sûr de nous envoyer vos réponses ?</Text>   
+                        <Text></Text> 
+                    )}
                     <Flex gap={200} justify="space-between">
-                        {currentQuestionIndex < questions.length - 1 ? (
+                        {(currentQuestionIndex < questions.length - 1 && !closeQuestionnaire)? (
+
                             <>
                             <Button bgColor="#003153" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={() => setCurrentQuestionIndex(prevIndex => Math.max(prevIndex - 1, 0))} disabled={currentQuestionIndex === 0}>
                                 <FaArrowLeft size="24px" color="white" />Précédent
                             </Button>
-                            <Button bgColor="#003153" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={() => setCurrentQuestionIndex(prevIndex => prevIndex + 1)}>
+                           {/*  <Button bgColor="#003153" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={() => setCurrentQuestionIndex(prevIndex => prevIndex + 1)}>
+                                Suivant<FaArrowRight size="24px" color="white" />
+                            </Button></> */}
+
+                             <Button bgColor="#003153" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={handleNextClick}>
                                 Suivant<FaArrowRight size="24px" color="white" />
                             </Button></>
+
                         ) : (
                             <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={sendResponses}>Envoyer<FaPaperPlane size="24px" color="white" /></Button>
                             /* <Flex flexDirection="row" justify="space-between" align="center" gap={200}>
@@ -234,6 +267,8 @@ const Question = () => {
                     </Flex>
                 </Flex>
             )}
+
+
 
             {submissionComplete && (
                 <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
