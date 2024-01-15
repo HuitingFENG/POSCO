@@ -43,7 +43,7 @@ router.get('/user/:userId', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+/* router.post('/', async (req, res) => {
     try {
         const { userId, responsesList } = req.body;
         const totalEmissions = calculateEmissions(responsesList);
@@ -57,7 +57,7 @@ router.post('/', async (req, res) => {
         console.error('Error creating emission:', error);
         res.status(500).send('Internal Server Error');
     }
-});
+}); */
 
 router.put('/:id', async (req, res) => {
     try {

@@ -1,6 +1,6 @@
 import { Box,Flex,Link,Text,Image,Button,Stack,Center,Icon,Input } from "@chakra-ui/react";
 import React, { useState, useEffect } from 'react';
-import { FaArrowLeft, FaArrowRight, FaPaperPlane } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaPaperPlane, FaShareAlt } from 'react-icons/fa';
 
 interface Question {
     id: number;
@@ -27,6 +27,8 @@ const Question = () => {
     // const [retakeTest, setRetakeTest] = useState(false);
     const [inputError, setInputError] = useState(false);
     const [totalEmission, setTotalEmission] = useState(0);
+    const [totalConsummationEmissions, setTotalConsummationEmissions] = useState(0);
+    const [totalCountryEmissions, setTotalCountryEmissions] = useState(0);
     const maxValue = 100
     const minValue = 0
     const stepValue = 1
@@ -46,6 +48,13 @@ const Question = () => {
     }, []);
 
     const renderInputField = (question: Question) => {
+/*         const responseToQ8 = responses[8]; 
+        // const hasOnlyAvionOption = [];
+
+        if ((question.id === 9 || question.id === 10) && responseToQ8 !== 'Oui') {
+            return null;
+        } */
+
         switch (question.type) {
           case 'text':
             // return <Input width="500px" type="text" value={responses[currentQuestionIndex] || ''} onChange={handleResponseChange} />;
@@ -108,6 +117,10 @@ const Question = () => {
     }; */
     
 
+    const sendMobiliteRequest = () => {
+        console.log("TEST sendMobiliteRequest... ");
+    };
+
     const sendResponses = () => {
         const formattedResponses = responses.map((answer, index) => ({
             userId: 1, 
@@ -143,10 +156,13 @@ const Question = () => {
             const latestEmission = emissionData.reduce((latest: Emission, current: Emission) => {
                 return (new Date(latest.createdAt) > new Date(current.createdAt)) ? latest : current;
             });
-            setResponses([]);
+            // setResponses([]);
             setTotalEmission(latestEmission.totalEmissions);
+            setTotalConsummationEmissions(latestEmission.totalConsummationEmissions);
+            setTotalCountryEmissions(latestEmission.totalCountryEmissions);
+            console.log('Submission complete');
             setSubmissionComplete(true);
-            setCurrentQuestionIndex(0);
+            // setCurrentQuestionIndex(0);
         })
         .catch((error) => {
           console.error('Error:', error);
@@ -158,11 +174,39 @@ const Question = () => {
         setRetakeTest(true);
     };
  */
+
+/*     const shouldDisplayCurrentQuestion = () => {
+        const currentQuestionId = questions[currentQuestionIndex].id;
+        const responseToQ8 = responses[8];
+
+        // Skip questions 9 and 10 if the response to question 8 is not 'Oui'
+        if ((currentQuestionId === 9 || currentQuestionId === 10) && responseToQ8 !== 'Oui') {
+            return false;
+        }
+        return true;
+    }; */
+
+/*     const shouldDisplayCurrentQuestion = () => {
+        if (currentQuestionIndex >= questions.length) {
+            return false;
+        }
+        const currentQuestionId = questions[currentQuestionIndex].id;
+        const responseToQ8 = responses[8];
+
+        if ((currentQuestionId === 9 || currentQuestionId === 10) && responseToQ8 !== 'Oui') {
+            return false;
+        }
+        return true;
+    }; */
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
 
     const isQuestionAvailable = questions.length > 0 && questions[currentQuestionIndex];
+
+
+
 
     return (
         <Flex justify="space-between" align="center" flexDirection="column" gap={10}>
@@ -193,10 +237,12 @@ const Question = () => {
 
             {submissionComplete && (
                 <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
-                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre Emission de Carbon Estimée au total : {totalEmission} kg</Text>
-                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre Emprunte Carbone pour la mobilité envisagée : {totalEmission} kg</Text>
-                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre Emprunte Carbone Personnelle : {totalEmission} kg</Text>
-                    <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous avoir envoyer vos réponses !</Text>
+                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Au total : {totalEmission} kg</Text>
+                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone liée à la mobilité envisagée : {totalConsummationEmissions} kg</Text>
+                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone personnelle par an : {totalCountryEmissions} kg</Text>
+                    <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous partager vos réponses !
+                        <Button ml={10} bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" gap={3} onClick={sendMobiliteRequest}>Partager<FaShareAlt size="24px" color="white" /></Button>
+                    </Text>
                     {/* <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button> */}
                 </Flex>
             )}

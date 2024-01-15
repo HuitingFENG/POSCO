@@ -44,11 +44,13 @@ router.post('/', async (req, res) => {
      /*  console.log("TEST: ", responses[4].answer); */
     }
     const responseIds = responseInstances.map(instance => instance.id);
-    const total = calculation(responses, countryEmissions, consummationEmissions);
+    const [total, totalConsummationEmissions, totalCountryEmissions] = calculationForAll(responses, countryEmissions, consummationEmissions);
     const savedTotal = await Emission.create({
         userId: responses[0].userId, 
         responsesList: responseIds, 
-        totalEmissions: total 
+        totalEmissions: total,
+        totalConsummationEmissions: totalConsummationEmissions,
+        totalCountryEmissions: totalCountryEmissions,
     });
     // console.log("TEST savedTotal: ", savedTotal)
     res.status(201).json({ message: "Responses saved successfully" });
@@ -115,13 +117,6 @@ function calculation(responses, countryEmissions, consummationEmissions) {
         userId = response.userId;
         questionIdList.push(response.questionId);
     });
-    // console.log("TEST userId: ", userId);
-
-/*     for (const response of responses) {
-        console.log("TEST response answer: ", response.answer);
-    } */
-
-    
 
     const checkDistanceEcoleDomicile = responses.find(response => response.questionId === questionIdDistanceEcoleDomicile).answer;
     const checkTransportEcoleDomicile = responses.find(response => response.questionId === questionIdTransportEcoleDomicile).answer;
@@ -136,7 +131,6 @@ function calculation(responses, countryEmissions, consummationEmissions) {
     const valueTransportEcoleDomicile = consummationEmissions.find(item => item.name == checkTransportEcoleDomicile).number;
     const valueTypeViande = consummationEmissions.find(item => item.name == checkTypeViande).number;
     const valueTransportVoyages = consummationEmissions.find(item => item.name == checkTransportVoyages).number;
-
 
     totalConsummationEmissions += checkDistanceEcoleDomicile * 40 * 7 * 4 * 2 * valueTransportEcoleDomicile; 
     totalConsummationEmissions += checkNombreViandeRepas * valueTypeViande * 52;
@@ -171,13 +165,10 @@ function calculation(responses, countryEmissions, consummationEmissions) {
     });
  */
     countryEmissions.forEach(item => {
-/*         console.log('TEST countryEmissions: ', item);
-        console.log('TEST countryEmissions location: ', item.location);
-        console.log('TEST countryEmissions avion: ', item.avion); */
+
         if (item.location == checkLocation){
             if (item[checkTransport] !== undefined) {
                 totalCountryEmissions += (item[checkTransport] * 2) ; // un seul voyage aller-retour france-destination
-                // console.log("TEST totalCountryEmissions: ", totalCountryEmissions);
             }
         }
     });
@@ -189,6 +180,55 @@ function calculation(responses, countryEmissions, consummationEmissions) {
 
     total = totalCountryEmissions + totalConsummationEmissions;
     console.log("TEST total: ", total);
-    return total;
+    return [total, totalConsummationEmissions, totalCountryEmissions];
 } 
 
+
+
+function calculationForAll(responses, countryEmissions, consummationEmissions) {
+    let totalConsummationEmissions = 0;
+    let totalCountryEmissions = 0;
+
+    // Extract responses by questionId for easier access
+    const responseByQuestionId = responses.reduce((acc, response) => {
+        acc[response.questionId] = response.answer;
+        return acc;
+    }, {});
+
+    // Helper function to get the 'number' value by 'name' from consummationEmissions
+    function getValueByName(dataArray, name) {
+        const item = dataArray.find(item => item.name === name);
+        return item ? item.number : 0;
+    }
+
+    // Calculate Consummation Emissions
+    totalConsummationEmissions += responseByQuestionId[2] * 40 * 7 * 4 * 2 * getValueByName(consummationEmissions, responseByQuestionId[3]);
+    totalConsummationEmissions += responseByQuestionId[4] * getValueByName(consummationEmissions, responseByQuestionId[5]) * 52;
+
+    // Calculate Country Emissions
+    const locationEmission = countryEmissions.find(item => item.location === responseByQuestionId[6]);
+    if (locationEmission && locationEmission[responseByQuestionId[7]] !== undefined) {
+        totalCountryEmissions += locationEmission[responseByQuestionId[7]] * 2;
+    }
+    // totalCountryEmissions += responseByQuestionId[9] * 2 * getValueByName(consummationEmissions, responseByQuestionId[10]);
+    // Assign default value 0 if response for question 9 and 10 is not available
+    const responseForQ9 = responseByQuestionId[9] !== undefined ? responseByQuestionId[9] : 0;
+    const responseForQ10 = responseByQuestionId[10] !== undefined ? responseByQuestionId[10] : ""; // Assuming a default transport mode if not answered
+
+    totalCountryEmissions += responseForQ9 * 2 * getValueByName(consummationEmissions, responseForQ10);
+
+  
+
+
+
+    // Calculate total emissions
+    const total = totalCountryEmissions + totalConsummationEmissions;
+
+    // Logging for reference and debugging
+    console.log("Reference totalConsummationEmissions: ", 40*7*4*2*5*0.11 + 5.51*7*52); // Example calculation for bus and beef
+    console.log("Total Consummation Emissions: ", totalConsummationEmissions);
+    console.log("Reference totalCountryEmissions: ", 129*2+20*2*0.215); // Example calculation for a specific country and plane
+    console.log("Total Country Emissions: ", totalCountryEmissions);
+    console.log("Total Emissions: ", total);
+    return [total, totalConsummationEmissions, totalCountryEmissions];
+}
