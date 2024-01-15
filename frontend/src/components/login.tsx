@@ -36,11 +36,12 @@ const Login = () => {
                 duration: 1000,
                 isClosable: true,
             });
-            setEmail('');
-            setPassword('');
+            // localStorage.setItem('user', JSON.stringify(data));
             setTimeout(() => {
-                navigate('/profil'); 
+                navigate('/profil', { state: { user: data } }); 
             }, 1000);
+            /* setEmail('');
+            setPassword(''); */
         })
         .catch((error) => {
             console.error('Error:', error);

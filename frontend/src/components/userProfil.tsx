@@ -1,21 +1,60 @@
-import React from "react";
+import React, { useState, useEffect }  from "react";
 import { Box,Flex,Link,Text,Image,Button,Stack,Center,Icon } from "@chakra-ui/react";
 import {Link as RouterLink, BrowserRouter as Router, Routes, Route, } from "react-router-dom";
 import { FaQuestionCircle, FaBook, FaCog, FaUser } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 
-
+interface User {
+  name: string;
+  email: string;
+}
 
 const UserProfil = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const location = useLocation();
+
+  /* useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      setUserName(user.name); 
+      setUserEmail(user.email); 
+    }
+    }, []);
+ */
+
+/*   useEffect(() => {
+    if (location.state?.user) {
+      setUser(location.state.user);
+    }
+  }, [location]); */
+
+
+  useEffect(() => {
+    console.log("Location State:", location.state);
+    const userData = location.state?.user as User;
+    if (userData) {
+      setUser(userData);
+    }
+  }, [location]);
+
+
+  if (!user) {
+    return <div>Loading...</div>; 
+  }
+
   return (
-    <Flex /* height="2000px" */ p={10} align="center" justify="space-between" flexDirection="column" gap={10}>
-        <Flex flexDirection="column" width="80%" gap={10} p={10} mt={4} > 
-          <Flex flexDirection="column" gap={5} align="center" justify="space-around">
+    <Flex p={10} align="center" justify="space-between" flexDirection="column" gap={20} m={10}>
+          <Flex mb={10}>
             <Text fontWeight="bold" fontSize="4xl" color="black">Profil de l'Utilisateur</Text>
           </Flex>
-          <Flex>
-
+          <Flex flexDirection="column" gap={5} align="center" justify="space-around" mb={10}>
+            <Text fontWeight="bold" fontSize="2xl" color="black">Votre nom : {user.name}</Text>
+            <Text fontWeight="bold" fontSize="2xl" color="black">Votre email : {user.email}</Text>
           </Flex>
-        </Flex>
+          <Flex flexDirection="column" gap={5} align="center" justify="space-around">
+            <Text fontWeight="bold" fontSize="3xl" color="black">Votre résultats historiques</Text>
+            <Text fontWeight="bold" fontSize="2xl" color="black">Votre résultats historiques : score, datetime, questionnaires concernés </Text>
+          </Flex>
     </Flex>
   );
 };
