@@ -36,12 +36,21 @@ const questionsList = [
   
 const responsesList = [];
 
-const usersList = [
+/* const usersList = [
     { userId: 0, name: "admin", email: "admin@efrei.fr", password: "admin" },
     { userId: 1, name: "student1", email: "student1@efrei.net", password: "student1" },
     { userId: 2, name: "student2", email: "student2@efrei.net", password: "student2" },
     { userId: 3, name: "student3", email: "student3@efrei.net", password: "student3" },
+]; */
+
+
+const usersList = [
+    { name: "admin", email: "admin@efrei.fr", password: "admin" },
+    { name: "student1", email: "student1@efrei.net", password: "student1" },
+    { name: "student2", email: "student2@efrei.net", password: "student2" },
+    { name: "student3", email: "student3@efrei.net", password: "student3" },
 ];
+
 
 const emissionsList = [];
 

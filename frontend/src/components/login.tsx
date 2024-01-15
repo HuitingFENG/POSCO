@@ -46,7 +46,8 @@ const Login = () => {
             console.error('Error:', error);
             toast({
                 title: 'Connexion échouée.',
-                description: error.message,
+                // description: error.message,
+                description: "Les données saisies sont incorrectes.",
                 status: 'error',
                 duration: 1000,
                 isClosable: true,

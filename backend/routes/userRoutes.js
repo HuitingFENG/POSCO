@@ -48,6 +48,7 @@ router.get('/user/:userId', async (req, res) => {
 
 router.post('/signup', async (req, res) => {
     const { name, email, password } = req.body;
+    console.log("TEST name, email, password: ", name, email, password);
 
     try {
         // Ensure that the user doesn't already exist
@@ -60,11 +61,11 @@ router.post('/signup', async (req, res) => {
         const nextUserId = lastUser.length === 0 ? 1 : lastUser[0].userId + 1;
         const newUser = await User.create({ userId: nextUserId, name, email, password }); */
 
-        const lastUser = await User.findAll({ order: [['userId', 'DESC']] });
+        /* const lastUser = await User.findAll({ order: [['userId', 'DESC']] });
         const nextUserId = lastUser ? lastUser.userId + 1 : 1;
-        const newUser = await User.create({ userId: nextUserId, name, email, password });
+        const newUser = await User.create({ userId: nextUserId, name, email, password }); */
 
-        // const newUser = await User.create({ name, email, password });
+        const newUser = await User.create({ name, email, password });
         res.status(201).json(newUser);
     } catch (error) {
         console.error('Error creating user:', error);

@@ -4,7 +4,7 @@ const sequelize = require('../config/sequelize');
 const User = require('../models/user');
 const { usersList } = require('../data/mockData');
 
-sequelize.sync().then(() => {
+sequelize.sync({ force: true }).then(() => {
     User.destroy({
         where: {},
         truncate: true 
