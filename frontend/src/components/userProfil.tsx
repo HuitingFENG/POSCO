@@ -4,6 +4,7 @@ import {Link as RouterLink, BrowserRouter as Router, Routes, Route, } from "reac
 import { FaQuestionCircle, FaBook, FaCog, FaUser } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { useUser } from '../context/UserContext';
+import LogoutButton from './logout'; 
 
 interface User {
   name: string;
@@ -69,6 +70,9 @@ const UserProfil = () => {
           <Flex flexDirection="column" gap={5} align="center" justify="space-around">
             <Text fontWeight="bold" fontSize="3xl" color="black">Votre résultats historiques</Text>
             <Text fontWeight="bold" fontSize="2xl" color="black">Votre résultats historiques : score, datetime, questionnaires concernés </Text>
+          </Flex>
+          <Flex p={10} align="center" justify="space-between" flexDirection="column" gap={20} m={10}>
+            <LogoutButton /> 
           </Flex>
     </Flex>
   );
