@@ -13,6 +13,10 @@ interface User {
   password: string;
 }
 
+interface Question {
+  id: number;
+  question_text: string;
+}
 
 interface Emission {
   userId: number;
@@ -23,19 +27,30 @@ interface Emission {
   createdAt: string; 
 }
 
-
+interface Response {
+  id: number;
+  userId: number;
+  questionId: number;
+  answer: string;
+  question: Question; 
+}
 
 const UserProfil = () => {
   const userContext = useUser(); 
   const userId = userContext?.user?.userId;
 
   const [emissions, setEmissions] = useState<Emission[]>([]);
+  const [responses, setResponses] = useState<Response[]>([]); 
 
   useEffect(() => {
       fetch(`http://localhost:3001/api/emissions/user/${userId}`) 
           .then(response => response.json())
           .then(data => setEmissions(data))
           .catch(error => console.error('Error:', error));
+      fetch(`http://localhost:3001/api/responses/user/${userId}`)
+          .then(response => response.json())
+          .then(data => setResponses(data))
+          .catch(error => console.error('Error fetching responses:', error));
   }, [userId]);
 
   if (!userContext) {
@@ -48,9 +63,6 @@ const UserProfil = () => {
     return <div>Aucun utilisateur connecté.</div>;
   }
 
-  
-
-
   function formatDate(isoString: string | number | Date) {
     const date = new Date(isoString);
     const day = date.getDate().toString().padStart(2, '0');
@@ -62,10 +74,8 @@ const UserProfil = () => {
     return `${day}/${month}/${year} ${hours}:${minutes}`;
   }
 
-
-
   return (
-    <Flex p={10} align="center" justify="space-between" flexDirection="column" m={10}>
+    <Flex height="2000px" p={10} align="center" justify="space-between" flexDirection="column" m={10}>
           <Flex flex="2" m={10} width="80%" bgColor="#dddddd" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={5}>
             <Text fontWeight="bold" fontSize="4xl" color="black" mb={5}>Profil de l'Utilisateur</Text>
             <Text fontWeight="bold" fontSize="2xl" color="black">Votre nom : {user.name}</Text>
@@ -74,15 +84,15 @@ const UserProfil = () => {
           </Flex>
           <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
             <Text fontWeight="bold" fontSize="3xl" color="black">Votre Résultats Historiques</Text>
-            <Box overflowX="auto">
+            <Box overflowX="auto" overflowY="auto" maxH="400px" w="100%">
               <Table variant="simple">
                 <Thead bg="blue.500" >
                   <Tr >
-                    <Th color="white" textAlign="center">N°</Th>
-                    <Th color="white" textAlign="center">Total Emissions (kg)</Th>
-                    <Th color="white" textAlign="center">Total Consummation Emissions (kg)</Th>
-                    <Th color="white" textAlign="center">Total Country Emissions (kg)</Th>
-                    <Th color="white" textAlign="center">Date</Th>
+                    <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >N°</Th>
+                    <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Total Emissions (kg)</Th>
+                    <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Total Consummation Emissions (kg)</Th>
+                    <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Total Country Emissions (kg)</Th>
+                    <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Date</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -93,6 +103,32 @@ const UserProfil = () => {
                       <Td textAlign="center">{emission.totalConsummationEmissions}</Td>
                       <Td textAlign="center">{emission.totalCountryEmissions}</Td>
                       <Td textAlign="center">{formatDate(emission.createdAt)}</Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
+          </Flex>
+        
+          <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
+            <Text fontWeight="bold" fontSize="3xl" color="black">Vos Réponses Historiques</Text>
+            <Box overflowX="auto" overflowY="auto" maxH="400px" w="100%">
+              <Table variant="simple">
+                <Thead bg="blue.500">
+                  <Tr>
+                    <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Émission ID</Th>
+                    <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >N°</Th>
+                    <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Question</Th>
+                    <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Réponse</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {responses.map((response, index) => (
+                    <Tr key={response.id} bg={index % 2 === 0 ? "gray.100" : "gray.200"}>
+                      <Td textAlign="center">{response.id}</Td>
+                      <Td textAlign="center">{index + 1}</Td>
+                      <Td textAlign="left">{response.question.question_text}</Td>
+                      <Td textAlign="center">{response.answer}</Td>
                     </Tr>
                   ))}
                 </Tbody>

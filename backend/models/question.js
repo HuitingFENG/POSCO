@@ -2,6 +2,7 @@
 
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize');
+const Response = require('./response');
 
 class Question extends Model {}
 
@@ -25,6 +26,7 @@ Question.init({
   modelName: 'question',
 });
 
+// Question.hasMany(Response, { foreignKey: 'questionId', as: 'responses' });
 
 
 Question.updateOrder = async () => {

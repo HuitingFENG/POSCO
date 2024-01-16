@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const Response = require('../models/response');
 const Emission = require('../models/emission');
+const Question = require('../models/question');
 const { consummationEmissions, countryEmissions } = require('../data/mockData');
 
 
@@ -30,6 +31,25 @@ router.get('/:id', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
+router.get('/user/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const responses = await Response.findAll({ 
+            where: { userId: userId },
+            include: [{
+                model: Question,
+                as: 'question' 
+            }] 
+        });
+        res.json(responses);
+    } catch (error) {
+        console.error('Error fetching responses for user:', error);
+    res.status(500).send('Internal Server Error');
+}
+});
+
 
 router.post('/', async (req, res) => {
   console.log("Received data:", req.body);

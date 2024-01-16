@@ -34,13 +34,13 @@ const ReferencesData = () => {
           </Flex>
 
           <Flex>
-            <Box overflowX="auto">
+            <Box overflowX="auto" overflowY="auto" maxH="1800px" w="100%">
               <Table variant="simple" >
                 <Thead bg="blue.500" >
                   <Tr>
-                    <Th color="white" textAlign="center">Destination</Th>
-                    <Th color="white" textAlign="center">Moyen de Transport</Th>
-                    <Th isNumeric color="white" textAlign="center" >Empreinte Carbone (en kgCO2e/personne) - Un Aller</Th>
+                    <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }}>Destination</Th>
+                    <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }}>Moyen de Transport</Th>
+                    <Th isNumeric color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Empreinte Carbone (en kgCO2e/personne) - Un Aller</Th>
                   </Tr>
                 </Thead> 
                 <Tbody>

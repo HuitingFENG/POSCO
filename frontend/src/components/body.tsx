@@ -39,7 +39,7 @@ const Body = () => {
           </Box>
         </Flex> */}
 
-        <Flex width="1000px" height="480px">
+        <Flex width="90%" height="650px" >
           <iframe
               src="https://www.google.com/maps/d/embed?mid=14Srngj75VBAmMrIY6QAcIOuo2laUwLJc&ehbc=2E312F"
               width="100%"
