@@ -1,6 +1,8 @@
 import { Box,Flex,Link,Text,Image,Button,Stack,Center,Icon,Input } from "@chakra-ui/react";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FaArrowLeft, FaArrowRight, FaPaperPlane, FaShareAlt } from 'react-icons/fa';
+import { useUser } from '../context/UserContext';
+
 
 interface Question {
     id: number;
@@ -19,6 +21,10 @@ interface Emission {
 }
 
 const Question = () => {
+    const userContext = useUser();
+    // Get userId from userContext, or use 999 as a default
+    const userId = userContext?.user?.userId || 999;
+
     const [questions, setQuestions] = useState<Question[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -126,7 +132,7 @@ const Question = () => {
 
     const sendResponses = () => {
         const formattedResponses = responses.map((answer, index) => ({
-            userId: 1, 
+            userId: userId, 
             questionId: questions[index].id, 
             answer: answer
         }));
