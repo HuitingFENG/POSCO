@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const Emission = require('../models/emission'); 
+const User = require('../models/user');
 
 router.get('/', async (req, res) => {
     try {
@@ -31,7 +32,14 @@ router.get('/:id', async (req, res) => {
 router.get('/user/:userId', async (req, res) => {
     try {
         const userId = req.params.userId;
-        const emission = await Emission.findAll({ where: { userId: userId }, order: [['createdAt', 'DESC']] });
+        const emission = await Emission.findAll({ 
+            where: { userId: userId }, 
+            include: [{
+                model: User,
+                as: "user"
+            }],
+            order: [['createdAt', 'DESC']] 
+        });
         if (emission) {
             res.json(emission);
         } else {

@@ -300,12 +300,11 @@ const Question = () => {
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Au total : {totalEmission} kg</Text>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone liée à la mobilité envisagée : {totalCountryEmissions} kg</Text>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone personnelle par an : {totalConsummationEmissions}kg</Text>
-                    <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous partager vos réponses !
-
-                        <Button ml={10} bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" gap={3} /* onClick={sendMobiliteRequest} */><Link to="/profil">Partager</Link><FaShareAlt size="24px" color="white" /></Button>
-                    
-                    
-                    </Text>
+                    { (userId == 999) && (
+                        <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous partager vos réponses et obtenir des suggestions personnalisées !
+                            <Button ml={10} bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" gap={3} /* onClick={sendMobiliteRequest} */><Link to="/profil">Partager</Link><FaShareAlt size="24px" color="white" /></Button>
+                        </Text>
+                    )}
                     {/* <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button> */}
                 </Flex>
             )}

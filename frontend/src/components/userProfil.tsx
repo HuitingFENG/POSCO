@@ -28,6 +28,7 @@ interface Emission {
 }
 
 interface Response {
+  createdAt: string | number | Date;
   id: number;
   userId: number;
   questionId: number;
@@ -123,7 +124,7 @@ const UserProfil = () => {
                         <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Total Emissions (kg)</Th>
                         <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Total Consummation Emissions (kg)</Th>
                         <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Total Country Emissions (kg)</Th>
-                        <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Date</Th>
+                        <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Date Envoyée</Th>
                       </Tr>
                     </Thead>
                     <Tbody>
@@ -133,7 +134,7 @@ const UserProfil = () => {
                           <Td textAlign="center">{emission.totalEmissions}</Td>
                           <Td textAlign="center">{emission.totalConsummationEmissions}</Td>
                           <Td textAlign="center">{emission.totalCountryEmissions}</Td>
-                          <Td textAlign="center">{formatDate(emission.createdAt)}</Td>
+                          <Td textAlign="left">{formatDate(emission.createdAt)}</Td>
                         </Tr>
                       ))}
                     </Tbody>
@@ -144,23 +145,24 @@ const UserProfil = () => {
 
               <Flex flex="5" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
                 <Text fontWeight="bold" fontSize="3xl" color="black">Vos Réponses Historiques</Text>
-                <Box overflowX="auto" overflowY="auto" maxH="400px" w="100%">
+                <Box overflowX="auto" overflowY="auto" maxH="600px" w="100%">
                   <Table variant="simple">
                     <Thead bg="blue.500">
                       <Tr>
-                        <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Émission ID</Th>
+                       
                         <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >N°</Th>
                         <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Question</Th>
                         <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Réponse</Th>
+                        <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Date Envoyée</Th>
                       </Tr>
                     </Thead>
                     <Tbody>
                       {responses.map((response, index) => (
                         <Tr key={response.id} bg={index % 2 === 0 ? "gray.100" : "gray.200"}>
-                          <Td textAlign="center">{response.id}</Td>
                           <Td textAlign="center">{index + 1}</Td>
                           <Td textAlign="left">{response.question.question_text}</Td>
                           <Td textAlign="center">{response.answer}</Td>
+                          <Td textAlign="left">{formatDate(response.createdAt)}</Td>
                         </Tr>
                       ))}
                     </Tbody>
