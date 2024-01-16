@@ -10,6 +10,7 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 const Body = () => {
   return (
     <Flex /* height="2000px" */ p={10} align="center" justify="space-between" flexDirection="column" gap={10}>
+
         <Flex flexDirection="column" width="80%" gap={10} p={10} mt={4} > 
           <Flex flexDirection="column" gap={5} align="center" justify="space-around">
             <Text fontWeight="bold" fontSize="4xl" color="black">Le Calculateur d'Empreinte Carbone d'EFREI Paris</Text>
@@ -39,7 +40,7 @@ const Body = () => {
           </Box>
         </Flex> */}
 
-        <Flex width="90%" height="650px" >
+        <Flex width="90%" height="480px" >
           <iframe
               src="https://www.google.com/maps/d/embed?mid=14Srngj75VBAmMrIY6QAcIOuo2laUwLJc&ehbc=2E312F"
               width="100%"
