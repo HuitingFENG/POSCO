@@ -88,7 +88,27 @@ const UserProfil = () => {
             <Text fontWeight="bold" fontSize="4xl" color="black" mb={5}>Profil de l'Utilisateur</Text>
             <Text fontWeight="bold" fontSize="2xl" color="black">Votre nom : {user.name}</Text>
             <Text fontWeight="bold" fontSize="2xl" color="black">Votre email : {user.email}</Text>
-            <LogoutButton /> 
+            
+            <Flex flexDirection="row" align="center" justify="space-between" gap={10} pt={10}>
+              <LogoutButton /> 
+                {(userId != 1) ? (
+                <>
+                  <Button bgColor="#003153" color="white" width="500px" height="60px" fontSize="xl" p={6} gap={3}>
+                    <div style={{ border: '1px solid white', borderRadius: '10%', display: 'inline-block', padding: '5px', backgroundColor:"white"}}>
+                      <FaBookReader size={24} color="green" />
+                    </div>
+                    <Link to="/actions">
+                      Lire actions suggérées pour moi
+                    </Link>
+                  </Button>
+                </>
+              ) : (
+                <Text></Text>
+              )}  
+            </Flex>
+            
+            
+           
           </Flex>
 
           {(userId != 1) ? (

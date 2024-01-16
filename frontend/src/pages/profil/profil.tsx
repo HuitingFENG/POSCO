@@ -6,6 +6,8 @@ import Signup from '../../components/signup';
 import Login from '../../components/login';
 import { Box,Flex,Link,Text,Image,Button,Stack,Center,Icon,Input } from "@chakra-ui/react";
 
+
+
 const Profil: React.FC = () => {
     return (
       <>

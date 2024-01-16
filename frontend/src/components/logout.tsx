@@ -16,7 +16,7 @@ const LogoutButton = () => {
     };
 
     return (
-        <Button onClick={handleLogout} colorScheme="red" gap= {3}><FaSignOutAlt />Déconnexion</Button>
+        <Button width="250px" height="60px" p={6} fontSize="xl" onClick={handleLogout} colorScheme="red" gap= {3}><FaSignOutAlt />Déconnexion</Button>
     );
 };
 

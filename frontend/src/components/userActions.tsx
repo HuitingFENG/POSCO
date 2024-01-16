@@ -27,7 +27,17 @@ const UserActions= () => {
   const { user } = userContext;
 
   if (!user) {
-    return <div>Aucun utilisateur connecté.</div>;
+    // return <div>Aucun utilisateur connecté.</div>;
+    return (
+      <Flex p={10} alignItems="center" justifyContent="center" flexDirection="column"  gap={10}>
+        <Text fontWeight="bold" fontSize="6xl" color="black">Agissons Ensemble</Text>
+        <Flex flexDirection="column" gap={5} alignItems="center" justifyContent="center">
+          <Text fontWeight="bold" fontSize="2xl" >Action 1: ...</Text>
+          <Text fontWeight="bold" fontSize="2xl">Action 2: ...</Text>
+          <Text fontWeight="bold" fontSize="2xl">Action 3: ...</Text>
+        </Flex>
+      </Flex>
+    );
   }
 
 
@@ -38,12 +48,12 @@ const UserActions= () => {
         <>
           <Flex flexDirection="column" width="80%" gap={10} p={10} mt={4} > 
             <Flex flexDirection="column" gap={5} align="center" justify="space-around">
-              <Text fontWeight="bold" fontSize="4xl" color="black">Agissons Ensemble</Text>
+              <Text fontWeight="bold" fontSize="4xl" color="black">Actions Suggérées pour Vous</Text>
             </Flex>
-            <Flex>
-              <Text>Action 1: ...</Text>
-              <Text>Action 2: ...</Text>
-              <Text>Action 3: ...</Text>
+            <Flex flexDirection="column" gap={5} alignItems="center" justifyContent="center">
+              <Text fontWeight="bold" fontSize="2xl" >Action 1: ...</Text>
+              <Text fontWeight="bold" fontSize="2xl">Action 2: ...</Text>
+              <Text fontWeight="bold" fontSize="2xl">Action 3: ...</Text>
             </Flex>
           </Flex>
         </>
@@ -54,9 +64,7 @@ const UserActions= () => {
           </Flex>
         </Flex>
       )}
-       
-
-
+      
 
     </Flex>
   );

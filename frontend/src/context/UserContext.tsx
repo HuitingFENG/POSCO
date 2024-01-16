@@ -1,5 +1,5 @@
 // src/context/UserContext.js
-import React, { createContext, useState, useContext, ReactNode  } from 'react';
+import React, { createContext, useState, useContext, useEffect, ReactNode  } from 'react';
 
 interface UserProviderProps {
     children: ReactNode;
@@ -17,7 +17,6 @@ interface UserContextType {
     logout: () => void;
   }
 
-// const UserContext = createContext(null);
 
 const UserContext = createContext<UserContextType | null>(null);
 export const useUser = () => useContext(UserContext);
@@ -27,16 +26,21 @@ export const useUser = () => useContext(UserContext);
 
 export const UserProvider = ({ children }: UserProviderProps) => {
 //   const [user, setUser] = useState(null); // null when not logged in
-  const [user, setUser] = useState<UserData | null>(null);
-
+  // const [user, setUser] = useState<UserData | null>(null);
+  const [user, setUser] = useState<UserData | null>(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
   const login = (userData: UserData) => {
     console.log("Logging in user:", userData);
+    localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData); // Set user data upon login
   };
 
   const logout = () => {
     console.log("Logging out user");
+    localStorage.removeItem('user'); 
     setUser(null); // Clear user data upon logout
   };
 
