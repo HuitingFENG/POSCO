@@ -70,7 +70,7 @@ const Signup = () => {
     };
 
     return (
-        <VStack spacing={4} as="form" onSubmit={handleSubmit}>
+/*         <VStack spacing={4} as="form" onSubmit={handleSubmit} width="50%" bgColor="#dddddd" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10}>
             <Input 
                 placeholder="Nom"
                 value={name}
@@ -89,7 +89,69 @@ const Signup = () => {
             />
             <Button colorScheme="blue" type="submit" leftIcon={<FaUserPlus />}>S'inscrire</Button>
             <Link to="/login"><Button color="#003153" type="submit" leftIcon={<FaUserPlus />}>Se Connecter</Button></Link>
+        </VStack> */
+
+        <VStack
+            spacing={4}
+            as="form"
+            onSubmit={handleSubmit}
+            width="50%"
+            bgColor="#f8f8f8" // Changed to a lighter and softer background color
+            border="2px" // Thinner border for a more elegant look
+            borderColor="#0C2340"
+            borderRadius="lg" // Added border radius for rounded corners
+            boxShadow="sm" // Subtle shadow for depth
+            p={6} // Adjusted padding for better spacing
+        >
+            <Input 
+                placeholder="Nom"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                borderColor="#cccccc" // Softened border color
+                _hover={{ borderColor: "#0C2340" }} // Change border color on hover
+                _focus={{ borderColor: "#0C2340", boxShadow: "outline" }} // Focus effect
+            />
+            <Input 
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                borderColor="#cccccc"
+                _hover={{ borderColor: "#0C2340" }}
+                _focus={{ borderColor: "#0C2340", boxShadow: "outline" }}
+            />
+            <Input 
+                placeholder="Mot de Passe"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                borderColor="#cccccc"
+                _hover={{ borderColor: "#0C2340" }}
+                _focus={{ borderColor: "#0C2340", boxShadow: "outline" }}
+            />
+            <Button
+                colorScheme="blue"
+                type="submit"
+                leftIcon={<FaUserPlus />}
+                bgColor="#0C2340" // Changed button color
+                color="white" // Text color for contrast
+                _hover={{ bgColor: "#003153" }} // Hover effect
+            >
+                S'inscrire
+            </Button>
+            <Link to="/login">
+                <Button
+                    bgColor="#f2f2f2" // Lighter color for the secondary button
+                    color="#0C2340" 
+                    _hover={{ bgColor: "#e2e2e2" }} // Hover effect
+                    leftIcon={<FaUserPlus />}
+                >
+                    Se Connecter
+                </Button>
+            </Link>
         </VStack>
+
+
+
     );
 };
 

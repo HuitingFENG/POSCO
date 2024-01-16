@@ -77,7 +77,7 @@ const Login = () => {
         sendUser();
     };
 
-    return (
+/*     return (
         <VStack spacing={4} as="form" onSubmit={handleSubmit}>
             <Input 
                 placeholder="Email"
@@ -91,18 +91,69 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-           {/*  <Button onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? "Hide" : "Show"}
-            </Button> */}
-       
-            
             <Button colorScheme="blue" type="submit" leftIcon={<FaSignInAlt />}>
                 Se Connecter
             </Button>
             <Link to="/signup"><Button color="#003153" type="submit" leftIcon={<FaUserPlus />}>S'inscrire</Button></Link>
+        </VStack>
+    ); */
+
+
+    return (
+        <VStack
+            spacing={4}
+            as="form"
+            onSubmit={handleSubmit}
+            width="50%"
+            bgColor="#f8f8f8" // Light and soft background color
+            border="2px" // Elegant thin border
+            borderColor="#0C2340"
+            borderRadius="lg" // Rounded corners for a polished look
+            boxShadow="sm" // Subtle shadow for depth
+            p={6} // Adjusted padding for spacing
+        >
+            <Input
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                borderColor="#cccccc" // Softened border color
+                _hover={{ borderColor: "#0C2340" }} // Change border color on hover
+                _focus={{ borderColor: "#0C2340", boxShadow: "outline" }} // Focus effect
+            />
+            <Input
+                placeholder="Mot de Passe"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                borderColor="#cccccc"
+                _hover={{ borderColor: "#0C2340" }}
+                _focus={{ borderColor: "#0C2340", boxShadow: "outline" }}
+            />
+
+            <Button
+                colorScheme="blue"
+                type="submit"
+                leftIcon={<FaSignInAlt />}
+                bgColor="#0C2340" // Changed button color
+                color="white" // Text color for contrast
+                _hover={{ bgColor: "#003153" }} // Hover effect
+            >
+                Se Connecter
+            </Button>
+            <Link to="/signup">
+                <Button
+                    bgColor="#f2f2f2" // Lighter color for the secondary button
+                    color="#0C2340"
+                    _hover={{ bgColor: "#e2e2e2" }} // Hover effect
+                    leftIcon={<FaUserPlus />}
+                >
+                    S'inscrire
+                </Button>
+            </Link>
         </VStack>
     );
 
 };
 
 export default Login;
+

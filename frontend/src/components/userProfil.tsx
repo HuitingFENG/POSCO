@@ -59,20 +59,16 @@ const UserProfil = () => {
   }
 
   return (
-    <Flex p={10} align="center" justify="space-between" flexDirection="column" gap={20} m={10}>
-          <Flex mb={10}>
+    <Flex p={10} align="center" justify="space-between" flexDirection="column" m={10}>
+          <Flex flex="2" m={10} width="80%" bgColor="#dddddd" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
             <Text fontWeight="bold" fontSize="4xl" color="black">Profil de l'Utilisateur</Text>
-          </Flex>
-          <Flex flexDirection="column" gap={5} align="center" justify="space-around" mb={10}>
             <Text fontWeight="bold" fontSize="2xl" color="black">Votre nom : {user.name}</Text>
             <Text fontWeight="bold" fontSize="2xl" color="black">Votre email : {user.email}</Text>
+            <LogoutButton /> 
           </Flex>
-          <Flex flexDirection="column" gap={5} align="center" justify="space-around">
+          <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
             <Text fontWeight="bold" fontSize="3xl" color="black">Votre résultats historiques</Text>
             <Text fontWeight="bold" fontSize="2xl" color="black">Votre résultats historiques : score, datetime, questionnaires concernés </Text>
-          </Flex>
-          <Flex p={10} align="center" justify="space-between" flexDirection="column" gap={20} m={10}>
-            <LogoutButton /> 
           </Flex>
     </Flex>
   );
