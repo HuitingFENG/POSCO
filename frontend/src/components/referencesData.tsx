@@ -27,7 +27,7 @@ const ReferencesData = () => {
   }, []); 
   
   return (
-    <Flex height="2800px" p={10} align="center" justify="space-between" flexDirection="column" gap={10}>
+    <Flex height="2500px" p={10} align="center" justify="space-between" flexDirection="column" gap={10}>
         <Flex flexDirection="column" gap={10} p={10} mt={4} > 
           <Flex flexDirection="column" gap={5} align="center" justify="space-around" mb={5}>
             <Text fontWeight="bold" fontSize="4xl" color="black">Références du Calculateur</Text>
