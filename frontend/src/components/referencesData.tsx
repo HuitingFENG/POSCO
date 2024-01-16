@@ -35,12 +35,12 @@ const ReferencesData = () => {
 
           <Flex>
             <Box overflowX="auto">
-              <Table variant="simple" /* fontWeight="bold"  */align="center">
-                <Thead>
+              <Table variant="simple" >
+                <Thead bg="blue.500" >
                   <Tr>
-                    <Th>Destination</Th>
-                    <Th>Moyen de Transport</Th>
-                    <Th isNumeric>Empreinte Carbone (en kgCO2e/personne) - Un Aller</Th>
+                    <Th color="white" textAlign="center">Destination</Th>
+                    <Th color="white" textAlign="center">Moyen de Transport</Th>
+                    <Th isNumeric color="white" textAlign="center" >Empreinte Carbone (en kgCO2e/personne) - Un Aller</Th>
                   </Tr>
                 </Thead> 
                 <Tbody>
@@ -62,10 +62,10 @@ const ReferencesData = () => {
                         bg={index % 2 === 0 ? "gray.100" : "gray.200"} // Alternating row colors
                       >
                         {modeIndex === 0 && (
-                          <Td align="center" rowSpan={transportModes.length}>{emission.location}</Td>
+                          <Td textAlign="center" rowSpan={transportModes.length}>{emission.location}</Td>
                         )}
-                        <Td align="center">{mode}</Td>
-                        <Td isNumeric align="center" >{emission[mode as keyof EmissionData]}</Td>
+                        <Td textAlign="center" >{mode}</Td>
+                        <Td isNumeric textAlign="center" >{emission[mode as keyof EmissionData]}</Td>
                       </Tr>
                     ));
                   })}
