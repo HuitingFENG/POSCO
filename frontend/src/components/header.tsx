@@ -18,8 +18,8 @@ const Header = () => {
             <Link as={RouterLink} to="/questionnaire"><Text fontWeight="bold" fontSize="xl" color="white"><Icon as={FaBook} boxSize={6} mr={2} color="white" />Questionnaire</Text></Link>
             <Link as={RouterLink} to="/references"><Text fontWeight="bold" fontSize="xl" color="white"><Icon as={FaChartBar} boxSize={6} mr={2} />Références</Text></Link>
             <Link as={RouterLink} to="/actions"><Text fontWeight="bold" fontSize="xl" color="white"><Icon as={FaRegLightbulb} boxSize={6} mr={2} />Actions</Text></Link>
-            <Link as={RouterLink} to="/signup"><Text fontWeight="bold" fontSize="xl" color="white"><Icon as={FaUserPlus} boxSize={6} mr={2} />S'inscrire</Text></Link>
-            <Link as={RouterLink} to="/login"><Text fontWeight="bold" fontSize="xl" color="white"><Icon as={FaSignInAlt} boxSize={6} mr={2} />Se Connecter</Text></Link>
+            {/* <Link as={RouterLink} to="/signup"><Text fontWeight="bold" fontSize="xl" color="white"><Icon as={FaUserPlus} boxSize={6} mr={2} />S'inscrire</Text></Link> */}
+            {/* <Link as={RouterLink} to="/login"><Text fontWeight="bold" fontSize="xl" color="white"><Icon as={FaSignInAlt} boxSize={6} mr={2} />Se Connecter</Text></Link> */}
             <Link as={RouterLink} to="/profil"><Text fontWeight="bold" fontSize="xl" color="white"><Icon as={FaUser} boxSize={6} mr={2} />Profil</Text></Link>
         </Flex>
     </Flex>

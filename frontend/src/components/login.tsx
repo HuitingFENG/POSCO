@@ -1,14 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Input, VStack, useToast } from '@chakra-ui/react';
-import { FaSignInAlt } from "react-icons/fa";
-
+import {Link, BrowserRouter as Router, Routes, Route, } from "react-router-dom";
+import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
+import {useUser} from "../context/UserContext";
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const toast = useToast();
     const navigate = useNavigate();
+    
+
+    const userContext = useUser();
+
+    if (!userContext) {
+        // Handle the scenario where context is not available
+        // This can be a redirect, an error message, or a loading indicator
+        return <div>Context not available</div>;
+    }
+
+    const { login } = userContext;
+
 
     const sendUser = () => {
         console.log("TEST email: ", email);
@@ -37,9 +51,11 @@ const Login = () => {
                 isClosable: true,
             });
             // localStorage.setItem('user', JSON.stringify(data));
-            setTimeout(() => {
+            /* setTimeout(() => {
                 navigate('/profil', { state: { user: data } }); 
-            }, 1000);
+            }, 1000); */
+            login(data);
+            navigate('/profil', { state: { user: data } });
             /* setEmail('');
             setPassword(''); */
         })
@@ -68,15 +84,22 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
             />
+    
             <Input 
                 placeholder="Mot de Passe"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
+           {/*  <Button onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? "Hide" : "Show"}
+            </Button> */}
+       
+            
             <Button colorScheme="blue" type="submit" leftIcon={<FaSignInAlt />}>
                 Se Connecter
             </Button>
+            <Link to="/signup"><Button color="#003153" type="submit" leftIcon={<FaUserPlus />}>S'inscrire</Button></Link>
         </VStack>
     );
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Button, Input, VStack, useToast } from '@chakra-ui/react';
 import { FaUserPlus } from "react-icons/fa";
 
@@ -88,6 +88,7 @@ const Signup = () => {
                 onChange={(e) => setPassword(e.target.value)}
             />
             <Button colorScheme="blue" type="submit" leftIcon={<FaUserPlus />}>S'inscrire</Button>
+            <Link to="/login"><Button color="#003153" type="submit" leftIcon={<FaUserPlus />}>Se Connecter</Button></Link>
         </VStack>
     );
 };
