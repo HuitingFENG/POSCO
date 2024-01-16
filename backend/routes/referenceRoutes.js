@@ -6,8 +6,17 @@ const Reference = require('../models/reference');
 
 router.get('/', async (req, res) => {
     try {
-        const references = await Reference.findAll();
+        // const references = await Reference.findAll();
+        const queryCode = req.query.code;
+        let queryOptions = {};
+        if (queryCode) {
+            queryOptions = {
+                where: { code: queryCode }
+            };
+        }
+        const references = await Reference.findAll(queryOptions);
         res.json(references);
+        
     } catch (error) {
         console.error('Error fetching references:', error);
         res.status(500).send('Error fetching references');

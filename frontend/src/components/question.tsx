@@ -25,11 +25,13 @@ const Question = () => {
     const userContext = useUser();
     // Get userId from userContext, or use 999 as a default
     const userId = userContext?.user?.userId || 999;
+    const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
 
     const [questions, setQuestions] = useState<Question[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [responses, setResponses] = useState<string[]>([]);
+    const [responsesCalculation, setResponsesCalculation] = useState<string[]>([]);
     const [submissionComplete, setSubmissionComplete] = useState(false);
     const [closeQuestionnaire, setCloseQuestionnaire] = useState(false);
     // const [retakeTest, setRetakeTest] = useState(false);
@@ -55,24 +57,31 @@ const Question = () => {
             });
     }, []);
 
-    const renderInputField = (question: Question) => {
-/*         const responseToQ8 = responses[8]; 
-        // const hasOnlyAvionOption = [];
+    const handleOptionClick = (questionId: number, option: string) => {
+        handleResponseChange({ target: { value: option } } as React.ChangeEvent<HTMLInputElement>);
+        setSelectedOptions(prev => ({ ...prev, [questionId]: option }));
+    };
 
-        if ((question.id === 9 || question.id === 10) && responseToQ8 !== 'Oui') {
-            return null;
-        } */
+
+
+    const renderInputField = (question: Question) => {
+        const selectedOption = selectedOptions[question.id];
 
         switch (question.type) {
           case 'text':
-            // return <Input width="500px" type="text" value={responses[currentQuestionIndex] || ''} onChange={handleResponseChange} />;
             return (
                 <Flex >
                     {question.options?.map((option, idx) => (
                         <Button 
                             key={idx}
-                            onClick={() => handleResponseChange({ target: { value: option } } as React.ChangeEvent<HTMLInputElement>)}
-                            style={{ margin: '5px' }}
+                            // onClick={() => handleResponseChange({ target: { value: option } } as React.ChangeEvent<HTMLInputElement>)}
+                            // style={{ margin: '5px' }}
+                            onClick={() => handleOptionClick(question.id, option)}
+                            style={{ 
+                                margin: '5px',
+                                backgroundColor: selectedOption === option ? '#4682B4' : 'white', // Change color if selected
+                                color: selectedOption === option ? 'white' : 'black'
+                            }}
                         >
                             {option}
                         </Button>
@@ -87,7 +96,13 @@ const Question = () => {
                 {question.options?.map((option, idx) => (
                     <Button
                         key={idx}
-                        onClick={() => handleResponseChange({ target: { value: option } } as React.ChangeEvent<HTMLInputElement>)} 
+                        // onClick={() => handleResponseChange({ target: { value: option } } as React.ChangeEvent<HTMLInputElement>)} 
+                        onClick={() => handleOptionClick(question.id, option)}
+                        style={{ 
+                            margin: '5px',
+                            backgroundColor: selectedOption === option ? '#4682B4' : 'white', // Change color if selected
+                            color: selectedOption === option ? 'white' : 'black'
+                        }}
                     >
                         {option}
                     </Button>
@@ -162,6 +177,7 @@ const Question = () => {
         })
         .then(response => response.json())
         .then(emissionData => {
+            setResponsesCalculation(emissionData);
             const latestEmission = emissionData.reduce((latest: Emission, current: Emission) => {
                 return (new Date(latest.createdAt) > new Date(current.createdAt)) ? latest : current;
             });
@@ -215,6 +231,9 @@ const Question = () => {
 
     const isQuestionAvailable = questions.length > 0 && questions[currentQuestionIndex];
 
+    const checkResponsesCalculation = () => {
+        console.log("TEST responsesCalculation: ", responsesCalculation);
+    }
     
 
     const handleNextClick = () => {
@@ -294,7 +313,14 @@ const Question = () => {
             )}
 
 
-
+            {submissionComplete && (
+                <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
+                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Processus du calcul</Text>
+                    <Button onClick={checkResponsesCalculation} >Check the calculation</Button>
+                </Flex>
+            )}
+            
+            
             {submissionComplete && (
                 <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Au total : {totalEmission} kg</Text>
@@ -308,6 +334,8 @@ const Question = () => {
                     {/* <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button> */}
                 </Flex>
             )}
+
+            
         </Flex>
     );
 };
