@@ -45,6 +45,7 @@ router.post('/', async (req, res) => {
     }
     const responseIds = responseInstances.map(instance => instance.id);
     const [total, totalConsummationEmissions, totalCountryEmissions] = calculationForAll(responses, countryEmissions, consummationEmissions);
+    console.log("TEST total, totalConsummationEmissions, totalCountryEmissions: ", total, totalConsummationEmissions, totalCountryEmissions)
     const savedTotal = await Emission.create({
         userId: responses[0].userId, 
         responsesList: responseIds, 
@@ -52,7 +53,7 @@ router.post('/', async (req, res) => {
         totalConsummationEmissions: totalConsummationEmissions,
         totalCountryEmissions: totalCountryEmissions,
     });
-    // console.log("TEST savedTotal: ", savedTotal)
+    console.log("TEST savedTotal: ", savedTotal)
     res.status(201).json({ message: "Responses saved successfully" });
   } catch (error) {
     console.error('Error saving response:', error);

@@ -154,7 +154,6 @@ const Question = () => {
           console.log("Sending formatted responses:", formattedResponses);
           console.log("TEST:", formattedResponses[4].answer);
           console.log('Success:', data);
-          const userId = 1;
           return fetch(`http://localhost:3001/api/emissions/user/${userId}`);
           /* setResponses([]);
           setSubmissionComplete(true); 
@@ -165,6 +164,7 @@ const Question = () => {
             const latestEmission = emissionData.reduce((latest: Emission, current: Emission) => {
                 return (new Date(latest.createdAt) > new Date(current.createdAt)) ? latest : current;
             });
+            console.log("TEST latestEmission: ", latestEmission);
             setResponses([]);
             setTotalEmission(latestEmission.totalEmissions);
             setTotalConsummationEmissions(latestEmission.totalConsummationEmissions);
