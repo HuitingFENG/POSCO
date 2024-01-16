@@ -120,11 +120,11 @@ const UserProfil = () => {
                   <Table variant="simple">
                     <Thead bg="blue.500" >
                       <Tr >
-                        <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >N°</Th>
-                        <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Total Emissions (kg)</Th>
-                        <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Total Consummation Emissions (kg)</Th>
-                        <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Total Country Emissions (kg)</Th>
-                        <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Date Envoyée</Th>
+                        <Th color="white" textAlign="left" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >N°</Th>
+                        <Th color="white" textAlign="left" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Total Emissions (kg)</Th>
+                        <Th color="white" textAlign="left" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Total Consummation Emissions (kg)</Th>
+                        <Th color="white" textAlign="left" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Total Country Emissions (kg)</Th>
+                        <Th color="white" textAlign="left" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Date Envoyée</Th>
                       </Tr>
                     </Thead>
                     <Tbody>

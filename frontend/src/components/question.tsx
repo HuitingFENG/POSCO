@@ -1,9 +1,9 @@
 import { Box,Flex,Text,Image,Button,Stack,Center,Icon,Input } from "@chakra-ui/react";
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, ReactNode } from 'react';
 import { FaArrowLeft, FaArrowRight, FaPaperPlane, FaShareAlt } from 'react-icons/fa';
 import { useUser } from '../context/UserContext';
-import {Link as RouterLink, BrowserRouter as Router, Routes, Route, Link, } from "react-router-dom";
-
+import {Link as RouterLink, BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { AiFillEye } from "react-icons/ai";
 
 interface Question {
     id: number;
@@ -13,6 +13,9 @@ interface Question {
 }
 
 interface Emission {
+    totalCountryEmissions: ReactNode;
+    calculation: ReactNode;
+    totalConsummationEmissions: ReactNode;
     id: number;
     userId: number;
     responsesList: number[];
@@ -31,7 +34,7 @@ const Question = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [responses, setResponses] = useState<string[]>([]);
-    const [responsesCalculation, setResponsesCalculation] = useState<string[]>([]);
+    const [responsesCalculation, setResponsesCalculation] = useState<Emission[]>([]);
     const [submissionComplete, setSubmissionComplete] = useState(false);
     const [closeQuestionnaire, setCloseQuestionnaire] = useState(false);
     // const [retakeTest, setRetakeTest] = useState(false);
@@ -42,6 +45,9 @@ const Question = () => {
     const maxValue = 100
     const minValue = 0
     const stepValue = 1
+    const [displayResponsesCalculation, setDisplayResponsesCalculation] = useState(false);
+
+
 
     useEffect(() => {
         fetch('http://localhost:3001/api/questions')
@@ -177,11 +183,11 @@ const Question = () => {
         })
         .then(response => response.json())
         .then(emissionData => {
-            setResponsesCalculation(emissionData);
             const latestEmission = emissionData.reduce((latest: Emission, current: Emission) => {
                 return (new Date(latest.createdAt) > new Date(current.createdAt)) ? latest : current;
             });
             console.log("TEST latestEmission: ", latestEmission);
+            setResponsesCalculation(latestEmission);
             setResponses([]);
             setTotalEmission(latestEmission.totalEmissions);
             setTotalConsummationEmissions(latestEmission.totalConsummationEmissions);
@@ -233,8 +239,21 @@ const Question = () => {
 
     const checkResponsesCalculation = () => {
         console.log("TEST responsesCalculation: ", responsesCalculation);
+        setDisplayResponsesCalculation(true);
     }
     
+
+    const displayCalculationResults = () => {
+        return responsesCalculation.map((calculation, index) => (
+            <Box key={index} p={4} border="1px solid gray" my={2}>
+                <Text>ID: {calculation.id}</Text>
+                <Text>Created At: {calculation.createdAt}</Text>
+                <Text>Total Emissions: {calculation.totalEmissions}</Text>
+                <Text>Total Consummation Emissions: {calculation.totalConsummationEmissions}</Text>
+                <Text>Total Country Emissions: {calculation.totalCountryEmissions}</Text>
+            </Box>
+        ));
+    };
 
     const handleNextClick = () => {
         const responseToQ8 = responses[7]; 
@@ -284,7 +303,7 @@ const Question = () => {
                         </>
                     ) : (
                         // <Text>Etes-vous sûr de nous envoyer vos réponses ?</Text>   
-                        <Text></Text> 
+                        <div></div>
                     )}
                     <Flex gap={200} justify="space-between">
                         {(currentQuestionIndex < questions.length - 1 && !closeQuestionnaire)? (
@@ -312,13 +331,6 @@ const Question = () => {
                 </Flex>
             )}
 
-
-            {submissionComplete && (
-                <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
-                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Processus du calcul</Text>
-                    <Button onClick={checkResponsesCalculation} >Check the calculation</Button>
-                </Flex>
-            )}
             
             
             {submissionComplete && (
@@ -334,8 +346,15 @@ const Question = () => {
                     {/* <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button> */}
                 </Flex>
             )}
-
             
+
+            {submissionComplete && (
+                <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
+                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Processus du calcul</Text>
+                    <Button bgColor="#0C2340" color="white" width="300px" height="60px" fontSize="xl" p={6} gap={3} onClick={checkResponsesCalculation} ><AiFillEye size="60px" />Check the calculation</Button>
+                </Flex>
+            )}
+
         </Flex>
     );
 };
