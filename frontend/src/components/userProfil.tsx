@@ -172,11 +172,11 @@ const UserProfil = () => {
           ) : (
 
             <Flex flex="3" gap={10}>
-              <Button bgColor="#003153" color="white" width="420px" height="60px" fontSize="xl" p={6} gap={3} onClick={() => modifyQuestion()}>
+              <Button bgColor="#003153" color="white" width="500px" height="60px" fontSize="xl" p={6} gap={3} onClick={() => modifyQuestion()}>
                 <div style={{ border: '1px solid white', borderRadius: '10%', display: 'inline-block', padding: '5px', backgroundColor:"white"}}>
                 <FaEdit size={24} color="blue" />
                 </div>
-                Modifier le questionnaire
+                Modifier le nombre MaxEmissionCarbon 
               </Button>
               
                 <Button bgColor="#003153" color="white" width="500px" height="60px" fontSize="xl" p={6} gap={3}>

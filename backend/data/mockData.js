@@ -92,7 +92,11 @@ const questionsList = [
     { id: 10, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsWithoutTDVApied },
 ];
 
-
+const maxMobiliteCarbonEmissionList = [
+    {id: 1, year: 2022, L1: 400, L2: 400, L3: 500, M1: 500, M2: 500},
+    {id: 2, year: 2023, L1: 400, L2: 400, L3: 500, M1: 500, M2: 500},
+    {id: 3, year: 2024, L1: 500, L2: 500, L3: 600, M1: 600, M2: 600},
+]
 
 module.exports = {
     questionsList,
@@ -100,6 +104,7 @@ module.exports = {
     consummationEmissions,
     responsesList,
     usersList,
-    emissionsList
+    emissionsList,
+    maxMobiliteCarbonEmissionList,
 };
 

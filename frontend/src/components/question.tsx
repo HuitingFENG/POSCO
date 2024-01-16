@@ -1,7 +1,8 @@
-import { Box,Flex,Link,Text,Image,Button,Stack,Center,Icon,Input } from "@chakra-ui/react";
+import { Box,Flex,Text,Image,Button,Stack,Center,Icon,Input } from "@chakra-ui/react";
 import React, { useState, useEffect, useContext } from 'react';
 import { FaArrowLeft, FaArrowRight, FaPaperPlane, FaShareAlt } from 'react-icons/fa';
 import { useUser } from '../context/UserContext';
+import {Link as RouterLink, BrowserRouter as Router, Routes, Route, Link, } from "react-router-dom";
 
 
 interface Question {
@@ -300,7 +301,10 @@ const Question = () => {
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone liée à la mobilité envisagée : {totalCountryEmissions} kg</Text>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone personnelle par an : {totalConsummationEmissions}kg</Text>
                     <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous partager vos réponses !
-                        <Button ml={10} bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" gap={3} onClick={sendMobiliteRequest}>Partager<FaShareAlt size="24px" color="white" /></Button>
+
+                        <Button ml={10} bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" gap={3} /* onClick={sendMobiliteRequest} */><Link to="/profil">Partager</Link><FaShareAlt size="24px" color="white" /></Button>
+                    
+                    
                     </Text>
                     {/* <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button> */}
                 </Flex>
