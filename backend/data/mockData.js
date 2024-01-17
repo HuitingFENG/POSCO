@@ -77,6 +77,7 @@ const transportOptionsWithoutTDVApied = consummationEmissions
     .filter(item => item.category === 1 && item.name !== "TGV" && item.name !== "A pied")
     .map(item => item.name);
 
+
 // category: 1 => Questions sur empreinte carbone personnelle  
 // category: 2 => Questions sur la mobilité
 const questionsList = [
@@ -92,11 +93,35 @@ const questionsList = [
     { id: 10, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsWithoutTDVApied },
 ];
 
+
+conseilsCategory1 = ["Privilégiez les transports en commun, le covoiturage, le vélo ou la marche", "Optez pour des véhicules économes en carburant ou électriques si possible", "Planifiez vos déplacements pour éviter les trajets inutiles"];
+conseilsCategory2 = ["Utilisez des ampoules LED et éteignez les lumières lorsque vous quittez une pièce", "Éteignez les appareils électroniques et débranchez les chargeurs lorsqu'\ils ne sont pas utilisés", "Investissez dans des appareils écoénergétiques et bien notés en matière d'efficacité énergétique"];
+conseilsCategory3 = ["Privilégiez les produits locaux et de saison pour réduire l\'empreinte carbone liée au transport", "Réduisez la consommation de viande et optez pour des alternatives végétariennes ou végétaliennes", "Évitez le gaspillage alimentaire en planifiant vos repas, en stockant les aliments correctement et en recyclant les déchets organiques"];
+conseilsCategory4 = ["Recyclez autant que possible, y compris le papier, le plastique, le verre et le métal", "Réduisez l\'utilisation de produits à usage unique et préférez des articles réutilisables", "Compostez les déchets organiques pour réduire les émissions de méthane dans les décharges"];
+conseilsCategory5 = ["Réparez les fuites d\'eau et utilisez des appareils et des systèmes économes en eau", "Collectez l\'eau de pluie pour un usage extérieur", "Adoptez des pratiques d\'arrosage économes, comme arroser tôt le matin ou tard le soir"];
+conseilsCategory6 = ["Sensibilisez votre entourage aux enjeux climatiques et partagez des conseils sur la réduction de l\'empreinte carbone", "Participez à des initiatives locales de lutte contre le changement climatique"];
+conseilsCategory7 = ["Soutenez des entreprises et des initiatives respectueuses de l\'environnement", "Explorez des options d'investissement socialement responsables"];
+conseilsCategory8 = ["Restez informé sur les questions environnementales et les solutions durables", "Adoptez un mode de vie axé sur la durabilité et encouragez d\'autres personnes à faire de même"];
+
+
+const conseilsList = [
+    {id: 1, type : "Transport durable", options: conseilsCategory1},
+    {id: 2, type : "Économie d\'énergie", options: conseilsCategory2},
+    {id: 3, type : "Consommation responsable", options: conseilsCategory3},
+    {id: 4, type : "Gestion des déchets", options: conseilsCategory4},
+    {id: 5, type : "Économie d\'eau", options: conseilsCategory5},
+    {id: 6, type : "Engagement communautaire", options: conseilsCategory6},
+    {id: 7, type : "Investissements responsables", options: conseilsCategory7},
+    {id: 8, type : "Éducation continue", options: conseilsCategory8},
+];
+
+
 const maxMobiliteCarbonEmissionList = [
     {id: 1, year: 2022, L1: 400, L2: 400, L3: 500, M1: 500, M2: 500},
     {id: 2, year: 2023, L1: 400, L2: 400, L3: 500, M1: 500, M2: 500},
     {id: 3, year: 2024, L1: 500, L2: 500, L3: 600, M1: 600, M2: 600},
 ]
+
 
 module.exports = {
     questionsList,
@@ -106,5 +131,6 @@ module.exports = {
     usersList,
     emissionsList,
     maxMobiliteCarbonEmissionList,
+    conseilsList,
 };
 

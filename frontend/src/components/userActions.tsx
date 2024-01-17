@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Box,Flex,Link,Text,Image,Button,Stack,Center,Icon, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
+import { Box,Flex,Link,Text,Image,Button,Stack,Center, Icon, Table, Thead, Tbody, Tr, Th, Td, Heading, List,ListItem,ListIcon } from "@chakra-ui/react";
 import {Link as RouterLink, BrowserRouter as Router, Routes, Route, } from "react-router-dom";
 import { FaQuestionCircle, FaBook, FaCog, FaUser, FaDatabase } from "react-icons/fa";
 import { FaChartBar, FaChartPie, FaRegLightbulb, FaRegCommentDots, FaArrowRight } from 'react-icons/fa';
 import { MdOutlineTrendingUp, MdOutlineTrendingDown, MdOutlineEdit } from 'react-icons/md';
 import { AiOutlineLike } from 'react-icons/ai';
-import { MdKeyboardArrowRight } from 'react-icons/md';
+import { MdKeyboardArrowRight, MdCheckCircle } from 'react-icons/md';
 import { useUser } from '../context/UserContext';
+
 
 interface User {
   userId: number;
@@ -24,12 +25,56 @@ interface Emission {
   createdAt: string; 
 }
 
+interface Conseil {
+  id: number;
+  type: string;
+  options?: string[];
+}
+
+// Props type using the Conseil interface
+type Props = {
+  conseilsList: Conseil[];
+};
+
+
+const ConseilsDisplay: React.FC<Props> = ({ conseilsList }) => {
+  return (
+    <Box>
+      {conseilsList.map((conseil, conseilIndex) => (
+        <Box key={conseil.id} mb={10}>
+          <Heading size="md" mb={4}> {/* Increased margin bottom for the Heading */}
+            {`${conseilIndex + 1}. ${conseil.type}`}
+          </Heading>
+          {conseil.options && (
+            <List spacing={4}>
+              {conseil.options.map((option, optionIndex) => (
+                <ListItem 
+                  key={optionIndex} 
+                  display="flex" 
+                  alignItems="center"
+                  mt={optionIndex === 0 ? 4 : 0} /* Increased top margin for the first ListItem */
+                >
+                  <MdCheckCircle color="green" style={{ marginRight: '8px' }} />
+                  <Text>{`${conseilIndex + 1}.${optionIndex + 1} ${option}`}</Text>
+                </ListItem>
+              ))}
+            </List>
+          )}
+        </Box>
+      ))}
+    </Box>
+  );
+};
+
+
+
+
 const UserActions= () => {
   const userContext = useUser(); 
   const userId = userContext?.user?.userId;
   const [emissions, setEmissions] = useState<Emission[]>([]);
   const [users, setUsers] = useState<User[]>([]);
-
+  const [conseils, setConseils] = useState<Conseil[]>([]);
 
   useEffect(() => {
     fetch('http://localhost:3001/api/emissions/')
@@ -52,7 +97,14 @@ const UserActions= () => {
           console.log("TEST data : ", data);
           setUsers(data);
         })
-        .catch(error => console.error('Error fetching responses:', error));
+        .catch(error => console.error('Error fetching users:', error));
+      fetch(`http://localhost:3001/api/conseils/`)
+        .then(response => response.json())
+        .then(data => {
+          console.log("TEST data : ", data);
+          setConseils(data);
+        })
+        .catch(error => console.error('Error fetching conseils:', error));
   }, []);
 
 
@@ -75,9 +127,7 @@ const UserActions= () => {
       <Flex p={10} alignItems="center" justifyContent="center" flexDirection="column"  gap={10}>
         <Text fontWeight="bold" fontSize="6xl" color="black">Agissons Ensemble</Text>
         <Flex flexDirection="column" gap={5} alignItems="center" justifyContent="center">
-          <Text fontWeight="bold" fontSize="2xl" >Action 1: ...</Text>
-          <Text fontWeight="bold" fontSize="2xl">Action 2: ...</Text>
-          <Text fontWeight="bold" fontSize="2xl">Action 3: ...</Text>
+          <ConseilsDisplay conseilsList={conseils} />
         </Flex>
       </Flex>
     );
@@ -109,6 +159,7 @@ const UserActions= () => {
               <Text fontWeight="bold" fontSize="2xl">Action 2: ...</Text>
               <Text fontWeight="bold" fontSize="2xl">Action 3: ...</Text>
             </Flex>
+            
           </Flex>
         </>
       ) : (

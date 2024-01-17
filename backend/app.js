@@ -13,6 +13,7 @@ const responseRoutes = require('./routes/responseRoutes');
 const emissionRoutes = require('./routes/emissionRoutes');
 const referenceRoutes = require('./routes/referenceRoutes');
 const userRoutes = require('./routes/userRoutes');
+const conseilRoutes = require('./routes/conseilRoutes');
 
 
 app.use(cors());
@@ -39,7 +40,7 @@ app.use('/api/responses', responseRoutes);
 app.use('/api/emissions', emissionRoutes); 
 app.use('/api/references', referenceRoutes); 
 app.use('/api/users', userRoutes); 
-
+app.use('/api/conseils', conseilRoutes); 
 
 
 module.exports = app;
