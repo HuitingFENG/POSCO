@@ -168,7 +168,7 @@ const UserActions= () => {
             <Text fontWeight="bold" fontSize="4xl" color="black">List d'Emissions Carbons</Text>
           </Flex>
           <Flex>
-            <Box overflowX="auto" overflowY="auto" maxH="1800px" w="100%">
+            <Box overflowX="auto" overflowY="auto" maxH="1000px" w="100%">
               <Table variant="simple">
                 <Thead bg="blue.500">
                     <Tr>
