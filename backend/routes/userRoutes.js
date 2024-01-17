@@ -3,6 +3,9 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 
 router.get('/', async (req, res) => {
     try {
@@ -65,8 +68,12 @@ router.post('/signup', async (req, res) => {
         const nextUserId = lastUser ? lastUser.userId + 1 : 1;
         const newUser = await User.create({ userId: nextUserId, name, email, password }); */
 
-        const newUser = await User.create({ name, email, password });
-        res.status(201).json(newUser);
+        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+        console.log("TEST hashedPassword: ", hashedPassword);
+        // const newUser = await User.create({ name, email, password });
+        const newUser = await User.create({ name, email, password: hashedPassword });
+        // res.status(201).json(newUser);
+        res.status(201).json({ userId: newUser.userId, name: newUser.name, email: newUser.email });
     } catch (error) {
         console.error('Error creating user:', error);
         res.status(500).send('Internal Server Error');
@@ -77,7 +84,7 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     console.log("TEST email and password from backend: ", email, password);
 
-    try {
+    /* try {
         console.log('TEST Email:', email);
         const user = await User.findOne({ where: { email: email }});
         if (user && user.password === password) { 
@@ -88,6 +95,38 @@ router.post('/login', async (req, res) => {
         }
     } catch (error) {
         console.error('Error creating user:', error);
+        res.status(500).send('Internal Server Error');
+    } */
+
+    try {
+        const user = await User.findOne({ where: { email: email } });
+        
+        if (user) {
+            // Compare the provided password with the hashed password in the database
+            if (user.password.startsWith("$2b$")) {
+                const match = await bcrypt.compare(password, user.password);
+                if (match) {
+                    res.status(200).send({ userId: user.userId, name: user.name, email: user.email });
+                } else {
+                    // Passwords do not match
+                    res.status(401).send({ message: 'Invalid credentials' });
+                }
+            } else {
+                if (user && user.password === password) { 
+                //   res.status(200).send({ message: 'Login successful', user: {name: user.name, email: user.email} });
+                    res.status(200).send({ userId: user.userId, name: user.name, email: user.email, password: user.password } );
+                } else {
+                    res.status(401).send({ message: 'Invalid credentials' });
+                }
+            }
+        } else {
+            // User not found
+            res.status(401).send({ message: 'User not found' });
+        }
+
+
+    } catch (error) {
+        console.error('Error logging in:', error);
         res.status(500).send('Internal Server Error');
     }
 });
