@@ -8,7 +8,9 @@ import Profil from "./pages/profil/profil";
 import Sinscrire from "./pages/sinscrire/sinscrire";
 import Seconnecter from "./pages/seconnecter/seconnecter";
 import { UserProvider, useUser } from './context/UserContext';
+import { TempIdProvider } from './context/TempIdContext';
 import AuthenticatedRoutes from './authenticate'; // This is the new component
+
   /* 
 
 function App() {
@@ -49,9 +51,12 @@ function App() {
 function App() {
   return (
     <UserProvider>
-      <Router>
-        <AuthenticatedRoutes />
-      </Router>
+      <TempIdProvider>
+        <Router>
+          <AuthenticatedRoutes />
+        </Router>
+      </TempIdProvider>
+      
     </UserProvider>
   );
 }

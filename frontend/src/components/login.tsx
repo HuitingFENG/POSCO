@@ -4,6 +4,9 @@ import { Box, Button, Input, VStack, useToast } from '@chakra-ui/react';
 import {Link, BrowserRouter as Router, Routes, Route, } from "react-router-dom";
 import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
 import {useUser} from "../context/UserContext";
+import { useTempId } from '../context/TempIdContext';
+
+
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -11,7 +14,8 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const toast = useToast();
     const navigate = useNavigate();
-    
+    const { tempId, setTempId } = useTempId();
+    const clearTempId = () => setTempId(null);
 
     const userContext = useUser();
 
@@ -23,17 +27,23 @@ const Login = () => {
 
     const { login } = userContext;
 
-
+/*     const handleLogin = (formData) => {
+        // ... handle login logic ...
+        // If login is successful
+        onSuccessfulLogin();
+    };
+ */
     const sendUser = () => {
         console.log("TEST email: ", email);
         console.log("TEST password: ", password);
+        console.log("TEST tempId: ", tempId);
 
         fetch('http://localhost:3001/api/users/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ email, password, tempId }),
         })
         .then(response => {
             console.log("TEST response: ", response);
@@ -55,6 +65,7 @@ const Login = () => {
                 navigate('/profil', { state: { user: data } }); 
             }, 1000); */
             login(data);
+            clearTempId();
             navigate('/profil', { state: { user: data } });
             /* setEmail('');
             setPassword(''); */

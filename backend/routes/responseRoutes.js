@@ -51,6 +51,46 @@ router.get('/user/:userId', async (req, res) => {
 });
 
 
+
+/* 
+router.post('/temporary', async (req, res) => {
+    const { responses, tempId } = req.body;
+
+    try {
+        if (tempId) {
+            const tempUser = await User.findOrCreate({
+                where: { tempId: tempId },
+                defaults: { tempId: tempId }
+            });
+
+            const tempUserId = tempUser[0].userId;
+
+            for (const response of responses) {
+                await Response.create({
+                    userId: tempUserId,
+                    questionId: response.questionId,
+                    answer: response.answer
+                });
+            }
+        } else {
+            for (const response of responses) {
+                await Response.create({
+                    userId: response.userId,
+                    questionId: response.questionId,
+                    answer: response.answer
+                });
+            }
+        }
+        console.log("TEST : ", );
+        res.status(200).json({ message: 'Responses saved successfully' });
+    } catch (error) {
+        console.error('Error saving temporary responses:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+ */
+
+
 router.post('/', async (req, res) => {
   console.log("Received data:", req.body);
   try {
@@ -68,6 +108,7 @@ router.post('/', async (req, res) => {
     console.log("TEST total, totalConsummationEmissions, totalCountryEmissions: ", total, totalConsummationEmissions, totalCountryEmissions)
     const savedTotal = await Emission.create({
         userId: responses[0].userId, 
+        tempId: responses[0].tempId, 
         responsesList: responseIds, 
         totalEmissions: total,
         totalConsummationEmissions: totalConsummationEmissions,
@@ -132,6 +173,8 @@ function calculation(responses, countryEmissions, consummationEmissions) {
     const questionIdTransportVoyages = 10;
 
     const questionIdList = [];
+
+
 
     responses.forEach(response => {
         // console.log('TEST calculation: ', response);

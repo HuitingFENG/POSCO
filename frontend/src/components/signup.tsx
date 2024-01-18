@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button, Input, VStack, useToast } from '@chakra-ui/react';
 import { FaUserPlus } from "react-icons/fa";
+import { useTempId } from '../context/TempIdContext';
 
 
 const Signup = () => {
@@ -10,6 +11,9 @@ const Signup = () => {
     const [password, setPassword] = useState('');
     const toast = useToast();
     const navigate = useNavigate();
+    const { tempId, setTempId } = useTempId();
+    const clearTempId = () => setTempId(null);
+    // const [ newUserId, setNewUserId ] = useState();
 
     const sendUser = () => {
         if (!name.trim() || !email.trim() || !password.trim()) {
@@ -23,12 +27,13 @@ const Signup = () => {
             return; 
         }
 
+
         fetch('http://localhost:3001/api/users/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ name, email, password }),
+            body: JSON.stringify({ name, email, password, tempId }),
         })
         .then(response => {
             console.log("TEST response: ", response);
@@ -37,6 +42,11 @@ const Signup = () => {
             }
             return response.json();
         })
+/*         .then(data => {
+            const newUserId = data.userId;
+            setNewUserId(newUserId); // Save the new user ID
+            // ... existing toast and navigation logic ...
+        }) */
         .then(data => {
             toast({
                 title: 'Inscription réussie.',
@@ -48,6 +58,7 @@ const Signup = () => {
             setName('');
             setEmail('');
             setPassword('');
+            clearTempId();
             setTimeout(() => {
                 navigate('/login'); 
             }, 1000);

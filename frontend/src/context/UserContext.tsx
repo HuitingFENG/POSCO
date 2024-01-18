@@ -4,8 +4,10 @@ import React, { createContext, useState, useContext, useEffect, ReactNode  } fro
 interface UserProviderProps {
     children: ReactNode;
 }
+
 interface UserData {
     userId: number;
+    tempId: string;
     name: string;
     email: string;
     password: string;

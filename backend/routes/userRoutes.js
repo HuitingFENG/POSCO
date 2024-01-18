@@ -3,6 +3,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const Emission = require('../models/emission');
+const Response = require('../models/response');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -16,8 +18,6 @@ router.get('/', async (req, res) => {
         res.status(500).send('Error fetching users');
     }
 });
-
-
 
 router.get('/:id', async (req, res) => {
     try {
@@ -49,9 +49,24 @@ router.get('/user/:userId', async (req, res) => {
     }
 });
 
+router.get('/temporary/:tempId', async (req, res) => {
+    try {
+        const tempId = req.params.tempId;
+        const user = await User.findOne({ where: { tempId: tempId }, order: [['createdAt', 'DESC']] });
+        if (user) {
+            res.json(user);
+        } else {
+            res.status(404).send('User not found');
+        }
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 router.post('/signup', async (req, res) => {
-    const { name, email, password } = req.body;
-    console.log("TEST name, email, password: ", name, email, password);
+    const { name, email, password, tempId } = req.body;
+    console.log("TEST name, email, password, tempId: ", name, email, password, tempId);
 
     try {
         // Ensure that the user doesn't already exist
@@ -71,9 +86,14 @@ router.post('/signup', async (req, res) => {
         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
         console.log("TEST hashedPassword: ", hashedPassword);
         // const newUser = await User.create({ name, email, password });
-        const newUser = await User.create({ name, email, password: hashedPassword });
+        const newUser = await User.create({ name, email, password: hashedPassword, tempId });
+        if (tempId) {
+            // Update emissions associated with the tempId
+            await Emission.update({ userId: newUser.userId }, { where: { tempId: tempId } });
+            await Response.update({ userId: newUser.userId }, { where: { tempId: tempId } });
+        }
         // res.status(201).json(newUser);
-        res.status(201).json({ userId: newUser.userId, name: newUser.name, email: newUser.email });
+        res.status(201).json({ userId: newUser.userId, name: newUser.name, email: newUser.email, tempId: newUser.tempId });
     } catch (error) {
         console.error('Error creating user:', error);
         res.status(500).send('Internal Server Error');
@@ -81,8 +101,8 @@ router.post('/signup', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    console.log("TEST email and password from backend: ", email, password);
+    const { email, password, tempId } = req.body;
+    console.log("TEST email, password, tempId from backend: ", email, password, tempId);
 
     /* try {
         console.log('TEST Email:', email);
@@ -106,15 +126,25 @@ router.post('/login', async (req, res) => {
             if (user.password.startsWith("$2b$")) {
                 const match = await bcrypt.compare(password, user.password);
                 if (match) {
-                    res.status(200).send({ userId: user.userId, name: user.name, email: user.email });
+                    if (tempId) {
+                        // Update emissions associated with the tempId
+                        await Emission.update({ userId: user.userId }, { where: { tempId: tempId } });
+                        await Response.update({ userId: user.userId }, { where: { tempId: tempId } });
+                    }
+                    res.status(200).send({ userId: user.userId, name: user.name, email: user.email, tempId: user.tempId });
                 } else {
                     // Passwords do not match
                     res.status(401).send({ message: 'Invalid credentials' });
                 }
             } else {
                 if (user && user.password === password) { 
+                    if (tempId) {
+                        // Update emissions associated with the tempId
+                        await Emission.update({ userId: user.userId }, { where: { tempId: tempId } });
+                        await Response.update({ userId: user.userId }, { where: { tempId: tempId } });
+                    }
                 //   res.status(200).send({ message: 'Login successful', user: {name: user.name, email: user.email} });
-                    res.status(200).send({ userId: user.userId, name: user.name, email: user.email, password: user.password } );
+                    res.status(200).send({ userId: user.userId, name: user.name, email: user.email, password: user.password, tempId: user.tempId  } );
                 } else {
                     res.status(401).send({ message: 'Invalid credentials' });
                 }

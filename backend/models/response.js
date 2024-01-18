@@ -7,7 +7,15 @@ const Question = require('./question');
 class Response extends Model {}
 
 Response.init({
-  userId: DataTypes.INTEGER,
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: true, // Allow null if it's an unregistered user
+  },
+  tempId: {
+    type: DataTypes.UUID,
+    allowNull: true, // Allow null if it's a registered user
+  },
+/*   userId: DataTypes.INTEGER, */
   questionId: DataTypes.INTEGER,
   answer: DataTypes.STRING
 }, {

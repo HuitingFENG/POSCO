@@ -51,7 +51,29 @@ router.get('/user/:userId', async (req, res) => {
     }
 });
 
-/* router.post('/', async (req, res) => {
+router.get('/temporary/:tempId', async (req, res) => {
+    try {
+        const tempId = req.params.tempId;
+        const emission = await Emission.findAll({ 
+            where: { tempId: tempId }, 
+            include: [{
+                model: User,
+                as: "user"
+            }],
+            order: [['createdAt', 'DESC']] 
+        });
+        if (emission) {
+            res.json(emission);
+        } else {
+            res.status(404).send('emission not found');
+        }
+    } catch (error) {
+        console.error('Error fetching emission:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+router.post('/', async (req, res) => {
     try {
         const { userId, responsesList } = req.body;
         const totalEmissions = calculateEmissions(responsesList);
@@ -65,7 +87,7 @@ router.get('/user/:userId', async (req, res) => {
         console.error('Error creating emission:', error);
         res.status(500).send('Internal Server Error');
     }
-}); */
+});
 
 router.put('/:id', async (req, res) => {
     try {

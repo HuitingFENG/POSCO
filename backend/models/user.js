@@ -12,9 +12,27 @@ User.init({
     primaryKey: true,
     allowNull: false,
   },
-  name: DataTypes.STRING,
+/*   name: DataTypes.STRING,
   email: DataTypes.STRING,
-  password: DataTypes.STRING
+  password: DataTypes.STRING */
+  name: {
+    type: DataTypes.STRING,
+    allowNull: true, // Allow null for unregistered users
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: true, // Allow null for unregistered users
+    unique: true, // Ensure that email is unique for registered users
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: true, // Allow null for unregistered users
+  },
+  tempId: {
+    type: DataTypes.UUID, // Store UUID for unregistered users
+    allowNull: true,
+    unique: true, // Ensure that tempId is unique
+  }
 }, {
   sequelize,
   modelName: 'user'

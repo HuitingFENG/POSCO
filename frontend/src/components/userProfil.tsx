@@ -5,9 +5,11 @@ import { FaQuestionCircle, FaBook, FaCog, FaUser, FaEdit, FaBookReader } from "r
 import { useLocation } from "react-router-dom";
 import { useUser } from '../context/UserContext';
 import LogoutButton from './logout'; 
+import { useTempId } from '../context/TempIdContext';
 
 interface User {
   userId: number;
+  tempId: string;
   name: string;
   email: string;
   password: string;
@@ -37,10 +39,13 @@ interface Response {
 }
 
 
-
 const UserProfil = () => {
+
   const userContext = useUser(); 
   const userId = userContext?.user?.userId;
+  const clearTempId = () => setTempId(null);
+
+  const { tempId, setTempId } = useTempId();
 
   const [emissions, setEmissions] = useState<Emission[]>([]);
   const [responses, setResponses] = useState<Response[]>([]); 
@@ -48,11 +53,21 @@ const UserProfil = () => {
   useEffect(() => {
       fetch(`http://localhost:3001/api/emissions/user/${userId}`) 
           .then(response => response.json())
-          .then(data => setEmissions(data))
+          // .then(data => setEmissions(data))
+          .then(data => {
+            // Sort data by date in descending order
+            const sortedData = data.sort((a: Emission, b: Emission) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            setEmissions(sortedData);
+          })
           .catch(error => console.error('Error:', error));
       fetch(`http://localhost:3001/api/responses/user/${userId}`)
           .then(response => response.json())
-          .then(data => setResponses(data))
+          // .then(data => setResponses(data))
+          .then(data => {
+            // Sort data by date in descending order
+            const sortedResponses = data.sort((a: Response, b: Response)=> new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            setResponses(sortedResponses);
+          })
           .catch(error => console.error('Error fetching responses:', error));
   }, [userId]);
 

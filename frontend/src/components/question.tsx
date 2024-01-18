@@ -2,8 +2,10 @@ import { Box,Flex,Text,Image,Button,Stack,Center,Icon,Input } from "@chakra-ui/r
 import React, { useState, useEffect, useContext, ReactNode } from 'react';
 import { FaArrowLeft, FaArrowRight, FaPaperPlane, FaShareAlt } from 'react-icons/fa';
 import { useUser } from '../context/UserContext';
-import {Link as RouterLink, BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import {Link as RouterLink, BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
 import { AiFillEye } from "react-icons/ai";
+import { v4 as uuidv4 } from 'uuid';
+import { useTempId } from "../context/TempIdContext";
 
 interface Question {
     id: number;
@@ -22,14 +24,87 @@ interface Emission {
     totalEmissions: string;
     createdAt: string;
     updatedAt: string;
+    tempId: string;
 }
 
 const Question = () => {
     const userContext = useUser();
     // Get userId from userContext, or use 999 as a default
-    const userId = userContext?.user?.userId || 999;
-    const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
+    // const userId = userContext?.user?.userId || 999;
+    const navigate = useNavigate();
+    const userId = userContext?.user?.userId;
+    // const [tempId, setTempId] = useState<string | null>(null); // State to store temporary ID
+    const { tempId, setTempId } = useTempId();
 
+/*     useEffect(() => {
+        setResponses([]);
+        setCurrentQuestionIndex(0);
+        setSubmissionComplete(false);
+        setSelectedOptions({});
+        setTotalEmission(0);
+        setTotalConsummationEmissions(0);
+        setTotalCountryEmissions(0);
+        setDisplayResponsesCalculation(false);
+
+        // Fetch questions when the component mounts
+        setIsLoading(true);
+        fetch('http://localhost:3001/api/questions')
+            .then(response => response.json())
+            .then(data => {
+                const sortedData = data.sort((a: {id: number; }, b: {id: number; }) => a.id - b.id);
+                setQuestions(sortedData);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+
+
+        // Generate a temporary ID for unregistered users
+        if (!userId) {
+            setTempId(uuidv4());
+        }
+    }, [userId]); */
+
+    useEffect(() => {
+        // Resetting state when the component mounts
+        setResponses([]);
+/*         setTimeout(() => {
+            setSubmissionComplete(true);
+            setCurrentQuestionIndex(0);
+            // Any other navigation or state updates
+        }, 500); // delay of 500 milliseconds */
+        setCurrentQuestionIndex(0);
+        setSubmissionComplete(false);
+        setSelectedOptions({});
+        setTotalEmission(0);
+        setTotalConsummationEmissions(0);
+        setTotalCountryEmissions(0);
+        setDisplayResponsesCalculation(false);
+
+        // Fetch questions and generate a temporary ID for unregistered users
+        setIsLoading(true);
+        fetch('http://localhost:3001/api/questions')
+            .then(response => response.json())
+            .then(data => {
+                const sortedData = data.sort((a: {id: number; }, b: {id: number; }) => a.id - b.id);
+                setQuestions(sortedData);
+                if (!userId) {
+                    setTempId(uuidv4());
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    }, [userId]); // Dependency on userId
+
+
+    const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
     const [questions, setQuestions] = useState<Question[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -49,7 +124,7 @@ const Question = () => {
 
 
 
-    useEffect(() => {
+/*     useEffect(() => {
         fetch('http://localhost:3001/api/questions')
             .then(response => response.json())
             .then(data => {
@@ -61,7 +136,7 @@ const Question = () => {
                 console.error('Error fetching data:', error);
                 setIsLoading(false);
             });
-    }, []);
+    }, []); */
 
     const handleOptionClick = (questionId: number, option: string) => {
         handleResponseChange({ target: { value: option } } as React.ChangeEvent<HTMLInputElement>);
@@ -126,6 +201,7 @@ const Question = () => {
         newResponses[currentQuestionIndex] = event.target.value;
         console.log("TEST newResponses[currentQuestionIndex] ", newResponses[currentQuestionIndex]);
         setResponses(newResponses);
+        
     }; 
 
 /*     const handleResponseChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,11 +230,21 @@ const Question = () => {
 
     const sendResponses = () => {
         const formattedResponses = responses.map((answer, index) => ({
-            userId: userId, 
+            // userId: userId, 
+            userId: userId, // Include userId if user is registered
+            tempId: !userId ? tempId : null,
             questionId: questions[index].id, 
             answer: answer
         }));
+        // const endpoint = userId ? '/api/responses' : '/api/responses/temporary';
 
+        // fetch('http://localhost:3001${endpoint}', {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: JSON.stringify({ responses: formattedResponses }),
+        // })
         fetch('http://localhost:3001/api/responses', {
           method: 'POST',
           headers: {
@@ -173,33 +259,64 @@ const Question = () => {
           return response.json();
         })
         .then(data => {
-          console.log("Sending formatted responses:", formattedResponses);
+          console.log("TEST Sending formatted responses:", formattedResponses);
           console.log("TEST:", formattedResponses[4].answer);
           console.log('Success:', data);
-          return fetch(`http://localhost:3001/api/emissions/user/${userId}`);
+        //   return fetch(`http://localhost:3001/api/emissions/user/${userId}`);
           /* setResponses([]);
           setSubmissionComplete(true); 
           setCurrentQuestionIndex(0); */
+          let emissionsEndpoint;
+          if (userId) {
+              emissionsEndpoint = `/api/emissions/user/${userId}`;
+          } else if (tempId) {
+              emissionsEndpoint = `/api/emissions/temporary/${tempId}`; // A new endpoint for tempId
+          }
+      
+          return fetch(`http://localhost:3001${emissionsEndpoint}`);
         })
         .then(response => response.json())
         .then(emissionData => {
-            const latestEmission = emissionData.reduce((latest: Emission, current: Emission) => {
-                return (new Date(latest.createdAt) > new Date(current.createdAt)) ? latest : current;
-            });
-            console.log("TEST latestEmission: ", latestEmission);
+            // const latestEmission = emissionData.reduce((latest: Emission, current: Emission) => {
+            //     return (new Date(latest.createdAt) > new Date(current.createdAt)) ? latest : current;
+            // });
+            /* let latestEmission;
+            if (emissionData && emissionData.length > 0) {
+                latestEmission = emissionData.reduce((latest: Emission, current: Emission) => {
+                    return (new Date(latest.createdAt) > new Date(current.createdAt)) ? latest : current;
+                });
+            } else {
+                // Handle the case where emissionData is empty
+                latestEmission = {}; // Or any other default value you prefer
+            } */
+            let latestEmission = emissionData.length > 0
+            ? emissionData.reduce((latest: Emission, current: Emission) => new Date(latest.createdAt) > new Date(current.createdAt) ? latest : current) : {};
+
+
+            // console.log("TEST latestEmission: ", latestEmission);
             setResponsesCalculation(latestEmission);
-            setResponses([]);
             setTotalEmission(latestEmission.totalEmissions);
             setTotalConsummationEmissions(latestEmission.totalConsummationEmissions);
             setTotalCountryEmissions(latestEmission.totalCountryEmissions);
-            console.log('Submission complete');
+            // console.log('Submission complete');
             setSubmissionComplete(true);
             setCurrentQuestionIndex(0);
+            setResponses([]);
+/*             setTimeout(() => {
+                setSubmissionComplete(true);
+                setCurrentQuestionIndex(0);
+                // Any other navigation or state updates
+            }, 500); // delay of 500 milliseconds */
         })
         .catch((error) => {
           console.error('Error:', error);
         });
     };
+
+    // useEffect for debugging
+    useEffect(() => {
+        console.log("Responses updated:", responses);
+    }, [responses]);
 
    /*  const retake = () => {
         setSubmissionComplete(false);
@@ -291,6 +408,17 @@ const Question = () => {
     };
 
 
+    const handlePartagerClick = () => {
+        console.log("TEST handlePartagerClick: ", tempId);
+        if (!userId) {
+            setTempId(tempId); // Set the generated tempId for unregistered user
+        }
+        navigate('/profil');
+
+    };
+
+
+
     return (
         <Flex justify="space-between" align="center" flexDirection="column" gap={10} alignItems="center" justifyContent="center">
             {isQuestionAvailable && (
@@ -338,15 +466,15 @@ const Question = () => {
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Au total : {totalEmission} kg</Text>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone liée à la mobilité envisagée : {totalCountryEmissions} kg</Text>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone personnelle par an : {totalConsummationEmissions}kg</Text>
-                    { (userId == 999) && (
+                    {/* { (userId == 999) && ( */}
                         <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous partager vos réponses et obtenir des suggestions personnalisées !
-                            <Button ml={10} bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" gap={3} /* onClick={sendMobiliteRequest} */><Link to="/profil">Partager</Link><FaShareAlt size="24px" color="white" /></Button>
+                            <Button ml={10} bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" gap={3} onClick={handlePartagerClick}><Link to="/profil">Partager</Link><FaShareAlt size="24px" color="white" /></Button>
                         </Text>
-                    )}
+                    {/* )} */}
                     {/* <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button> */}
                 </Flex>
             )}
-            
+
 
             {submissionComplete && (
                 <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
