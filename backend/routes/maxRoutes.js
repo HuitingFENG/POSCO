@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const Max = require('../models/max'); 
+const { maxMobiliteCarbonEmissionList } = require('../data/mockData');
 
 router.get('/', async (req, res) => {
     try {
@@ -11,7 +12,7 @@ router.get('/', async (req, res) => {
         let queryOptions = {};
         if (queryCode) {
             queryOptions = {
-                where: { code: queryCode }
+                where: { year: queryCode }
             };
         }
         const maxs = await Max.findAll(queryOptions);
@@ -30,6 +31,22 @@ router.get('/:id', async (req, res) => {
             res.json(max);
         } else {
             res.status(404).send('max not found');
+        }
+    } catch (error) {
+        console.error('Error fetching max:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+router.get('/years/:year', async (req, res) => {
+    try {
+        const year = parseInt(req.params.year);
+        const data = maxMobiliteCarbonEmissionList.filter(item => item.year === year);
+        // If there are multiple entries for the same year, you might want to handle that (e.g., get the latest entry)
+        if (data.length > 0) {
+            res.json(data);
+        } else {
+            res.status(404).send('Data not found for the specified year');
         }
     } catch (error) {
         console.error('Error fetching max:', error);

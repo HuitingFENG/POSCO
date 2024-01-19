@@ -45,7 +45,8 @@ const Question = () => {
     const tempIdToUse = navigatedTempId || contextTempId;
     const [isPartagerClicked, setIsPartagerClicked] = useState(false);
     const { fromPartager, setFromPartager } = useContext(PartagerContext);
-
+    const currentYear = new Date().getFullYear();
+    // console.log("Current Year: ", currentYear); 
     
 
 
@@ -114,6 +115,40 @@ const Question = () => {
             .finally(() => {
                 setIsLoading(false);
             });
+        // fetch(`http://localhost:3001/api/maxs/${max}`).then();
+
+        // fetch(`http://localhost:3001/api/maxs/years/${currentYear}`)
+        //     .then(response => {
+        //         if (!response.ok) {
+        //             throw new Error('Network response was not ok');
+        //         }
+        //         return response.json();
+        //     })
+        //     .then(data => {
+        //         console.log('Data for the year:', data);
+        //         // Handle the data as needed
+        //         setMaxPromotion(data);
+        //         console.log("TEST setMaxPromotion data.L1, data.L2: ", data.L1, data.L2);
+        //         const sortedData = data.sort((a: { id: number; }, b: { id: number; }) => b.id - a.id);
+        //         const highestIdData = sortedData[0];
+
+        //         setMaxPromotion(highestIdData);
+                
+        //         console.log("Selected Data with the highest ID:", highestIdData);
+        //         // console.log("Selected Data with the highest ID:", highestIdData.L1, highestIdData.M1);
+        //         // setPromotion(highestIdData.M1)
+        //         console.log("TEST promotion: ", promotion);
+        //         console.log("TEST setMaxPromotion: ", highestIdData.promotion);
+        //         console.log("TEST maxPromotion: ", maxPromotion);
+        //         // console.log("TEST setPromotion: ", promotion);
+        //         setMaxCarbonByPromotion(highestIdData.promotion);
+        //         console.log("TEST setMaxCarbonByPromotion(highestIdData.promotion): ", maxCarbonByPromotion);
+        //     })
+        //     .catch(error => {
+        //         console.error('There was a problem with the fetch operation:', error);
+        //     });
+
+
     }, [userId]); // Dependency on userId
 
 
@@ -122,11 +157,14 @@ const Question = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [responses, setResponses] = useState<string[]>([]);
+    const [tempResponses, setTempResponses] = useState<string[]>([]);
     const [responsesCalculation, setResponsesCalculation] = useState<Emission[]>([]);
     const [submissionComplete, setSubmissionComplete] = useState(false);
     const [closeQuestionnaire, setCloseQuestionnaire] = useState(false);
     // const [retakeTest, setRetakeTest] = useState(false);
     const [inputError, setInputError] = useState(false);
+    const [maxPromotion, setMaxPromotion] = useState<string[]>([]);
+    const [promotion, setPromotion] = useState('');
     const [totalEmission, setTotalEmission] = useState(0);
     const [totalConsummationEmissions, setTotalConsummationEmissions] = useState(0);
     const [totalCountryEmissions, setTotalCountryEmissions] = useState(0);
@@ -135,10 +173,41 @@ const Question = () => {
     const minValue = 0
     const stepValue = 1
     const [displayResponsesCalculation, setDisplayResponsesCalculation] = useState(false);
-   
-
+    const [tempFormattedResponses, setTempFormattedResponses] = useState([]);
+    const [maxCarbonByPromotion, setMaxCarbonByPromotion] = useState(0);
 
     const [totalQuestionsToAnswer, setTotalQuestionsToAnswer] = useState(questions.length);
+  
+    useEffect(() => {
+        if (responses.length > 0) {
+            // Assuming the first response contains the promotion data
+            // Adjust based on your actual data structure
+            const newPromotion = responses[0];
+            setPromotion(newPromotion);
+        }
+    }, [responses]);
+
+    useEffect(() => {
+        // This useEffect will now run after promotion is set
+        if (promotion) {
+            fetch(`http://localhost:3001/api/maxs/years/${currentYear}`)
+                .then(response => response.json())
+                .then(data => {
+                    const sortedData = data.sort((a: { id: number; }, b: { id: number; }) => b.id - a.id);
+                    const highestIdData = sortedData[0];
+    
+                    // Assuming the data structure contains a field that matches the promotion
+                    const maxCarbonByPromotion = highestIdData[promotion];
+                    setMaxCarbonByPromotion(maxCarbonByPromotion);
+                    console.log("TEST setMaxCarbonByPromotion(maxCarbonByPromotion): ", maxCarbonByPromotion);
+                    // Other operations...
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+    }, [promotion, currentYear]);
+
 
     useEffect(() => {
         if (responses[questions.length - 3] === 'Non') {
@@ -260,10 +329,6 @@ const Question = () => {
     }; */
     
 
-    const sendMobiliteRequest = () => {
-        console.log("TEST sendMobiliteRequest... ");
-    };
-
     const sendResponses = () => {
         const formattedResponses = responses.map((answer, index) => ({
             // userId: userId, 
@@ -273,6 +338,7 @@ const Question = () => {
             questionId: questions[index].id, 
             answer: answer
         }));
+        
         // const endpoint = userId ? '/api/responses' : '/api/responses/temporary';
 
         // fetch('http://localhost:3001${endpoint}', {
@@ -297,7 +363,8 @@ const Question = () => {
         })
         .then(data => {
           console.log("TEST Sending formatted responses:", formattedResponses);
-          console.log("TEST:", formattedResponses[4].answer);
+        //   setPromotion(formattedResponses[0].answer);
+        //   console.log("TEST promotion :", formattedResponses[0].answer);
           console.log('Success:', data);
         //   return fetch(`http://localhost:3001/api/emissions/user/${userId}`);
           /* setResponses([]);
@@ -331,7 +398,11 @@ const Question = () => {
 
 
             // console.log("TEST latestEmission: ", latestEmission);
+
             setResponsesCalculation(latestEmission);
+            // setTempResponses(latestEmission.responsesList);
+            // console.log("TEST responsesList json file: ", latestEmission.responsesList);
+            
             setTotalEmission(latestEmission.totalEmissions);
             setTotalConsummationEmissions(latestEmission.totalConsummationEmissions);
             setTotalCountryEmissions(latestEmission.totalCountryEmissions);
@@ -509,26 +580,22 @@ const Question = () => {
             
             {submissionComplete && (
                 <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
-                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Au total : {totalEmission} {overMax} kg</Text>
+                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Au total : {totalEmission} kg</Text>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone liée à la mobilité envisagée : {totalCountryEmissions} kg</Text>
-                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone personnelle par an : {totalConsummationEmissions}kg</Text>
+                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone personnelle par an : {totalConsummationEmissions} kg</Text>
 
                     
                     {(overMax) ? (
                         <>
-                            <Flex p= {2} bgColor="white">
-                                <Text fontWeight="bold" fontSize="2xl" color="red" textAlign="center">Attention : Votre empreinte carbone liée à la mobilité dépasse la valeur max définie par l'école.</Text>
+                            <Flex p= {2} bgColor="#A4DDED" border="4px" borderColor="#0C2340" borderStyle="dashed">
+                                <Text fontWeight="bold" fontSize="2xl" color="red" textAlign="center">Attention : Votre empreinte carbone liée à la mobilité dépasse la valeur max définie par l'école ({maxCarbonByPromotion} kg).</Text>
                             </Flex>
                         </>
                         ) : (
-                            <Flex p= {2} bgColor="white">
-                                <Text  fontWeight="bold" fontSize="2xl" color="green" textAlign="center">Félicitation : Votre empreinte carbone liée à la mobilité ne dépasse pas encore la valeur max définie par l'école.</Text>
-                            </Flex>
-                            
+                            <Flex p= {2} bgColor="#A4DDED" border="4px" borderColor="#0C2340" borderStyle="dashed">
+                                <Text  fontWeight="bold" fontSize="2xl" color="green" textAlign="center">Félicitation : Votre empreinte carbone liée à la mobilité ne dépasse pas la valeur max définie par l'école ({maxCarbonByPromotion} kg).</Text>
+                            </Flex> 
                     )}
-
-
-                   
                         <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous partager vos réponses et obtenir des suggestions personnalisées !
                             <Button ml={10} bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" gap={3} onClick={handlePartagerClick}>{/* <Link to="/profil"> */}Partager{/* </Link> */}<FaShareAlt size="24px" color="white" /></Button>
                         </Text>
