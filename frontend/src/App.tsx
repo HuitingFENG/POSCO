@@ -10,6 +10,7 @@ import Seconnecter from "./pages/seconnecter/seconnecter";
 import { UserProvider, useUser } from './context/UserContext';
 import { TempIdProvider } from './context/TempIdContext';
 import AuthenticatedRoutes from './authenticate'; // This is the new component
+import { PartagerProvider } from './context/PartagerContext';
 
   /* 
 
@@ -47,14 +48,18 @@ function App() {
 }
 
 */
-
+ 
 function App() {
   return (
     <UserProvider>
       <TempIdProvider>
-        <Router>
-          <AuthenticatedRoutes />
-        </Router>
+       
+          <PartagerProvider>
+            <Router>
+              <AuthenticatedRoutes />
+            </Router>
+          </PartagerProvider>
+        
       </TempIdProvider>
       
     </UserProvider>

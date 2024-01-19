@@ -10,6 +10,7 @@ interface EmissionData {
   Bus: number;
   Avion: number;
   Voiture: number;
+  overMax: boolean;
 }
 
 const ReferencesData = () => {

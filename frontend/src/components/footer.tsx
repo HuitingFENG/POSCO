@@ -19,7 +19,7 @@ const Footer = () => {
 
         <Flex justify="space-between" align="center" flexDirection="column" gap={3}>
           <Text fontWeight="bold" fontSize="2xl" color="white" pb={3}><Icon as={FaRegCommentDots} boxSize={8} mr={4} />Contactez-nous :</Text>
-          <Text fontWeight="bold" fontSize="md" color="white"><Icon as={AiOutlineMail} boxSize={4} mr={2} />Email : projet.posco@efrei.net </Text>
+          <Text fontWeight="bold" fontSize="md" color="white"><Icon as={AiOutlineMail} boxSize={4} mr={2} />Email : posco@efrei.fr </Text>
           <Text fontWeight="bold" fontSize="md" color="white"><Icon as={FaPhone} boxSize={4} mr={2} />Téléphone : +01 23 45 67 89</Text>
         </Flex>
 

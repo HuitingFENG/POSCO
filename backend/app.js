@@ -14,6 +14,7 @@ const emissionRoutes = require('./routes/emissionRoutes');
 const referenceRoutes = require('./routes/referenceRoutes');
 const userRoutes = require('./routes/userRoutes');
 const conseilRoutes = require('./routes/conseilRoutes');
+const maxRoutes = require('./routes/maxRoutes');
 
 
 app.use(cors());
@@ -41,7 +42,7 @@ app.use('/api/emissions', emissionRoutes);
 app.use('/api/references', referenceRoutes); 
 app.use('/api/users', userRoutes); 
 app.use('/api/conseils', conseilRoutes); 
-
+app.use('/api/maxs', maxRoutes); 
 
 module.exports = app;
 

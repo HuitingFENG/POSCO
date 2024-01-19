@@ -27,6 +27,7 @@ interface Emission {
   totalConsummationEmissions: number;
   totalCountryEmissions: number;
   createdAt: string; 
+  overMax: boolean;
 }
 
 interface Response {

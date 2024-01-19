@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button, Input, VStack, useToast } from '@chakra-ui/react';
 import {Link, BrowserRouter as Router, Routes, Route, } from "react-router-dom";
 import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
 import {useUser} from "../context/UserContext";
 import { useTempId } from '../context/TempIdContext';
-
+import { PartagerContext } from '../context/PartagerContext';
 
 
 const Login = () => {
@@ -16,11 +16,15 @@ const Login = () => {
     const navigate = useNavigate();
 /*     const { tempId, setTempId } = useTempId();
     const clearTempId = () => setTempId(null); */
-    const location = useLocation();
+    
     const { tempId: contextTempId, setTempId } = useTempId();
-    const navigatedTempId = location.state?.tempId;
+    const { fromPartager, setFromPartager } = useContext(PartagerContext);
+    const location = useLocation();
+    // const navigatedTempId = location.state?.tempId;
+    const navigatedTempId = fromPartager ? location.state?.tempId : null;
     const tempIdToUse = navigatedTempId || contextTempId;
     const clearTempId = () => setTempId(null);
+    
 
     const userContext = useUser();
 
@@ -71,6 +75,7 @@ const Login = () => {
             }, 1000); */
             login(data);
             clearTempId();
+            setFromPartager(false);
             navigate('/profil', { state: { user: data } });
             /* setEmail('');
             setPassword(''); */

@@ -10,7 +10,7 @@ const Header = () => {
         <Flex justify="space-between" gap={10} p={1}>
             <Link as={RouterLink} to="/"><Image src="../../../assets/icon.png" alt="icon.png" boxSize="100px" /></Link>
             <Flex align="center" justify="center">
-                <Text fontWeight="bold" fontSize="2xl" color="white">Projet POSCO</Text>
+                <Text fontWeight="bold" fontSize="2xl" color="white">POSCO</Text>
             </Flex>
         </Flex>
 

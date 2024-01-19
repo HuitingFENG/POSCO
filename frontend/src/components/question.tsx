@@ -6,7 +6,7 @@ import {Link as RouterLink, BrowserRouter as Router, Routes, Route, Link, useNav
 import { AiFillEye } from "react-icons/ai";
 import { v4 as uuidv4 } from 'uuid';
 import { useTempId } from "../context/TempIdContext";
-
+import { PartagerContext } from '../context/PartagerContext';
 
 
 interface Question {
@@ -27,6 +27,7 @@ interface Emission {
     createdAt: string;
     updatedAt: string;
     tempId: string;
+    overMax: boolean;
 }
 
 const Question = () => {
@@ -43,7 +44,7 @@ const Question = () => {
     const { tempId: navigatedTempId } = location.state || {};
     const tempIdToUse = navigatedTempId || contextTempId;
     const [isPartagerClicked, setIsPartagerClicked] = useState(false);
-
+    const { fromPartager, setFromPartager } = useContext(PartagerContext);
 
     
 
@@ -129,6 +130,7 @@ const Question = () => {
     const [totalEmission, setTotalEmission] = useState(0);
     const [totalConsummationEmissions, setTotalConsummationEmissions] = useState(0);
     const [totalCountryEmissions, setTotalCountryEmissions] = useState(0);
+    const [overMax, setOverMax] = useState(false);
     const maxValue = 100
     const minValue = 0
     const stepValue = 1
@@ -333,6 +335,8 @@ const Question = () => {
             setTotalEmission(latestEmission.totalEmissions);
             setTotalConsummationEmissions(latestEmission.totalConsummationEmissions);
             setTotalCountryEmissions(latestEmission.totalCountryEmissions);
+            setOverMax(latestEmission.overMax);
+            console.log("TEST latestEmission.overMax: ", latestEmission.overMax);
             // console.log('Submission complete');
             setSubmissionComplete(true);
             setCurrentQuestionIndex(0);
@@ -448,10 +452,9 @@ const Question = () => {
         console.log("TEST handlePartagerClick: ", tempIdToUse);
         if (!userId) {
             setIsPartagerClicked(true);
-            // setTempId(tempId); // Set the generated tempId for unregistered users
-            navigate('/profil', { state: { tempId: tempIdToUse } });
+            setFromPartager(true);
+            navigate('/profil', { state: { tempId: tempIdToUse, fromPartager: true } });
         }
-        // navigate('/profil');
     };
 
     
@@ -506,14 +509,30 @@ const Question = () => {
             
             {submissionComplete && (
                 <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
-                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Au total : {totalEmission} kg</Text>
+                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Au total : {totalEmission} {overMax} kg</Text>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone liée à la mobilité envisagée : {totalCountryEmissions} kg</Text>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone personnelle par an : {totalConsummationEmissions}kg</Text>
-                    {/* { (userId == 999) && ( */}
+
+                    
+                    {(overMax) ? (
+                        <>
+                            <Flex p= {2} bgColor="white">
+                                <Text fontWeight="bold" fontSize="2xl" color="red" textAlign="center">Attention : Votre empreinte carbone liée à la mobilité dépasse la valeur max définie par l'école.</Text>
+                            </Flex>
+                        </>
+                        ) : (
+                            <Flex p= {2} bgColor="white">
+                                <Text  fontWeight="bold" fontSize="2xl" color="green" textAlign="center">Félicitation : Votre empreinte carbone liée à la mobilité ne dépasse pas encore la valeur max définie par l'école.</Text>
+                            </Flex>
+                            
+                    )}
+
+
+                   
                         <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous partager vos réponses et obtenir des suggestions personnalisées !
                             <Button ml={10} bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" gap={3} onClick={handlePartagerClick}>{/* <Link to="/profil"> */}Partager{/* </Link> */}<FaShareAlt size="24px" color="white" /></Button>
                         </Text>
-                    {/* )} */}
+             
                     {/* <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button> */}
                 </Flex>
             )}

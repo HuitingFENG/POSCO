@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate, Link, useLocation  } from 'react-router-dom';
 import { Button, Input, VStack, useToast } from '@chakra-ui/react';
 import { FaUserPlus } from "react-icons/fa";
 import { useTempId } from '../context/TempIdContext';
+import { PartagerContext } from '../context/PartagerContext';
 
 
 const Signup = () => {
@@ -19,7 +20,7 @@ const Signup = () => {
     const navigatedTempId = location.state?.tempId;
     const tempIdToUse = navigatedTempId || contextTempId;
     const clearTempId = () => setTempId(null);
-
+    const { fromPartager, setFromPartager } = useContext(PartagerContext);
 
     const sendUser = () => {
         if (!name.trim() || !email.trim() || !password.trim()) {

@@ -23,6 +23,7 @@ interface Emission {
   totalConsummationEmissions: number;
   totalCountryEmissions: number;
   createdAt: string; 
+  overMax: boolean;
 }
 
 interface Conseil {
@@ -81,13 +82,13 @@ const UserActions= () => {
         .then(response => response.json())
         .then(data => {
           console.log("TEST data : ", data);
-          /* const filteredEmissions2 = data.filter((emission: { userId: number; }) => (emission.userId !== 999 ));
+          /* 
           const filteredEmissions3 = filteredEmissions2.filter((emission: { userId: number; }) => (emission.userId !== 1 ));
           const validEmissions = filteredEmissions3.filter((emission: { tempId: string | null; }) => emission.tempId == null);
           setEmissions(validEmissions);
           console.log("TEST validEmissions : ", validEmissions); */
           const filteredEmissions = data
-            .filter((emission: { userId: number; tempId: null; }) => emission.userId !== 999 && emission.userId !== 1 && emission.tempId == null)
+            .filter((emission: { userId: number; tempId: null; }) => emission.userId !== 1 && emission.tempId == null)
             .sort((a: Emission, b: Emission) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
           setEmissions(filteredEmissions);
           console.log("TEST filteredEmissions : ", filteredEmissions);
@@ -167,7 +168,7 @@ const UserActions= () => {
       ) : (
         <Flex flexDirection="column" width="80%" gap={10} p={10} mt={4} > 
           <Flex flexDirection="column" gap={5} align="center" justify="space-around">
-            <Text fontWeight="bold" fontSize="4xl" color="black">List d'Emissions Carbons</Text>
+            <Text fontWeight="bold" fontSize="4xl" color="black">Liste d'Emissions Carbons</Text>
           </Flex>
           <Flex>
             <Box overflowX="auto" overflowY="auto" maxH="1000px" w="100%">

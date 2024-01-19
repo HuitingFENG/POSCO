@@ -5,7 +5,8 @@ const router = express.Router();
 const Response = require('../models/response');
 const Emission = require('../models/emission');
 const Question = require('../models/question');
-const { consummationEmissions, countryEmissions } = require('../data/mockData');
+const Max = require('../models/max');
+const { consummationEmissions, countryEmissions, maxMobiliteCarbonEmissionList  } = require('../data/mockData');
 
 
 router.get('/', async (req, res) => {
@@ -104,8 +105,8 @@ router.post('/', async (req, res) => {
      /*  console.log("TEST: ", responses[4].answer); */
     }
     const responseIds = responseInstances.map(instance => instance.id);
-    const [total, totalConsummationEmissions, totalCountryEmissions] = calculationForAll(responses, countryEmissions, consummationEmissions);
-    console.log("TEST total, totalConsummationEmissions, totalCountryEmissions: ", total, totalConsummationEmissions, totalCountryEmissions)
+    const [total, totalConsummationEmissions, totalCountryEmissions, totalOverMax] = calculationForAll(responses, countryEmissions, consummationEmissions);
+    console.log("TEST total, totalConsummationEmissions, totalCountryEmissions, totalOverMax: ", total, totalConsummationEmissions, totalCountryEmissions, totalOverMax)
     const savedTotal = await Emission.create({
         userId: responses[0].userId, 
         tempId: responses[0].tempId, 
@@ -113,6 +114,7 @@ router.post('/', async (req, res) => {
         totalEmissions: total,
         totalConsummationEmissions: totalConsummationEmissions,
         totalCountryEmissions: totalCountryEmissions,
+        overMax: totalOverMax,
     });
     console.log("TEST savedTotal: ", savedTotal)
     res.status(201).json({ message: "Responses saved successfully" });
@@ -252,6 +254,7 @@ function calculation(responses, countryEmissions, consummationEmissions) {
 function calculationForAll(responses, countryEmissions, consummationEmissions) {
     let totalConsummationEmissions = 0;
     let totalCountryEmissions = 0;
+    let totalOverMax = false;
 
     // Extract responses by questionId for easier access
     const responseByQuestionId = responses.reduce((acc, response) => {
@@ -294,5 +297,29 @@ function calculationForAll(responses, countryEmissions, consummationEmissions) {
     console.log("Reference totalCountryEmissions: ", 129*2+20*2*0.215); // Example calculation for a specific country and plane
     console.log("Total Country Emissions: ", totalCountryEmissions);
     console.log("Total Emissions: ", total);
-    return [total, totalConsummationEmissions, totalCountryEmissions];
+
+
+
+    const currentYear = new Date().getFullYear();
+    console.log("Current Year: ", currentYear); 
+    const tempAnswer = responseByQuestionId[1];
+    console.log("tempAnswer: ", tempAnswer);
+    // const yearData = maxMobiliteCarbonEmissionList.find(item => item.year === currentYear);
+    const yearDataList = maxMobiliteCarbonEmissionList.filter(item => item.year === currentYear);
+    const highestIdEntry = yearDataList.reduce((prev, current) => (prev.id > current.id) ? prev : current, {});
+
+    if (highestIdEntry && highestIdEntry[tempAnswer] !== undefined) {
+        console.log("TEST maxMobiliteCarbonEmissionList: ", highestIdEntry[tempAnswer]);
+    } else {
+        console.log("No data found for the year ", currentYear);
+    };
+
+
+
+    if ( totalCountryEmissions > highestIdEntry[tempAnswer] ) {
+        totalOverMax = true;
+    };
+    console.log("TEST totalOverMax: ", totalOverMax);
+
+    return [total, totalConsummationEmissions, totalCountryEmissions, totalOverMax];
 }

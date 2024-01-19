@@ -32,7 +32,8 @@ Emission.init({
   responsesList: DataTypes.JSON,
   totalEmissions: DataTypes.DECIMAL(10,2),
   totalConsummationEmissions: DataTypes.DECIMAL(10,2),
-  totalCountryEmissions: DataTypes.DECIMAL(10,2)
+  totalCountryEmissions: DataTypes.DECIMAL(10,2),
+  overMax: DataTypes.BOOLEAN,
 }, {
   sequelize,
   modelName: 'emission'
