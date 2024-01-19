@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation  } from 'react-router-dom';
 import { Button, Input, VStack, useToast } from '@chakra-ui/react';
 import { FaUserPlus } from "react-icons/fa";
 import { useTempId } from '../context/TempIdContext';
@@ -11,9 +11,15 @@ const Signup = () => {
     const [password, setPassword] = useState('');
     const toast = useToast();
     const navigate = useNavigate();
-    const { tempId, setTempId } = useTempId();
-    const clearTempId = () => setTempId(null);
+    // const { tempId, setTempId } = useTempId();
+    // const clearTempId = () => setTempId(null);
     // const [ newUserId, setNewUserId ] = useState();
+    const location = useLocation();
+    const { tempId: contextTempId, setTempId } = useTempId();
+    const navigatedTempId = location.state?.tempId;
+    const tempIdToUse = navigatedTempId || contextTempId;
+    const clearTempId = () => setTempId(null);
+
 
     const sendUser = () => {
         if (!name.trim() || !email.trim() || !password.trim()) {
@@ -33,12 +39,12 @@ const Signup = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ name, email, password, tempId }),
+            body: JSON.stringify({ name, email, password, tempIdToUse }),
         })
         .then(response => {
             console.log("TEST response: ", response);
             if (!response.ok) {
-                return response.text().then(text => { throw new Error(text) });
+                return response.text().then(text => { throw new Error(text) }); 
             }
             return response.json();
         })
@@ -58,7 +64,8 @@ const Signup = () => {
             setName('');
             setEmail('');
             setPassword('');
-            clearTempId();
+            // clearTempId();
+            setTempId(null);
             setTimeout(() => {
                 navigate('/login'); 
             }, 1000);

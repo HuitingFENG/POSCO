@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button, Input, VStack, useToast } from '@chakra-ui/react';
 import {Link, BrowserRouter as Router, Routes, Route, } from "react-router-dom";
 import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
@@ -14,7 +14,12 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const toast = useToast();
     const navigate = useNavigate();
-    const { tempId, setTempId } = useTempId();
+/*     const { tempId, setTempId } = useTempId();
+    const clearTempId = () => setTempId(null); */
+    const location = useLocation();
+    const { tempId: contextTempId, setTempId } = useTempId();
+    const navigatedTempId = location.state?.tempId;
+    const tempIdToUse = navigatedTempId || contextTempId;
     const clearTempId = () => setTempId(null);
 
     const userContext = useUser();
@@ -36,14 +41,14 @@ const Login = () => {
     const sendUser = () => {
         console.log("TEST email: ", email);
         console.log("TEST password: ", password);
-        console.log("TEST tempId: ", tempId);
+        console.log("TEST tempId: ", tempIdToUse);
 
         fetch('http://localhost:3001/api/users/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password, tempId }),
+            body: JSON.stringify({ email, password, tempIdToUse }),
         })
         .then(response => {
             console.log("TEST response: ", response);
@@ -74,8 +79,8 @@ const Login = () => {
             console.error('Error:', error);
             toast({
                 title: 'Connexion échouée.',
-                // description: error.message,
-                description: "Les données saisies sont incorrectes.",
+                description: error.message,
+                // description: "Les données saisies sont incorrectes.",
                 status: 'error',
                 duration: 1000,
                 isClosable: true,

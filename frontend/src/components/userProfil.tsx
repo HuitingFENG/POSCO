@@ -1,6 +1,6 @@
 import React, { useState, useEffect }  from "react";
 import { Box,Flex,Text,Image,Button,Stack,Center,Icon, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
-import {Link as RouterLink, BrowserRouter as Router, Routes, Route, Link, } from "react-router-dom";
+import {Link as RouterLink, BrowserRouter as Router, Routes, Route, Link,useNavigate } from "react-router-dom";
 import { FaQuestionCircle, FaBook, FaCog, FaUser, FaEdit, FaBookReader } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { useUser } from '../context/UserContext';
@@ -49,9 +49,14 @@ const UserProfil = () => {
 
   const [emissions, setEmissions] = useState<Emission[]>([]);
   const [responses, setResponses] = useState<Response[]>([]); 
+  const navigate = useNavigate();
+
+  const navigateToActions = () => {
+      navigate('/actions');
+  };
 
   useEffect(() => {
-      fetch(`http://localhost:3001/api/emissions/user/${userId}`) 
+      /* fetch(`http://localhost:3001/api/emissions/user/${userId}`) 
           .then(response => response.json())
           // .then(data => setEmissions(data))
           .then(data => {
@@ -61,14 +66,44 @@ const UserProfil = () => {
           })
           .catch(error => console.error('Error:', error));
       fetch(`http://localhost:3001/api/responses/user/${userId}`)
-          .then(response => response.json())
+          // .then(response => response.json())
           // .then(data => setResponses(data))
           .then(data => {
             // Sort data by date in descending order
             const sortedResponses = data.sort((a: Response, b: Response)=> new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
             setResponses(sortedResponses);
           })
-          .catch(error => console.error('Error fetching responses:', error));
+          .catch(error => console.error('Error fetching responses:', error)); */
+          if (userId) {
+            fetch(`http://localhost:3001/api/emissions/user/${userId}`) 
+                .then(response => response.json())
+                .then( (data: any[]) => {
+                    // Sort data by date in descending order
+                    const sortedData = data.sort((a: Emission, b: Emission) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+                    // const validEmissions = data.filter(emission => {emission.tempId == null});
+                    // console.log("TEST validEmissions: ", validEmissions);
+                
+                    // const sortedData = validEmissions.sort((a: Response, b: Response) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+                    
+                    setEmissions(sortedData);
+                })
+                .catch(error => console.error('Error:', error));
+    
+            fetch(`http://localhost:3001/api/responses/user/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Sort data by date in descending order
+                    const sortedResponses = data.sort((a: Response, b: Response) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+                    setResponses(sortedResponses);
+                })
+                .catch(error => console.error('Error fetching responses:', error));
+          } else {
+              console.log('No userId provided, skipping fetch.');
+              // Optionally set emissions and responses to empty arrays or handle the state accordingly
+              setEmissions([]);
+              setResponses([]);
+          }
+
   }, [userId]);
 
   if (!userContext) {
@@ -196,13 +231,13 @@ const UserProfil = () => {
                 Modifier le nombre MaxEmissionCarbon 
               </Button>
               
-                <Button bgColor="#003153" color="white" width="500px" height="60px" fontSize="xl" p={6} gap={3}>
+                <Button bgColor="#003153" color="white" width="500px" height="60px" fontSize="xl" p={6} gap={3} onClick={navigateToActions}>
                   <div style={{ border: '1px solid white', borderRadius: '10%', display: 'inline-block', padding: '5px', backgroundColor:"white"}}>
                     <FaBookReader size={24} color="green" />
                   </div>
-                  <Link to="/actions">
-                    Parcourir les lists d'émissions carbons
-                  </Link>
+                  {/* <Link to="/actions"> */}
+                    Lire la liste d'émissions carbons
+                  {/* </Link> */}
                 </Button>
             </Flex>
           )};

@@ -34,10 +34,10 @@ router.get('/user/:userId', async (req, res) => {
         const userId = req.params.userId;
         const emission = await Emission.findAll({ 
             where: { userId: userId }, 
-            include: [{
-                model: User,
-                as: "user"
-            }],
+            // include: [{
+            //     model: User,
+            //     as: "user"
+            // }],
             order: [['createdAt', 'DESC']] 
         });
         if (emission) {
@@ -56,10 +56,10 @@ router.get('/temporary/:tempId', async (req, res) => {
         const tempId = req.params.tempId;
         const emission = await Emission.findAll({ 
             where: { tempId: tempId }, 
-            include: [{
-                model: User,
-                as: "user"
-            }],
+            // include: [{
+            //     model: User,
+            //     as: "user"
+            // }],
             order: [['createdAt', 'DESC']] 
         });
         if (emission) {

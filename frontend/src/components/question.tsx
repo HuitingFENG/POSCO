@@ -1,11 +1,13 @@
-import { Box,Flex,Text,Image,Button,Stack,Center,Icon,Input } from "@chakra-ui/react";
+import { Box,Flex,Text,Image,Button,Stack,Center,Icon,Input,Progress } from "@chakra-ui/react";
 import React, { useState, useEffect, useContext, ReactNode } from 'react';
 import { FaArrowLeft, FaArrowRight, FaPaperPlane, FaShareAlt } from 'react-icons/fa';
 import { useUser } from '../context/UserContext';
-import {Link as RouterLink, BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
+import {Link as RouterLink, BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from "react-router-dom";
 import { AiFillEye } from "react-icons/ai";
 import { v4 as uuidv4 } from 'uuid';
 import { useTempId } from "../context/TempIdContext";
+
+
 
 interface Question {
     id: number;
@@ -34,7 +36,17 @@ const Question = () => {
     const navigate = useNavigate();
     const userId = userContext?.user?.userId;
     // const [tempId, setTempId] = useState<string | null>(null); // State to store temporary ID
-    const { tempId, setTempId } = useTempId();
+    
+    // const { tempId, setTempId } = useTempId();
+    const { tempId: contextTempId, setTempId } = useTempId();
+    const location = useLocation();
+    const { tempId: navigatedTempId } = location.state || {};
+    const tempIdToUse = navigatedTempId || contextTempId;
+    const [isPartagerClicked, setIsPartagerClicked] = useState(false);
+
+
+    
+
 
 /*     useEffect(() => {
         setResponses([]);
@@ -121,8 +133,32 @@ const Question = () => {
     const minValue = 0
     const stepValue = 1
     const [displayResponsesCalculation, setDisplayResponsesCalculation] = useState(false);
+   
 
 
+    const [totalQuestionsToAnswer, setTotalQuestionsToAnswer] = useState(questions.length);
+
+    useEffect(() => {
+        if (responses[questions.length - 3] === 'Non') {
+            // If the user answers 'Non' to the specific question, skip the last two questions
+            setTotalQuestionsToAnswer(questions.length - 2);
+        } else {
+            // Otherwise, the user needs to answer all questions
+            setTotalQuestionsToAnswer(questions.length);
+        }
+    }, [responses, questions.length]);
+
+
+    useEffect(() => {
+        // If there's a tempId from navigation, use it. Otherwise, stick with the context tempId
+        if (navigatedTempId) {
+            setTempId(navigatedTempId);
+        } else if (!contextTempId) {
+            // Generate a new tempId only if it's not already set in the context
+            setTempId(uuidv4());
+        }
+        // ... rest of your useEffect code ...
+    }, [navigatedTempId, contextTempId, setTempId]);
 
 /*     useEffect(() => {
         fetch('http://localhost:3001/api/questions')
@@ -142,8 +178,6 @@ const Question = () => {
         handleResponseChange({ target: { value: option } } as React.ChangeEvent<HTMLInputElement>);
         setSelectedOptions(prev => ({ ...prev, [questionId]: option }));
     };
-
-
 
     const renderInputField = (question: Question) => {
         const selectedOption = selectedOptions[question.id];
@@ -232,7 +266,8 @@ const Question = () => {
         const formattedResponses = responses.map((answer, index) => ({
             // userId: userId, 
             userId: userId, // Include userId if user is registered
-            tempId: !userId ? tempId : null,
+            // tempId: !userId ? tempId : null,
+            tempId: !userId ? (navigatedTempId || contextTempId) : null,
             questionId: questions[index].id, 
             answer: answer
         }));
@@ -269,8 +304,8 @@ const Question = () => {
           let emissionsEndpoint;
           if (userId) {
               emissionsEndpoint = `/api/emissions/user/${userId}`;
-          } else if (tempId) {
-              emissionsEndpoint = `/api/emissions/temporary/${tempId}`; // A new endpoint for tempId
+          } else if (tempIdToUse) {
+              emissionsEndpoint = `/api/emissions/temporary/${tempIdToUse}`; // A new endpoint for tempId
           }
       
           return fetch(`http://localhost:3001${emissionsEndpoint}`);
@@ -408,22 +443,30 @@ const Question = () => {
     };
 
 
+    
     const handlePartagerClick = () => {
-        console.log("TEST handlePartagerClick: ", tempId);
+        console.log("TEST handlePartagerClick: ", tempIdToUse);
         if (!userId) {
-            setTempId(tempId); // Set the generated tempId for unregistered user
+            setIsPartagerClicked(true);
+            // setTempId(tempId); // Set the generated tempId for unregistered users
+            navigate('/profil', { state: { tempId: tempIdToUse } });
         }
-        navigate('/profil');
-
+        // navigate('/profil');
     };
 
-
+    
+    
+    const progressPercentage = (currentQuestionIndex / totalQuestionsToAnswer) * 100;
 
     return (
         <Flex justify="space-between" align="center" flexDirection="column" gap={10} alignItems="center" justifyContent="center">
+            {/* <Progress value={progressPercentage} size="sm" colorScheme="green" /> */}
             {isQuestionAvailable && (
                 <Flex flex="2" m={10} width="80%" bgColor="#dddddd" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Questionnaire</Text>
+                    <Box width="80%" p={4}>
+                        <Progress value={progressPercentage} size="sm" colorScheme="green" />
+                    </Box>
                     {(currentQuestionIndex <= questions.length - 1 && !closeQuestionnaire) ?  (
                         <>
                         <Text fontWeight="bold" fontSize="xl"> {currentQuestionIndex+1}. {questions[currentQuestionIndex]?.question_text}</Text>
@@ -468,7 +511,7 @@ const Question = () => {
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone personnelle par an : {totalConsummationEmissions}kg</Text>
                     {/* { (userId == 999) && ( */}
                         <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous partager vos réponses et obtenir des suggestions personnalisées !
-                            <Button ml={10} bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" gap={3} onClick={handlePartagerClick}><Link to="/profil">Partager</Link><FaShareAlt size="24px" color="white" /></Button>
+                            <Button ml={10} bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" gap={3} onClick={handlePartagerClick}>{/* <Link to="/profil"> */}Partager{/* </Link> */}<FaShareAlt size="24px" color="white" /></Button>
                         </Text>
                     {/* )} */}
                     {/* <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button> */}

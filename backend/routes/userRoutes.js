@@ -134,7 +134,7 @@ router.post('/login', async (req, res) => {
                     res.status(200).send({ userId: user.userId, name: user.name, email: user.email, tempId: user.tempId });
                 } else {
                     // Passwords do not match
-                    res.status(401).send({ message: 'Invalid credentials' });
+                    res.status(401).send( "Les saisies sont incorrectes.");
                 }
             } else {
                 if (user && user.password === password) { 
@@ -146,12 +146,13 @@ router.post('/login', async (req, res) => {
                 //   res.status(200).send({ message: 'Login successful', user: {name: user.name, email: user.email} });
                     res.status(200).send({ userId: user.userId, name: user.name, email: user.email, password: user.password, tempId: user.tempId  } );
                 } else {
-                    res.status(401).send({ message: 'Invalid credentials' });
+                    res.status(401).send('Les saisies sont incorrectes.');
                 }
             }
         } else {
             // User not found
-            res.status(401).send({ message: 'User not found' });
+            // res.status(401).send({ message: 'L\Utilisateur n\'existe pas.' });
+            res.status(401).send("L'\Utilisateur n\'existe pas.");
         }
 
 
@@ -185,7 +186,7 @@ router.delete('/:id', async (req, res) => {
         if (result) {
             res.send('User deleted successfully');
         } else {
-            res.status(404).send('User not found');
+            res.status(404).send('L\Utilisateur n\'existe pas.');
         }
     } catch (error) {
         console.error('Error deleting user:', error);

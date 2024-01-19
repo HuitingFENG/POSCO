@@ -25,10 +25,10 @@ const responsesList = [];
 ]; */
 
 const usersList = [
-    { name: "admin", email: "admin@efrei.fr", password: "$2b$10$KEQLNT4TB3BFTj2m/m5YX.B2iCo6Lk1ZEB5ItS4e7y9eGLXSYP7Tu" },
-    { name: "student1", email: "student1@efrei.net", password: "$2b$10$gMKcu98m.DWj0cF6SwB5NeuD2Jwzh3juZpX2pfLW0oFbOuebLhBtW" },
-    { name: "student2", email: "student2@efrei.net", password: "$2b$10$MPe3hsguE4U9YF79h8SAEOpVNXqfkv7lRuDKE.fn0mFCtjZ0.YQb6" },
-    { name: "student3", email: "student3@efrei.net", password: "$2b$10$PsqQFN9ATlQ6FIPp3oMvIeAUhhg23hPyLTS55eoQeCixtz6RZvaiC" },
+    { id: 1, userId: 1, name: "admin", email: "admin@efrei.fr", password: "$2b$10$KEQLNT4TB3BFTj2m/m5YX.B2iCo6Lk1ZEB5ItS4e7y9eGLXSYP7Tu" },
+    { id: 2, userId: 2, name: "student1", email: "student1@efrei.net", password: "$2b$10$gMKcu98m.DWj0cF6SwB5NeuD2Jwzh3juZpX2pfLW0oFbOuebLhBtW" },
+    { id: 3, userId: 3, name: "student2", email: "student2@efrei.net", password: "$2b$10$MPe3hsguE4U9YF79h8SAEOpVNXqfkv7lRuDKE.fn0mFCtjZ0.YQb6" },
+    { id: 4, userId: 4, name: "student3", email: "student3@efrei.net", password: "$2b$10$PsqQFN9ATlQ6FIPp3oMvIeAUhhg23hPyLTS55eoQeCixtz6RZvaiC" },
 ];
 
 const emissionsList = [];

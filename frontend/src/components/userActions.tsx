@@ -79,16 +79,18 @@ const UserActions= () => {
   useEffect(() => {
     fetch('http://localhost:3001/api/emissions/')
         .then(response => response.json())
-        // .then(data => setEmissions(data))
         .then(data => {
           console.log("TEST data : ", data);
-          // Filter out emissions with userId 999
-          const filteredEmissions2 = data.filter((emission: { userId: number; }) => (emission.userId !== 999 ));
-          setEmissions(filteredEmissions2);
-          console.log("TEST filteredEmissions2 : ", filteredEmissions2);
+          /* const filteredEmissions2 = data.filter((emission: { userId: number; }) => (emission.userId !== 999 ));
           const filteredEmissions3 = filteredEmissions2.filter((emission: { userId: number; }) => (emission.userId !== 1 ));
-          setEmissions(filteredEmissions3);
-          console.log("TEST filteredEmissions3 : ", filteredEmissions3);
+          const validEmissions = filteredEmissions3.filter((emission: { tempId: string | null; }) => emission.tempId == null);
+          setEmissions(validEmissions);
+          console.log("TEST validEmissions : ", validEmissions); */
+          const filteredEmissions = data
+            .filter((emission: { userId: number; tempId: null; }) => emission.userId !== 999 && emission.userId !== 1 && emission.tempId == null)
+            .sort((a: Emission, b: Emission) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          setEmissions(filteredEmissions);
+          console.log("TEST filteredEmissions : ", filteredEmissions);
         })
         .catch(error => console.error('Error fetching emissions:', error));
       fetch(`http://localhost:3001/api/users/`)
