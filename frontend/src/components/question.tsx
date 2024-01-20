@@ -332,6 +332,7 @@ const Question = () => {
 
     return (
         <Flex justify="space-between" align="center" flexDirection="column" gap={10} alignItems="center" justifyContent="center">
+            
             {isQuestionAvailable && (
                 <Flex flex="2" m={10} width="80%" bgColor="#dddddd" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Questionnaire</Text>
@@ -402,6 +403,7 @@ const Question = () => {
 
 
         </Flex>
+        
     );
 };
 

@@ -344,3 +344,5 @@ function calculationForCountryEmissions (responses, countryEmissions, consummati
     console.log("TEST result: ", result);
     return result;
 };
+
+
