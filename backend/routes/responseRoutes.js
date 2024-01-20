@@ -7,7 +7,7 @@ const Response = require('../models/response');
 const Emission = require('../models/emission');
 const Question = require('../models/question');
 const Max = require('../models/max');
-const { fetchDataFromImpactCO2 } = require('./externalApiRoutes');
+const { fetchDataFromImpactCO2, fetchDataFromImpactCO2ByIdThematique, getEcvForSlug } = require('./externalApiRoutes');
 const { consummationEmissions, countryEmissions, } = require('../data/mockData');
 
 
@@ -138,6 +138,12 @@ router.post('/', async (req, res) => {
         .catch(error => console.error("Error: ", error));
     console.log("TEST calculateTransportEmissions(): ", transportEmissions);
     
+
+    transportEmissions2 = calculateEmissionsByImpactCO2(4, responses.find(i => i.questionId === 2).answer)
+        .then(value => console.log("TEST Emission from ImpactCO2: ", value))
+        .catch(error => console.error("Error: ", error));
+    console.log("TEST calculateEmissionsByImpactCO2(4): ", transportEmissions2);
+
 
     // console.log("TEST questionsList: ", questionsList);
     // console.log("TEST transportOptionsWithoutAvionFromImpactCO2: ", transportOptionsWithoutAvionFromImpactCO2);
@@ -409,21 +415,17 @@ function calculationForCountryEmissions (responses, countryEmissions, consummati
 
 
 
-
-
-
 async function calculateTransportEmissions(distance, transportType) {
     try {
         const apiData = await fetchDataFromImpactCO2(distance);
         console.log("TEST apiData: ", apiData);
-        const tgvData = apiData.data.find(item => item.name === transportType);
+        const resultData = apiData.data.find(item => item.name === transportType);
 
-        if (tgvData) {
-            console.log("TEST calculateTransportEmissions: ", tgvData.value); 
-            // console.log("TEST apiData.data.find(item => item.name === 'TGV').value: ", apiData.data.find(item => item.name === 'TGV').value);
-            return tgvData.value; // return the value if you need to use it elsewhere
+        if (resultData) {
+            // console.log("TEST calculateTransportEmissions: ", tgvData.value); 
+            return resultData.value; 
         } else {
-            console.log("TEST TGV data not found");
+            console.log("TEST calculateTransportEmissions() data not found");
         }
 
         
@@ -433,7 +435,32 @@ async function calculateTransportEmissions(distance, transportType) {
     }
 }
 
+async function calculateEmissionsByImpactCO2(idThematique, value) {
+    try {
+        const apiData = await fetchDataFromImpactCO2ByIdThematique(idThematique);
+        console.log("TEST apiData: ", apiData);
+
+        const tempData = apiData.data.find(item => item.slug === "tgv");
+        const resultData = tempData ? tempData.ecv : null;
+
+        console.log("TEST resultData calculateEmissionsByImpactCO2: ", resultData);
+        console.log("TEST value calculateEmissionsByImpactCO2: ", value);
+        
+        const resultData2 = resultData * value;
+
+        if (resultData) {
+            console.log("TEST resultData2 calculateEmissionsByImpactCO2: ", resultData2); 
+            return resultData2; 
+        } else {
+            console.log("TEST calculateEmissionsByImpactCO2 data not found");
+        }
 
 
-
+    // return getEcvForSlug('tgv').then(ecv => console.log('ECV for TGV:', ecv));        
+        
+    } catch (error) {
+        console.error('Error fetching data from the external API:', error);
+        throw error;
+    }
+}
 
