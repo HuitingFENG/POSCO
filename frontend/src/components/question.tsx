@@ -32,13 +32,8 @@ interface Emission {
 
 const Question = () => {
     const userContext = useUser();
-    // Get userId from userContext, or use 999 as a default
-    // const userId = userContext?.user?.userId || 999;
     const navigate = useNavigate();
     const userId = userContext?.user?.userId;
-    // const [tempId, setTempId] = useState<string | null>(null); // State to store temporary ID
-    
-    // const { tempId, setTempId } = useTempId();
     const { tempId: contextTempId, setTempId } = useTempId();
     const location = useLocation();
     const { tempId: navigatedTempId } = location.state || {};
@@ -46,50 +41,10 @@ const Question = () => {
     const [isPartagerClicked, setIsPartagerClicked] = useState(false);
     const { fromPartager, setFromPartager } = useContext(PartagerContext);
     const currentYear = new Date().getFullYear();
-    // console.log("Current Year: ", currentYear); 
-    
 
-
-/*     useEffect(() => {
-        setResponses([]);
-        setCurrentQuestionIndex(0);
-        setSubmissionComplete(false);
-        setSelectedOptions({});
-        setTotalEmission(0);
-        setTotalConsummationEmissions(0);
-        setTotalCountryEmissions(0);
-        setDisplayResponsesCalculation(false);
-
-        // Fetch questions when the component mounts
-        setIsLoading(true);
-        fetch('http://localhost:3001/api/questions')
-            .then(response => response.json())
-            .then(data => {
-                const sortedData = data.sort((a: {id: number; }, b: {id: number; }) => a.id - b.id);
-                setQuestions(sortedData);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
-
-
-        // Generate a temporary ID for unregistered users
-        if (!userId) {
-            setTempId(uuidv4());
-        }
-    }, [userId]); */
 
     useEffect(() => {
-        // Resetting state when the component mounts
         setResponses([]);
-/*         setTimeout(() => {
-            setSubmissionComplete(true);
-            setCurrentQuestionIndex(0);
-            // Any other navigation or state updates
-        }, 500); // delay of 500 milliseconds */
         setCurrentQuestionIndex(0);
         setSubmissionComplete(false);
         setSelectedOptions({});
@@ -98,7 +53,6 @@ const Question = () => {
         setTotalCountryEmissions(0);
         setDisplayResponsesCalculation(false);
 
-        // Fetch questions and generate a temporary ID for unregistered users
         setIsLoading(true);
         fetch('http://localhost:3001/api/questions')
             .then(response => response.json())
@@ -115,41 +69,7 @@ const Question = () => {
             .finally(() => {
                 setIsLoading(false);
             });
-        // fetch(`http://localhost:3001/api/maxs/${max}`).then();
-
-        // fetch(`http://localhost:3001/api/maxs/years/${currentYear}`)
-        //     .then(response => {
-        //         if (!response.ok) {
-        //             throw new Error('Network response was not ok');
-        //         }
-        //         return response.json();
-        //     })
-        //     .then(data => {
-        //         console.log('Data for the year:', data);
-        //         // Handle the data as needed
-        //         setMaxPromotion(data);
-        //         console.log("TEST setMaxPromotion data.L1, data.L2: ", data.L1, data.L2);
-        //         const sortedData = data.sort((a: { id: number; }, b: { id: number; }) => b.id - a.id);
-        //         const highestIdData = sortedData[0];
-
-        //         setMaxPromotion(highestIdData);
-                
-        //         console.log("Selected Data with the highest ID:", highestIdData);
-        //         // console.log("Selected Data with the highest ID:", highestIdData.L1, highestIdData.M1);
-        //         // setPromotion(highestIdData.M1)
-        //         console.log("TEST promotion: ", promotion);
-        //         console.log("TEST setMaxPromotion: ", highestIdData.promotion);
-        //         console.log("TEST maxPromotion: ", maxPromotion);
-        //         // console.log("TEST setPromotion: ", promotion);
-        //         setMaxCarbonByPromotion(highestIdData.promotion);
-        //         console.log("TEST setMaxCarbonByPromotion(highestIdData.promotion): ", maxCarbonByPromotion);
-        //     })
-        //     .catch(error => {
-        //         console.error('There was a problem with the fetch operation:', error);
-        //     });
-
-
-    }, [userId]); // Dependency on userId
+    }, [userId]); 
 
 
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
@@ -180,27 +100,21 @@ const Question = () => {
   
     useEffect(() => {
         if (responses.length > 0) {
-            // Assuming the first response contains the promotion data
-            // Adjust based on your actual data structure
             const newPromotion = responses[0];
             setPromotion(newPromotion);
         }
     }, [responses]);
 
     useEffect(() => {
-        // This useEffect will now run after promotion is set
         if (promotion) {
             fetch(`http://localhost:3001/api/maxs/years/${currentYear}`)
                 .then(response => response.json())
                 .then(data => {
                     const sortedData = data.sort((a: { id: number; }, b: { id: number; }) => b.id - a.id);
                     const highestIdData = sortedData[0];
-    
-                    // Assuming the data structure contains a field that matches the promotion
                     const maxCarbonByPromotion = highestIdData[promotion];
                     setMaxCarbonByPromotion(maxCarbonByPromotion);
                     console.log("TEST setMaxCarbonByPromotion(maxCarbonByPromotion): ", maxCarbonByPromotion);
-                    // Other operations...
                 })
                 .catch(error => {
                     console.error('There was a problem with the fetch operation:', error);
@@ -211,39 +125,20 @@ const Question = () => {
 
     useEffect(() => {
         if (responses[questions.length - 3] === 'Non') {
-            // If the user answers 'Non' to the specific question, skip the last two questions
             setTotalQuestionsToAnswer(questions.length - 2);
         } else {
-            // Otherwise, the user needs to answer all questions
             setTotalQuestionsToAnswer(questions.length);
         }
     }, [responses, questions.length]);
 
 
     useEffect(() => {
-        // If there's a tempId from navigation, use it. Otherwise, stick with the context tempId
         if (navigatedTempId) {
             setTempId(navigatedTempId);
         } else if (!contextTempId) {
-            // Generate a new tempId only if it's not already set in the context
             setTempId(uuidv4());
         }
-        // ... rest of your useEffect code ...
     }, [navigatedTempId, contextTempId, setTempId]);
-
-/*     useEffect(() => {
-        fetch('http://localhost:3001/api/questions')
-            .then(response => response.json())
-            .then(data => {
-                const sortedData = data.sort((a: {id: number; }, b: {id: number; }) => a.id - b.id);
-                setQuestions(sortedData);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-                setIsLoading(false);
-            });
-    }, []); */
 
     const handleOptionClick = (questionId: number, option: string) => {
         handleResponseChange({ target: { value: option } } as React.ChangeEvent<HTMLInputElement>);
@@ -260,12 +155,10 @@ const Question = () => {
                     {question.options?.map((option, idx) => (
                         <Button 
                             key={idx}
-                            // onClick={() => handleResponseChange({ target: { value: option } } as React.ChangeEvent<HTMLInputElement>)}
-                            // style={{ margin: '5px' }}
                             onClick={() => handleOptionClick(question.id, option)}
                             style={{ 
                                 margin: '5px',
-                                backgroundColor: selectedOption === option ? '#4682B4' : 'white', // Change color if selected
+                                backgroundColor: selectedOption === option ? '#4682B4' : 'white', 
                                 color: selectedOption === option ? 'white' : 'black'
                             }}
                         >
@@ -282,11 +175,10 @@ const Question = () => {
                 {question.options?.map((option, idx) => (
                     <Button
                         key={idx}
-                        // onClick={() => handleResponseChange({ target: { value: option } } as React.ChangeEvent<HTMLInputElement>)} 
                         onClick={() => handleOptionClick(question.id, option)}
                         style={{ 
                             margin: '5px',
-                            backgroundColor: selectedOption === option ? '#4682B4' : 'white', // Change color if selected
+                            backgroundColor: selectedOption === option ? '#4682B4' : 'white',
                             color: selectedOption === option ? 'white' : 'black'
                         }}
                     >
@@ -308,46 +200,16 @@ const Question = () => {
         setResponses(newResponses);
         
     }; 
-
-/*     const handleResponseChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { value, type } = event.target;
-        const newResponses = [...responses];
-    
-        if (type === 'number') {
-            if (value === '' || !isNaN(Number(value))) {
-                setInputError(false);
-                const newResponses = [...responses];
-                newResponses[currentQuestionIndex] = value;
-                setResponses(newResponses);
-            } else {
-                setInputError(true);
-            }
-        } else {
-            newResponses[currentQuestionIndex] = value;
-            setResponses(newResponses);
-        } 
-    }; */
     
 
     const sendResponses = () => {
         const formattedResponses = responses.map((answer, index) => ({
-            // userId: userId, 
-            userId: userId, // Include userId if user is registered
-            // tempId: !userId ? tempId : null,
+            userId: userId, 
             tempId: !userId ? (navigatedTempId || contextTempId) : null,
             questionId: questions[index].id, 
             answer: answer
         }));
         
-        // const endpoint = userId ? '/api/responses' : '/api/responses/temporary';
-
-        // fetch('http://localhost:3001${endpoint}', {
-        //   method: 'POST',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        //   body: JSON.stringify({ responses: formattedResponses }),
-        // })
         fetch('http://localhost:3001/api/responses', {
           method: 'POST',
           headers: {
@@ -363,100 +225,39 @@ const Question = () => {
         })
         .then(data => {
           console.log("TEST Sending formatted responses:", formattedResponses);
-        //   setPromotion(formattedResponses[0].answer);
-        //   console.log("TEST promotion :", formattedResponses[0].answer);
           console.log('Success:', data);
-        //   return fetch(`http://localhost:3001/api/emissions/user/${userId}`);
-          /* setResponses([]);
-          setSubmissionComplete(true); 
-          setCurrentQuestionIndex(0); */
           let emissionsEndpoint;
           if (userId) {
               emissionsEndpoint = `/api/emissions/user/${userId}`;
           } else if (tempIdToUse) {
-              emissionsEndpoint = `/api/emissions/temporary/${tempIdToUse}`; // A new endpoint for tempId
+              emissionsEndpoint = `/api/emissions/temporary/${tempIdToUse}`; 
           }
       
           return fetch(`http://localhost:3001${emissionsEndpoint}`);
         })
         .then(response => response.json())
         .then(emissionData => {
-            // const latestEmission = emissionData.reduce((latest: Emission, current: Emission) => {
-            //     return (new Date(latest.createdAt) > new Date(current.createdAt)) ? latest : current;
-            // });
-            /* let latestEmission;
-            if (emissionData && emissionData.length > 0) {
-                latestEmission = emissionData.reduce((latest: Emission, current: Emission) => {
-                    return (new Date(latest.createdAt) > new Date(current.createdAt)) ? latest : current;
-                });
-            } else {
-                // Handle the case where emissionData is empty
-                latestEmission = {}; // Or any other default value you prefer
-            } */
             let latestEmission = emissionData.length > 0
             ? emissionData.reduce((latest: Emission, current: Emission) => new Date(latest.createdAt) > new Date(current.createdAt) ? latest : current) : {};
-
-
-            // console.log("TEST latestEmission: ", latestEmission);
-
             setResponsesCalculation(latestEmission);
-            // setTempResponses(latestEmission.responsesList);
-            // console.log("TEST responsesList json file: ", latestEmission.responsesList);
             
             setTotalEmission(latestEmission.totalEmissions);
             setTotalConsummationEmissions(latestEmission.totalConsummationEmissions);
             setTotalCountryEmissions(latestEmission.totalCountryEmissions);
             setOverMax(latestEmission.overMax);
             console.log("TEST latestEmission.overMax: ", latestEmission.overMax);
-            // console.log('Submission complete');
             setSubmissionComplete(true);
             setCurrentQuestionIndex(0);
             setResponses([]);
-/*             setTimeout(() => {
-                setSubmissionComplete(true);
-                setCurrentQuestionIndex(0);
-                // Any other navigation or state updates
-            }, 500); // delay of 500 milliseconds */
         })
         .catch((error) => {
           console.error('Error:', error);
         });
     };
 
-    // useEffect for debugging
     useEffect(() => {
         console.log("Responses updated:", responses);
     }, [responses]);
-
-   /*  const retake = () => {
-        setSubmissionComplete(false);
-        setRetakeTest(true);
-    };
- */
-
-/*     const shouldDisplayCurrentQuestion = () => {
-        const currentQuestionId = questions[currentQuestionIndex].id;
-        const responseToQ8 = responses[8];
-
-        // Skip questions 9 and 10 if the response to question 8 is not 'Oui'
-        if ((currentQuestionId === 9 || currentQuestionId === 10) && responseToQ8 !== 'Oui') {
-            return false;
-        }
-        return true;
-    }; */
-
-/*     const shouldDisplayCurrentQuestion = () => {
-        if (currentQuestionIndex >= questions.length) {
-            return false;
-        }
-        const currentQuestionId = questions[currentQuestionIndex].id;
-        const responseToQ8 = responses[8];
-
-        if ((currentQuestionId === 9 || currentQuestionId === 10) && responseToQ8 !== 'Oui') {
-            return false;
-        }
-        return true;
-    }; */
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -506,7 +307,6 @@ const Question = () => {
             setCurrentQuestionIndex(prevIndex => prevIndex + 1);
         } else {
             console.log("TEST user's option for question 6 (not countryOnlyEnAvion): ", responseToQ6);
-            // setCurrentQuestionIndex(prevIndex => prevIndex + 1);
             
             if (responseToQ8 === 'Non') {
                 console.log("TEST user chooses NON for question 8.");
@@ -534,7 +334,6 @@ const Question = () => {
 
     return (
         <Flex justify="space-between" align="center" flexDirection="column" gap={10} alignItems="center" justifyContent="center">
-            {/* <Progress value={progressPercentage} size="sm" colorScheme="green" /> */}
             {isQuestionAvailable && (
                 <Flex flex="2" m={10} width="80%" bgColor="#dddddd" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Questionnaire</Text>
@@ -557,20 +356,12 @@ const Question = () => {
                             <Button bgColor="#003153" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={() => setCurrentQuestionIndex(prevIndex => Math.max(prevIndex - 1, 0))} disabled={currentQuestionIndex === 0}>
                                 <FaArrowLeft size="24px" color="white" />Précédent
                             </Button>
-                           {/*  <Button bgColor="#003153" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={() => setCurrentQuestionIndex(prevIndex => prevIndex + 1)}>
-                                Suivant<FaArrowRight size="24px" color="white" />
-                            </Button></> */}
-
                              <Button bgColor="#003153" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={handleNextClick}>
                                 Suivant<FaArrowRight size="24px" color="white" />
                             </Button></>
 
                         ) : (
                             <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={sendResponses}>Envoyer<FaPaperPlane size="24px" color="white" /></Button>
-                            /* <Flex flexDirection="row" justify="space-between" align="center" gap={200}>
-                                {submissionComplete && (<Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={sendResponses}>Envoyer<FaPaperPlane size="24px" color="white" /></Button>)}
-                                {!submissionComplete && (<Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button>)}
-                            </Flex> */
                         )}
                     </Flex>
                 </Flex>
@@ -597,10 +388,8 @@ const Question = () => {
                             </Flex> 
                     )}
                         <Text fontWeight="bold" fontSize="xl" color="black" textAlign="center">Merci de nous partager vos réponses et obtenir des suggestions personnalisées !
-                            <Button ml={10} bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" gap={3} onClick={handlePartagerClick}>{/* <Link to="/profil"> */}Partager{/* </Link> */}<FaShareAlt size="24px" color="white" /></Button>
+                            <Button ml={10} bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" gap={3} onClick={handlePartagerClick}>Partager<FaShareAlt size="24px" color="white" /></Button>
                         </Text>
-             
-                    {/* <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={retake}>Réessayer<FaPaperPlane size="24px" color="white" /></Button> */}
                 </Flex>
             )}
 
