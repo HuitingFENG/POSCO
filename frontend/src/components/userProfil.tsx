@@ -165,8 +165,6 @@ const UserProfil = () => {
             </Flex>
           </Flex>
 
-
-
           {userId === 1 && (
             <Flex flex="3" flexDirection="column" alignItems="center" gap={5}>
               <Flex gap={10} justifyContent="center" my={5}>
@@ -181,8 +179,8 @@ const UserProfil = () => {
                   onClick={handleMaxModification}
                   _hover={{ bg: "#004175" }} // Hover effect
                 >
-                  <FaEdit size={24} color="blue" />
-                  <Text ml={3}>Modifier le nombre MaxEmissionCarbon</Text>
+                  <div style={{ border: '1px solid white', borderRadius: '10%', display: 'inline-block', padding: '5px', backgroundColor:"white"}}><FaEdit size={24} color="blue" /></div>
+                  <Text ml={3}>Modifier les max d'empreinte carbon</Text>
                 </Button>
                 <Button
                   bgColor="#003153"
@@ -195,8 +193,8 @@ const UserProfil = () => {
                   onClick={navigateToActions}
                   _hover={{ bg: "#004175" }} // Hover effect
                 >
-                  <FaBookReader size={24} color="green" />
-                  <Text ml={3}>Lire la liste d'émissions carbons</Text>
+                  <div style={{ border: '1px solid white', borderRadius: '10%', display: 'inline-block', padding: '5px', backgroundColor:"white"}}><FaBookReader size={24} color="green" /></div>
+                  <Text ml={3}>Lire la liste de soumissions d'étudiants</Text>
                 </Button>
               </Flex>
               {adminModifyMax && <AdminMaxForm />}
