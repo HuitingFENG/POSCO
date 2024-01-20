@@ -7,8 +7,8 @@ const Response = require('../models/response');
 const Emission = require('../models/emission');
 const Question = require('../models/question');
 const Max = require('../models/max');
-const { fetchDataFromImpactCO2, fetchDataFromImpactCO2ByIdThematique, getEcvForSlug } = require('./externalApiRoutes');
-const { consummationEmissions, countryEmissions, } = require('../data/mockData');
+const { fetchDataFromImpactCO2, fetchDataFromImpactCO2ByIdThematique, getEcvForSlug, } = require('./externalApiRoutes');
+const { consummationEmissions, countryEmissions, transportOptionsFromImpactCO2LongTrip, transportOptionsFromImpactCO2 } = require('../data/mockData');
 
 
 
@@ -133,22 +133,30 @@ router.post('/', async (req, res) => {
     // const responseValue = findResponseValue(responses, questionIdToFind);
     // console.log("Response value for questionId 4:", responseValue);
 
-    transportEmissions = calculateTransportEmissions(responses.find(i => i.questionId === 2).answer, responses.find(i => i.questionId === 3).answer)
-        .then(value => console.log("TEST Emission from ImpactCO2: ", value))
-        .catch(error => console.error("Error: ", error));
-    console.log("TEST calculateTransportEmissions(): ", transportEmissions);
+    // transportEmissions = calculateTransportEmissionsShortTripPerRound(responses.find(i => i.questionId === 2).answer, responses.find(i => i.questionId === 3).answer)
+    //     .then(value => console.log("TEST Emission from ImpactCO2 calculateTransportEmissionsShortTrip: ", value))
+    //     .catch(error => console.error("Error: ", error));
+    // console.log("TEST calculateTransportEmissionsShortTrip: ", transportEmissions);
     
 
-    transportEmissions2 = calculateEmissionsByImpactCO2(4, responses.find(i => i.questionId === 2).answer)
-        .then(value => console.log("TEST Emission from ImpactCO2: ", value))
-        .catch(error => console.error("Error: ", error));
-    console.log("TEST calculateEmissionsByImpactCO2(4): ", transportEmissions2);
+    // transportEmissions2 = calculateEmissionsByImpactCO2(4, responses.find(i => i.questionId === 2).answer)
+    //     .then(value => console.log("TEST Emission from ImpactCO2: ", value))
+    //     .catch(error => console.error("Error: ", error));
+    // console.log("TEST calculateEmissionsByImpactCO2(4): ", transportEmissions2);
+
+    // transportEmissions2 = calculateTransportEmissionsLongTripPerRound(responses.find(i => i.questionId === 9).answer, responses.find(i => i.questionId === 10).answer)
+    // .then(value => console.log("TEST Emission from ImpactCO2 calculateTransportEmissionsLongTrip: ", value))
+    // .catch(error => console.error("Error: ", error));
+    // console.log("TEST calculateTransportEmissionsLongTrip: ", transportEmissions2);
+
 
 
     // console.log("TEST questionsList: ", questionsList);
     // console.log("TEST transportOptionsWithoutAvionFromImpactCO2: ", transportOptionsWithoutAvionFromImpactCO2);
     // console.log("TEST transportOptionsFromImpactCO2: ", transportOptionsFromImpactCO2);
 
+
+    console.log("TEST calculateRepasEmissionsPerYear: ", calculateRepasEmissionsPerYear(responses.find(i => i.questionId === 4).answer, responses.find(i => i.questionId === 5).answer).then(value => console.log("TEST calculateRepasEmissionsPerYear: ", value)).catch(error => console.error("Error: ", error)));
 
     res.status(201).json({ message: "Responses saved successfully" });
   } catch (error) {
@@ -297,6 +305,9 @@ function calculation(responses, countryEmissions, consummationEmissions) {
 
 
 
+
+
+
 async function calculationForAll(responses, countryEmissions, consummationEmissions) {
     let totalConsummationEmissions = 0;
     let totalCountryEmissions = 0;
@@ -415,52 +426,109 @@ function calculationForCountryEmissions (responses, countryEmissions, consummati
 
 
 
-async function calculateTransportEmissions(distance, transportType) {
+async function calculateTransportEmissionsShortTripPerRound(distance, transportType) {
     try {
         const apiData = await fetchDataFromImpactCO2(distance);
-        console.log("TEST apiData: ", apiData);
+        console.log("TEST apiData calculateTransportEmissionsShortTrip: ", apiData);
         const resultData = apiData.data.find(item => item.name === transportType);
-
         if (resultData) {
             // console.log("TEST calculateTransportEmissions: ", tgvData.value); 
             return resultData.value; 
         } else {
             console.log("TEST calculateTransportEmissions() data not found");
         }
-
-        
     } catch (error) {
         console.error('Error fetching data from the external API:', error);
         throw error;
     }
 }
 
-async function calculateEmissionsByImpactCO2(idThematique, value) {
+// async function calculateEmissionsByImpactCO2(idThematique, value) {
+//     try {
+//         const apiData = await fetchDataFromImpactCO2ByIdThematique(idThematique);
+//         console.log("TEST apiData: ", apiData);
+
+//         const tempData = apiData.data.find(item => item.slug === "tgv");
+//         const resultData = tempData ? tempData.ecv : null;
+
+//         console.log("TEST resultData calculateEmissionsByImpactCO2: ", resultData);
+//         console.log("TEST value calculateEmissionsByImpactCO2: ", value);
+        
+
+//         if (resultData) {
+//             console.log("TEST resultData2 calculateEmissionsByImpactCO2: ", resultData * value); 
+//             return resultData * value; 
+//         } else {
+//             console.log("TEST calculateEmissionsByImpactCO2 data not found");
+//         }
+
+//     // return getEcvForSlug('tgv').then(ecv => console.log('ECV for TGV:', ecv));        
+        
+//     } catch (error) {
+//         console.error('Error fetching data from the external API:', error);
+//         throw error;
+//     }
+// };
+
+
+async function calculateTransportEmissionsLongTripPerRound(distance, transportType) {
+    // const transportSlug = transportOptionsFromImpactCO2LongTrip.filter(option => option.name === transportType ).map(item => item.slug);
+    function findSlugByName(name) {
+        const option = transportOptionsFromImpactCO2.find(option => option.name === name);
+        return option ? option.slug : null;
+    }
+    const transportSlug = findSlugByName(transportType);
+    // console.log("TEST transportSlug: ", transportSlug);
+    
     try {
-        const apiData = await fetchDataFromImpactCO2ByIdThematique(idThematique);
-        console.log("TEST apiData: ", apiData);
-
-        const tempData = apiData.data.find(item => item.slug === "tgv");
+        const apiData = await fetchDataFromImpactCO2ByIdThematique(4);
+        console.log("TEST apiData calculateTransportEmissionsLongTrip: ", apiData);
+        const tempData = apiData.data.find(item => item.slug === transportSlug);
         const resultData = tempData ? tempData.ecv : null;
-
-        console.log("TEST resultData calculateEmissionsByImpactCO2: ", resultData);
-        console.log("TEST value calculateEmissionsByImpactCO2: ", value);
-        
-        const resultData2 = resultData * value;
-
         if (resultData) {
-            console.log("TEST resultData2 calculateEmissionsByImpactCO2: ", resultData2); 
-            return resultData2; 
+            // console.log("TEST resultData2 calculateTransportEmissionsLongTrip: ", resultData * distance); 
+            return resultData * distance; 
         } else {
-            console.log("TEST calculateEmissionsByImpactCO2 data not found");
+            console.log("TEST calculateTransportEmissionsLongTrip data not found");
         }
-
-
-    // return getEcvForSlug('tgv').then(ecv => console.log('ECV for TGV:', ecv));        
-        
     } catch (error) {
         console.error('Error fetching data from the external API:', error);
         throw error;
     }
+};
+
+
+async function calculateRepasEmissionsPerYear(repasType, nbrRepas) {
+    try {
+        const apiData = await fetchDataFromImpactCO2ByIdThematique(2);
+        console.log("TEST fetchDataFromImpactCO2ByIdThematique: ", apiData);
+        const tempData = apiData.data.find(item => item.name === repasType);
+        const resultData = tempData ? tempData.ecv : null;
+
+        if (resultData) {
+            // console.log("TEST resultData: ", resultData); 
+            return resultData * nbrRepas * 52; // 52 weeks = 1 year 
+        } else {
+            console.log("TEST calculateTransportEmissions() data not found");
+        }
+
+    } catch (error) {
+        console.error('Error fetching data from the external API:', error);
+        throw error;
+    }
+};
+
+
+
+
+
+function calculateTotalEmissionsFromImpactCO2(responses) {
+    let totalEmissions = 0;
+    let totalCountryEmissions = 0;
+    let totalConsummationEmissions = 0;
+    let subCountryEmissions = [];
+    let subConsummationEmissions = [];
+    let totalOverMax = false;
+    let resultList = []; 
 }
 

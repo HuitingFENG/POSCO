@@ -155,10 +155,10 @@ const Question = () => {
     const renderInputField = (question: Question) => {
         const selectedOption = selectedOptions[question.id];
 
-        const shouldUseSelectTag = question.options && question.options.length > 7  && (question.id === 3 || question.id === 7 || question.id === 10 || question.id === 6);
+        const shouldUseSelectTag = question.options && question.options.length > 5 ;
 
         if (shouldUseSelectTag) {
-            return (
+            return ( 
                 <Select width="50%" bgColor="white" textStyle="bold" textColor="black"
                     placeholder="Sélectionner un choix"
                     onChange={(event) => handleOptionClick(question.id, event.target.value)}
@@ -170,6 +170,7 @@ const Question = () => {
                 </Select>
             );
         }
+
 
 
         switch (question.type) {
