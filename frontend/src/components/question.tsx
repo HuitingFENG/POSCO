@@ -8,6 +8,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { useTempId } from "../context/TempIdContext";
 import { PartagerContext } from '../context/PartagerContext';
 import ResponseVisualization from './responseVisualization';
+import TransportData from './transportData';
+import { Select } from "@chakra-ui/react";
+
 
 interface Question {
     id: number;
@@ -145,20 +148,59 @@ const Question = () => {
         setSelectedOptions(prev => ({ ...prev, [questionId]: option }));
     };
 
+
+
+
+
     const renderInputField = (question: Question) => {
         const selectedOption = selectedOptions[question.id];
 
+        const shouldUseSelectTag = question.options && question.options.length > 7  && (question.id === 3 || question.id === 7 || question.id === 10 || question.id === 6);
+
+        if (shouldUseSelectTag) {
+            return (
+                <Select width="50%" bgColor="white" textStyle="bold" textColor="black"
+                    placeholder="Sélectionner un choix"
+                    onChange={(event) => handleOptionClick(question.id, event.target.value)}
+                    value={selectedOption}
+                >
+                    {question.options?.map((option, idx) => (
+                        <option key={idx} value={option}>{option}</option>
+                    ))}
+                </Select>
+            );
+        }
+
+
         switch (question.type) {
           case 'text':
+            // return (
+            //     <Flex >
+            //         {question.options?.map((option, idx) => (
+            //             <Button 
+            //                 key={idx}
+            //                 onClick={() => handleOptionClick(question.id, option)}
+            //                 style={{ 
+            //                     margin: '5px',
+            //                     backgroundColor: selectedOption === option ? '#4682B4' : 'white', 
+            //                     color: selectedOption === option ? 'white' : 'black'
+            //                 }}
+            //             >
+            //                 {option}
+            //             </Button>
+            //         ))}
+            //     </Flex>
+            // );
+
             return (
-                <Flex >
+                <Flex>
                     {question.options?.map((option, idx) => (
-                        <Button 
+                        <Button
                             key={idx}
                             onClick={() => handleOptionClick(question.id, option)}
-                            style={{ 
+                            style={{
                                 margin: '5px',
-                                backgroundColor: selectedOption === option ? '#4682B4' : 'white', 
+                                backgroundColor: selectedOption === option ? '#4682B4' : 'white',
                                 color: selectedOption === option ? 'white' : 'black'
                             }}
                         >
@@ -167,6 +209,9 @@ const Question = () => {
                     ))}
                 </Flex>
             );
+
+
+
           case 'number':
             return  <Input width="250px" type="number" value={responses[currentQuestionIndex] || ''} onChange={handleResponseChange} min={minValue} max={maxValue} step={stepValue} isInvalid={inputError} /> 
           case 'mcq':
@@ -366,6 +411,7 @@ const Question = () => {
                 </Flex>
             )}
 
+            {/* {submissionComplete && <TransportData />} */}
             {submissionComplete && <ResponseVisualization />}
             
             {submissionComplete && (

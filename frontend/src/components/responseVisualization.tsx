@@ -216,6 +216,10 @@ const ResponseVisualization = () => {
             <Box w="100%" h="100%" display="flex" justifyContent="center" alignItems="center" p ={4} >
                 <Doughnut data={countryData} options={countryChartOptions} />
             </Box>
+
+
+
+            
         </Flex>
     );
 };

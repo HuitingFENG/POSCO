@@ -2,11 +2,14 @@
 
 const express = require('express');
 const router = express.Router();
+const axios = require('axios'); 
 const Response = require('../models/response');
 const Emission = require('../models/emission');
 const Question = require('../models/question');
 const Max = require('../models/max');
-const { consummationEmissions, countryEmissions, maxMobiliteCarbonEmissionList  } = require('../data/mockData');
+const { fetchDataFromImpactCO2 } = require('./externalApiRoutes');
+const { consummationEmissions, countryEmissions, } = require('../data/mockData');
+
 
 
 router.get('/', async (req, res) => {
@@ -100,12 +103,14 @@ router.post('/', async (req, res) => {
 
     for (const response of responses) {
     //   await Response.create(response);
-    const newResponse = await Response.create(response);
+      const newResponse = await Response.create(response);
       responseInstances.push(newResponse);
      /*  console.log("TEST: ", responses[4].answer); */
     }
+    // console.log("TEST : responseInstances : ", responseInstances);
     const responseIds = responseInstances.map(instance => instance.id);
-    const [total, totalConsummationEmissions, totalCountryEmissions, totalOverMax] = calculationForAll(responses, countryEmissions, consummationEmissions);
+    // console.log("TEST responseIds: ", responseIds); 
+    const [total, totalConsummationEmissions, totalCountryEmissions, totalOverMax] = await calculationForAll(responses, countryEmissions, consummationEmissions);
     console.log("TEST total, totalConsummationEmissions, totalCountryEmissions, totalOverMax: ", total, totalConsummationEmissions, totalCountryEmissions, totalOverMax)
     const savedTotal = await Emission.create({
         userId: responses[0].userId, 
@@ -116,13 +121,37 @@ router.post('/', async (req, res) => {
         totalCountryEmissions: totalCountryEmissions,
         overMax: totalOverMax,
     });
-    console.log("TEST savedTotal: ", savedTotal)
+    console.log("TEST savedTotal: ", savedTotal);
+
+
+    // const findResponseValue = (responses, questionId) => {
+    //     const response = responses.find(response => response.questionId === questionId);
+    //     return response ? response.answer : null;
+    // };
+    
+    // const questionIdToFind = 4;
+    // const responseValue = findResponseValue(responses, questionIdToFind);
+    // console.log("Response value for questionId 4:", responseValue);
+
+    transportEmissions = calculateTransportEmissions(responses.find(i => i.questionId === 2).answer, responses.find(i => i.questionId === 3).answer)
+        .then(value => console.log("TEST Emission from ImpactCO2: ", value))
+        .catch(error => console.error("Error: ", error));
+    console.log("TEST calculateTransportEmissions(): ", transportEmissions);
+    
+
+    // console.log("TEST questionsList: ", questionsList);
+    // console.log("TEST transportOptionsWithoutAvionFromImpactCO2: ", transportOptionsWithoutAvionFromImpactCO2);
+    // console.log("TEST transportOptionsFromImpactCO2: ", transportOptionsFromImpactCO2);
+
+
     res.status(201).json({ message: "Responses saved successfully" });
   } catch (error) {
     console.error('Error saving response:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
+
 
 router.put('/:id', async (req, res) => {
     try {
@@ -155,6 +184,15 @@ router.delete('/:id', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
+
+
+
+
+
+
+
 
 module.exports = router;
 
@@ -253,7 +291,7 @@ function calculation(responses, countryEmissions, consummationEmissions) {
 
 
 
-function calculationForAll(responses, countryEmissions, consummationEmissions) {
+async function calculationForAll(responses, countryEmissions, consummationEmissions) {
     let totalConsummationEmissions = 0;
     let totalCountryEmissions = 0;
     let totalOverMax = false;
@@ -302,25 +340,50 @@ function calculationForAll(responses, countryEmissions, consummationEmissions) {
 
 
 
-    const currentYear = new Date().getFullYear();
-    // console.log("Current Year: ", currentYear); 
-    const tempAnswer = responseByQuestionId[1];
-    // console.log("tempAnswer: ", tempAnswer);
-    // const yearData = maxMobiliteCarbonEmissionList.find(item => item.year === currentYear);
-    const yearDataList = maxMobiliteCarbonEmissionList.filter(item => item.year === currentYear);
-    const highestIdEntry = yearDataList.reduce((prev, current) => (prev.id > current.id) ? prev : current, {});
+    // const currentYear = new Date().getFullYear();
+    // // console.log("Current Year: ", currentYear); 
+    // const tempAnswer = responseByQuestionId[1];
+    // // console.log("tempAnswer: ", tempAnswer);
+    // // const yearData = maxMobiliteCarbonEmissionList.find(item => item.year === currentYear);
+    // const yearDataList = maxMobiliteCarbonEmissionList.filter(item => item.year === currentYear);
+    // const highestIdEntry = yearDataList.reduce((prev, current) => (prev.id > current.id) ? prev : current, {});
 
-    // if (highestIdEntry && highestIdEntry[tempAnswer] !== undefined) {
-    //     console.log("TEST maxMobiliteCarbonEmissionList: ", highestIdEntry[tempAnswer]);
-    // } else {
-    //     console.log("No data found for the year ", currentYear);
+    // // if (highestIdEntry && highestIdEntry[tempAnswer] !== undefined) {
+    // //     console.log("TEST maxMobiliteCarbonEmissionList: ", highestIdEntry[tempAnswer]);
+    // // } else {
+    // //     console.log("No data found for the year ", currentYear);
+    // // };
+
+    // if ( totalCountryEmissions > highestIdEntry[tempAnswer] ) {
+    //     totalOverMax = true;
     // };
+    // // console.log("TEST totalOverMax: ", totalOverMax);
 
-    if ( totalCountryEmissions > highestIdEntry[tempAnswer] ) {
-        totalOverMax = true;
-    };
-    // console.log("TEST totalOverMax: ", totalOverMax);
+   
+    const currentYear = new Date().getFullYear();
+    try {
+        // Fetch the max emissions data for the current year
+        const maxData = await Max.findOne({
+            where: { year: currentYear },
+            order: [['id', 'DESC']] // Assuming you want the latest entry for the year
+        });
 
+        if (maxData) {
+            const tempAnswer = responseByQuestionId[1];
+            const maxEmission = maxData[tempAnswer];
+
+            if (totalCountryEmissions > maxEmission) {
+                totalOverMax = true;
+            }
+        } else {
+            console.log('No max emission data found for the year', currentYear);
+        }
+    } catch (error) {
+        console.error('Error fetching max emission data:', error);
+    }
+
+
+    console.log("TEST totalOverMax: ", totalOverMax);
     return [total, totalConsummationEmissions, totalCountryEmissions, totalOverMax];
 };
 
@@ -334,15 +397,43 @@ function calculationForConsummationEmissions () {
 };
 
 
+
 function calculationForCountryEmissions (responses, countryEmissions, consummationEmissions) {
     let totalMobiliteEmissions = [];
     let totalSwimEmissions = [];
     let result = {totalMobiliteEmissions, totalSwimEmissions};
 
-
-    
     console.log("TEST result: ", result);
     return result;
 };
+
+
+
+
+
+
+async function calculateTransportEmissions(distance, transportType) {
+    try {
+        const apiData = await fetchDataFromImpactCO2(distance);
+        console.log("TEST apiData: ", apiData);
+        const tgvData = apiData.data.find(item => item.name === transportType);
+
+        if (tgvData) {
+            console.log("TEST calculateTransportEmissions: ", tgvData.value); 
+            // console.log("TEST apiData.data.find(item => item.name === 'TGV').value: ", apiData.data.find(item => item.name === 'TGV').value);
+            return tgvData.value; // return the value if you need to use it elsewhere
+        } else {
+            console.log("TEST TGV data not found");
+        }
+
+        
+    } catch (error) {
+        console.error('Error fetching data from the external API:', error);
+        throw error;
+    }
+}
+
+
+
 
 

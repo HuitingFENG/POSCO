@@ -78,19 +78,69 @@ const transportOptionsWithoutTDVApied = consummationEmissions
     .map(item => item.name);
 
 
+// const transportOptionsFromImpactCO2 = [
+//     {id: 1, name: "Avion (court courrier)"},
+//     {"id": 2, "name: "TGV"},
+//     {"id": 3, "name": "Intercités"},
+//     {"id": 4,"name": "Voiture (Moteur thermique)"},
+//     {"id": 5,"name": "Voiture (Moteur électrique)"},
+//     {"id": 6,"name": "Autocar"},
+//     {"id": 7,"name": "Vélo ou marche"},
+//     {"id": 8,"name": "Vélo (ou trottinette) à assistance électrique"},
+//     {"id": 9,"name": "Bus (Moteur thermique)"},
+//     {"id": 10,"name": "Tramway"},
+//     {"id": 11, "name": "Métro"},
+//     {"id": 12,"name": "Scooter ou moto légère"},
+//     {"id": 13, "name": "Moto"},
+//     {"id": 14, "name": "RER ou Transilien"},
+//     {"id": 15, "name": "TER"},
+//     {"id": 16,"name": "Bus (Moteur électrique)"},
+//     {"id": 21,"name": "Bus (GNV)"}
+// ];
+
+
+const transportOptionsFromImpactCO2 = [
+    { id: 1, name: "Avion (court courrier)" },
+    { id: 2, name: "TGV" },
+    { id: 3, name: "Intercités" },
+    { id: 4, name: "Voiture (Moteur thermique)" },
+    { id: 5, name: "Voiture (Moteur électrique)" },
+    { id: 6, name: "Autocar" },
+    { id: 7, name: "Vélo ou marche" },
+    { id: 8, name: "Vélo (ou trottinette) à assistance électrique" },
+    { id: 9, name: "Bus (Moteur thermique)" },
+    { id: 10, name: "Tramway" },
+    { id: 11, name: "Métro" },
+    { id: 12, name: "Scooter ou moto légère" },
+    { id: 13, name: "Moto" },
+    { id: 14, name: "RER ou Transilien" },
+    { id: 15, name: "TER" },
+    { id: 16, name: "Bus (Moteur électrique)" },
+    { id: 21, name: "Bus (GNV)" },
+    { id: 22, name: "A pied" }
+];
+
+
+// const transportOptionsWithoutAvionFromImpactCO2 = transportOptionsFromImpactCO2.filter(item => item.id === 1 && item.name !== "Avion (court courrier)").map(item => item.name);
+const transportOptionsWithoutAvionFromImpactCO2 = transportOptionsFromImpactCO2.filter(item => item.name !== "Avion (court courrier)").map(item => item.name);
+const transportOptionsWithoutTGVFromImpactCO2 = transportOptionsFromImpactCO2.filter(item => item.name !== "TGV").map(item => item.name);
+
+
+
 // category: 1 => Questions sur empreinte carbone personnelle  
 // category: 2 => Questions sur la mobilité
 const questionsList = [
     { id: 1, category: 1, question_text: "En quelle année êtes-vous ?", type: "text", options: ["L1", "L2", "L3", "M1", "M2"] },
     { id: 2, category: 1, question_text: "A quelle distance (en km) habitez-vous d\'Efrei ?", type: "number", options: [] },
-    { id: 3, category: 1, question_text: "Comment vous déplacez-vous pour vous y rendre ?" , type: "text", options: transportOptionsWithoutAvion},
+    { id: 3, category: 1, question_text: "Comment vous déplacez-vous pour vous y rendre ?" , type: "text", options: transportOptionsWithoutAvionFromImpactCO2},
     { id: 4, category: 1, question_text: "Combien de fois par semaine mangez-vous de la viande ?", type: "number", options: []},
     { id: 5, category: 1, question_text: "De quelle viande s’agit-il ?" , type: "text", options: viandeOptions},
-    { id: 6, category: 2, question_text: "Quelle destination envisagez-vous pour la mobilité L3 ?", type: "mcq", options: locationOptions },
-    { id: 7, category: 2, question_text: "Par quels moyens comptez-vous y aller ?" , type: "text", options: transportOptionsWithoutTDVApied },
+    // { id: 6, category: 2, question_text: "Quelle destination envisagez-vous pour la mobilité L3 ?", type: "mcq", options: locationOptions },
+    { id: 6, category: 2, question_text: "Quelle destination envisagez-vous pour la mobilité L3 ?", type: "text", options: locationOptions },
+    { id: 7, category: 2, question_text: "Par quels moyens comptez-vous y aller ?" , type: "text", options: transportOptionsWithoutTGVFromImpactCO2 },
     { id: 8, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité ?" , type: "text", options: ["Oui", "Non"]},
     { id: 9, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
-    { id: 10, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsWithoutTDVApied },
+    { id: 10, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsWithoutTGVFromImpactCO2 },
 ];
 
 
