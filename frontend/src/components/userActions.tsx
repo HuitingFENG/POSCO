@@ -7,6 +7,7 @@ import { MdOutlineTrendingUp, MdOutlineTrendingDown, MdOutlineEdit } from 'react
 import { AiOutlineLike } from 'react-icons/ai';
 import { MdKeyboardArrowRight, MdCheckCircle } from 'react-icons/md';
 import { useUser } from '../context/UserContext';
+import CompensationActions from './compensation';
 
 
 interface User {
@@ -76,6 +77,8 @@ const UserActions= () => {
   const [emissions, setEmissions] = useState<Emission[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [conseils, setConseils] = useState<Conseil[]>([]);
+  // const [compensationsActions, setConpensationsActions] = useState(false);
+
 
   useEffect(() => {
     fetch('http://localhost:3001/api/emissions/')
@@ -157,12 +160,7 @@ const UserActions= () => {
             <Flex flexDirection="column" gap={5} align="center" justify="space-around">
               <Text fontWeight="bold" fontSize="4xl" color="black">Actions Suggérées pour Vous</Text>
             </Flex>
-            <Flex flexDirection="column" gap={5} alignItems="center" justifyContent="center">
-              <Text fontWeight="bold" fontSize="2xl" >Action 1: ...</Text>
-              <Text fontWeight="bold" fontSize="2xl">Action 2: ...</Text>
-              <Text fontWeight="bold" fontSize="2xl">Action 3: ...</Text>
-            </Flex>
-            
+            <CompensationActions />
           </Flex>
         </>
       ) : (

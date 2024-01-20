@@ -7,7 +7,7 @@ import { AiFillEye } from "react-icons/ai";
 import { v4 as uuidv4 } from 'uuid';
 import { useTempId } from "../context/TempIdContext";
 import { PartagerContext } from '../context/PartagerContext';
-
+import ResponseVisualization from './responseVisualization';
 
 interface Question {
     id: number;
@@ -318,7 +318,6 @@ const Question = () => {
     };
 
 
-    
     const handlePartagerClick = () => {
         console.log("TEST handlePartagerClick: ", tempIdToUse);
         if (!userId) {
@@ -328,7 +327,6 @@ const Question = () => {
         }
     };
 
-    
     
     const progressPercentage = (currentQuestionIndex / totalQuestionsToAnswer) * 100;
 
@@ -367,7 +365,7 @@ const Question = () => {
                 </Flex>
             )}
 
-            
+            {submissionComplete && <ResponseVisualization />}
             
             {submissionComplete && (
                 <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
@@ -400,6 +398,8 @@ const Question = () => {
                     <Button bgColor="#0C2340" color="white" width="300px" height="60px" fontSize="xl" p={6} gap={3} onClick={checkResponsesCalculation} ><AiFillEye size="60px" />Check the calculation</Button>
                 </Flex>
             )}
+
+
 
         </Flex>
     );

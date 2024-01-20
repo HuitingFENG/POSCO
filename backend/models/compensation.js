@@ -1,12 +1,12 @@
-// models/conseil.js
+// models/compensation.js
 
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize');
 
 
-class Conseil extends Model {}
+class Compensation extends Model {}
 
-Conseil.init({
+Compensation.init({
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -15,8 +15,8 @@ Conseil.init({
   options: DataTypes.JSON
 }, {
   sequelize,
-  modelName: 'conseil',
+  modelName: 'compensation',
 });
 
-module.exports = Conseil;
+module.exports = Compensation;
 

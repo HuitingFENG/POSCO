@@ -115,6 +115,20 @@ const conseilsList = [
     {id: 8, type : "Éducation continue", options: conseilsCategory8},
 ];
 
+compensationCategory1 = ["vélo d’occasion (gagner 40 kg de CO2)", "machine à laver d’occasion (gagner 160 kg de CO2)", "meubles d’occasion (gagner environ 100 kg de CO2 par meuble)", "voiture d’occasion (gagner 2.5 tonnes de CO2)", "vêtements d’occasion (gagner environ 7 kg de CO2 par vêtement)"];
+compensationCategory2 = ["métal (gagner 1.625 kg de CO2)", "plastique (gagner 1.625 kg de CO2)", "papier (gagner 1.625 kg de CO2)", "verre (gagner 1.625 kg de CO2)"];
+compensationCategory3 = ["LED (gagner 100 kg de CO2 par an)"];
+compensationCategory4 = ["savon noir (gagner 100 kg de CO2 par an)", "vinaigre blanc (gagner 100 kg de CO2 par an)", "bicarbonate de soude (gagner 100 kg de CO2 par an)"];
+compensationCategory5 = ["isoler la toiture avec de la laine de verre (gagner 1.5 tonne de CO2 par an)", " isoler les murs avec de la laine de verre (gagner 4 tonne de CO2 par an)", "remplacer les fenêtres par un double vitrage (gagner 0.5 tonne de CO2 par an)"];
+
+const compensationsList = [
+    {id: 1, type : "Acheter de l\'équipement d\'occasion", options: compensationCategory1},
+    {id: 2, type : "Trier les déchets triés (par kg)", options: compensationCategory2},
+    {id: 3, type : "Privilégier l\’éclairage", options: compensationCategory3},
+    {id: 4, type : "Substituer les produits de nettoyage domestique par 3 produits naturels", options: compensationCategory4},
+    {id: 5, type : "Améliorer l\’isolation thermique de la toiture, des murs, et des fenêtres dans sa maison", options: compensationCategory5},
+];
+
 
 const maxMobiliteCarbonEmissionList = [
     {id: 1, year: 2022, L1: 100, L2: 100, L3: 200, M1: 200, M2: 200},
@@ -133,5 +147,6 @@ module.exports = {
     emissionsList,
     maxMobiliteCarbonEmissionList,
     conseilsList,
+    compensationsList,
 };
 

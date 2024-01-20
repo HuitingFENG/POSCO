@@ -161,6 +161,8 @@ module.exports = router;
 
 
 
+
+
 function calculation(responses, countryEmissions, consummationEmissions) {
     let total = 0;
     let totalCountryEmissions = 0;
@@ -247,7 +249,7 @@ function calculation(responses, countryEmissions, consummationEmissions) {
     total = totalCountryEmissions + totalConsummationEmissions;
     console.log("TEST total: ", total);
     return [total, totalConsummationEmissions, totalCountryEmissions];
-} 
+};
 
 
 
@@ -301,25 +303,44 @@ function calculationForAll(responses, countryEmissions, consummationEmissions) {
 
 
     const currentYear = new Date().getFullYear();
-    console.log("Current Year: ", currentYear); 
+    // console.log("Current Year: ", currentYear); 
     const tempAnswer = responseByQuestionId[1];
-    console.log("tempAnswer: ", tempAnswer);
+    // console.log("tempAnswer: ", tempAnswer);
     // const yearData = maxMobiliteCarbonEmissionList.find(item => item.year === currentYear);
     const yearDataList = maxMobiliteCarbonEmissionList.filter(item => item.year === currentYear);
     const highestIdEntry = yearDataList.reduce((prev, current) => (prev.id > current.id) ? prev : current, {});
 
-    if (highestIdEntry && highestIdEntry[tempAnswer] !== undefined) {
-        console.log("TEST maxMobiliteCarbonEmissionList: ", highestIdEntry[tempAnswer]);
-    } else {
-        console.log("No data found for the year ", currentYear);
-    };
-
-
+    // if (highestIdEntry && highestIdEntry[tempAnswer] !== undefined) {
+    //     console.log("TEST maxMobiliteCarbonEmissionList: ", highestIdEntry[tempAnswer]);
+    // } else {
+    //     console.log("No data found for the year ", currentYear);
+    // };
 
     if ( totalCountryEmissions > highestIdEntry[tempAnswer] ) {
         totalOverMax = true;
     };
-    console.log("TEST totalOverMax: ", totalOverMax);
+    // console.log("TEST totalOverMax: ", totalOverMax);
 
     return [total, totalConsummationEmissions, totalCountryEmissions, totalOverMax];
-}
+};
+
+
+
+function calculationForConsummationEmissions () {
+    let totalTransportEmissions = 0;
+    let result = [];
+
+    return result;
+};
+
+
+function calculationForCountryEmissions (responses, countryEmissions, consummationEmissions) {
+    let totalMobiliteEmissions = [];
+    let totalSwimEmissions = [];
+    let result = {totalMobiliteEmissions, totalSwimEmissions};
+
+
+    
+    console.log("TEST result: ", result);
+    return result;
+};
