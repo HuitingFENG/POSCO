@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import { useUser } from '../context/UserContext';
 import LogoutButton from './logout'; 
 import { useTempId } from '../context/TempIdContext';
+import AdminMaxForm from "./adminMaxForm";
 
 interface User {
   userId: number;
@@ -39,7 +40,6 @@ interface Response {
   question: Question; 
 }
 
-
 const UserProfil = () => {
 
   const userContext = useUser(); 
@@ -51,6 +51,7 @@ const UserProfil = () => {
   const [emissions, setEmissions] = useState<Emission[]>([]);
   const [responses, setResponses] = useState<Response[]>([]); 
   const navigate = useNavigate();
+  const [adminModifyMax, setAdminModifyMax] = useState(false);
 
   const navigateToActions = () => {
       navigate('/actions');
@@ -128,9 +129,13 @@ const UserProfil = () => {
     return `${day}/${month}/${year} ${hours}:${minutes}`;
   }
 
+  const handleMaxModification = () => {
+    setAdminModifyMax(!adminModifyMax); 
+  }
 
-  const modifyQuestion = () => {
-    console.log("TEST modifyQuestion : ");
+  const modifyMax = () => {
+    console.log("TEST modifyMax : ");
+    setAdminModifyMax(true);
   }
 
   return (
@@ -158,11 +163,111 @@ const UserProfil = () => {
                 <Text></Text>
               )}  
             </Flex>
-            
-            
-           
           </Flex>
 
+
+
+          {userId === 1 && (
+            <Flex flex="3" flexDirection="column" alignItems="center" gap={5}>
+              <Flex gap={10} justifyContent="center" my={5}>
+                <Button
+                  bgColor="#003153"
+                  color="white"
+                  width="500px"
+                  height="60px"
+                  fontSize="xl"
+                  p={6}
+                  gap={3}
+                  onClick={handleMaxModification}
+                  _hover={{ bg: "#004175" }} // Hover effect
+                >
+                  <FaEdit size={24} color="blue" />
+                  <Text ml={3}>Modifier le nombre MaxEmissionCarbon</Text>
+                </Button>
+                <Button
+                  bgColor="#003153"
+                  color="white"
+                  width="500px"
+                  height="60px"
+                  fontSize="xl"
+                  p={6}
+                  gap={3}
+                  onClick={navigateToActions}
+                  _hover={{ bg: "#004175" }} // Hover effect
+                >
+                  <FaBookReader size={24} color="green" />
+                  <Text ml={3}>Lire la liste d'émissions carbons</Text>
+                </Button>
+              </Flex>
+              {adminModifyMax && <AdminMaxForm />}
+            </Flex>
+          )};
+
+
+          {userId != 1 && (
+            <>
+              <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
+                <Text fontWeight="bold" fontSize="3xl" color="black">Votre Résultats du Questionnaire Historiques </Text>
+                <Box overflowX="auto" overflowY="auto" maxH="400px" w="100%">
+                  <Table variant="simple">
+                    <Thead bg="blue.500" >
+                      <Tr >
+                        <Th color="white" textAlign="left" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >N°</Th>
+                        <Th color="white" textAlign="left" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Total Emissions (kg)</Th>
+                        <Th color="white" textAlign="left" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Total Consummation Emissions (kg)</Th>
+                        <Th color="white" textAlign="left" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Total Country Emissions (kg)</Th>
+                        <Th color="white" textAlign="left" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Date Envoyée</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {emissions.map((emission, index) => (
+                        <Tr key={`${emission.userId}-${index}`} bg={index % 2 === 0 ? "gray.100" : "gray.200"}>
+                          <Td textAlign="center">{index + 1}</Td>
+                          <Td textAlign="center">{emission.totalEmissions}</Td>
+                          <Td textAlign="center">{emission.totalConsummationEmissions}</Td>
+                          <Td textAlign="center">{emission.totalCountryEmissions}</Td>
+                          <Td textAlign="left">{formatDate(emission.createdAt)}</Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </Box>
+              </Flex>
+            
+
+              <Flex flex="5" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
+                <Text fontWeight="bold" fontSize="3xl" color="black">Vos Réponses Historiques</Text>
+                <Box overflowX="auto" overflowY="auto" maxH="600px" w="100%">
+                  <Table variant="simple">
+                    <Thead bg="blue.500">
+                      <Tr>
+                      
+                        <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >N°</Th>
+                        <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Question</Th>
+                        <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Réponse</Th>
+                        <Th color="white" textAlign="center" backgroundColor='blue.500' style={{ position: 'sticky', top: 0, backgroundColor: 'blue.500' }} >Date Envoyée</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {responses.map((response, index) => (
+                        <Tr key={response.id} bg={index % 2 === 0 ? "gray.100" : "gray.200"}>
+                          <Td textAlign="center">{index + 1}</Td>
+                          <Td textAlign="left">{response.question.question_text}</Td>
+                          <Td textAlign="center">{response.answer}</Td>
+                          <Td textAlign="left">{formatDate(response.createdAt)}</Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </Box>
+              </Flex>
+            </>
+          )};
+
+
+
+
+{/* 
           {(userId != 1) ? (
             <>
               <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
@@ -223,27 +328,8 @@ const UserProfil = () => {
             </>
 
           ) : (
-
-            <Flex flex="3" gap={10}>
-              <Button bgColor="#003153" color="white" width="500px" height="60px" fontSize="xl" p={6} gap={3} onClick={() => modifyQuestion()}>
-                <div style={{ border: '1px solid white', borderRadius: '10%', display: 'inline-block', padding: '5px', backgroundColor:"white"}}>
-                <FaEdit size={24} color="blue" />
-                </div>
-                Modifier le nombre MaxEmissionCarbon 
-              </Button>
-              
-                <Button bgColor="#003153" color="white" width="500px" height="60px" fontSize="xl" p={6} gap={3} onClick={navigateToActions}>
-                  <div style={{ border: '1px solid white', borderRadius: '10%', display: 'inline-block', padding: '5px', backgroundColor:"white"}}>
-                    <FaBookReader size={24} color="green" />
-                  </div>
-                  {/* <Link to="/actions"> */}
-                    Lire la liste d'émissions carbons
-                  {/* </Link> */}
-                </Button>
-            </Flex>
-          )};
-
-          
+            <></>
+          )}; */}
     </Flex>
   );
 };
