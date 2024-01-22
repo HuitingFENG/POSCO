@@ -10,6 +10,7 @@ import { PartagerContext } from '../context/PartagerContext';
 import ResponseVisualization from './responseVisualization';
 import TransportData from './transportData';
 import { Select } from "@chakra-ui/react";
+import CalculationVisualization from "./calculationVisualization";
 
 
 interface DestinationOption {
@@ -25,18 +26,44 @@ interface Question {
 }
 
 interface Emission {
-    totalCountryEmissions: ReactNode;
-    calculation: ReactNode;
-    totalConsummationEmissions: ReactNode;
+    // totalCountryEmissions: ReactNode;
+    // calculation: ReactNode;
+    // totalConsummationEmissions: ReactNode;
     id: number;
     userId: number;
+    tempId: string;
     responsesList: number[];
     totalEmissions: string;
     createdAt: string;
-    updatedAt: string;
-    tempId: string;
+    // updatedAt: string;
+    totalCountryEmissions: number;
+    // calculation: ReactNode;
+    totalConsummationEmissions: number;
+    subConsummationEmissions: number[];
+    subCountryEmissions: number[];
     overMax: boolean;
 }
+
+interface SubEmissionData {
+    transportsEmissions?: number;
+    foodsEmissions?: number;
+    totalMobilityEmissions?: number;
+    totalEffetRebondEmissions?: number;
+}
+
+
+// interface EmissionData {
+//     id: number;
+//     userId: number | null;
+//     tempId: string | null;
+//     totalEmissions: number;
+//     totalConsummationEmissions: number;
+//     totalCountryEmissions: number;
+//     subConsummationEmissions: SubEmissionData;
+//     subCountryEmissions: SubEmissionData;
+//     createdAt: string; 
+// }
+
 
 const Question = () => {
     const userContext = useUser();
@@ -52,6 +79,8 @@ const Question = () => {
     const [destinationOptions, setDestinationOptions] = useState<DestinationOption[]>([]);
     const [answeredNonToQ11, setAnsweredNonToQ11] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [latestEmissionData, setLatestEmissionData] = useState<Emission[]>([]);
+    const [latestEmissionDataId, setLatestEmissionDataId] = useState(0);
 
 
     useEffect(() => {
@@ -99,6 +128,7 @@ const Question = () => {
     }, [userId]); 
 
 
+
     const [selectedOptions, setSelectedOptions] = useState<Record<number, string>>({});
     const [questions, setQuestions] = useState<Question[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -127,6 +157,8 @@ const Question = () => {
     const [selectedMobilityType, setSelectedMobilityType] = useState('');
     const allQuestionsAnswered = responses.length === questions.length;
     const [isQuestionnaireFullyLoaded, setIsQuestionnaireFullyLoaded] = useState(false);
+    const [listForCalculation, setListForCalculation] = useState([]);
+
 
 
     useEffect(() => {
@@ -396,7 +428,9 @@ const Question = () => {
             let latestEmission = emissionData.length > 0
             ? emissionData.reduce((latest: Emission, current: Emission) => new Date(latest.createdAt) > new Date(current.createdAt) ? latest : current) : {};
             setResponsesCalculation(latestEmission);
-            
+            setLatestEmissionData(latestEmission);
+            setLatestEmissionDataId(latestEmission.id);
+            setListForCalculation(latestEmission.responsesList);
             setTotalEmission(latestEmission.totalEmissions);
             setTotalConsummationEmissions(latestEmission.totalConsummationEmissions);
             setTotalCountryEmissions(latestEmission.totalCountryEmissions);
@@ -787,7 +821,7 @@ const Question = () => {
                     </Box>
                     {(currentQuestionIndex <= questions.length - 1 && !closeQuestionnaire) ?  (
                         <>
-                        <Text fontWeight="bold" fontSize="xl"> {/* {currentQuestionIndex+1}. */} {questions[currentQuestionIndex]?.question_text}</Text>
+                        <Text fontWeight="bold" fontSize="xl"> {currentQuestionIndex+1}. {questions[currentQuestionIndex]?.question_text}</Text>
                         {renderInputField(questions[currentQuestionIndex])}
                         </>
                     ) : (
@@ -823,9 +857,9 @@ const Question = () => {
             
             {submissionComplete && (
                 <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
-                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Au total : {totalEmission} kg</Text>
-                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone liée à la mobilité envisagée : {totalCountryEmissions} kg</Text>
-                    <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Votre empreinte carbone personnelle par an : {totalConsummationEmissions} kg</Text>
+                    <Text fontWeight="bold" fontSize="2xl" color="black" textAlign="center">Au total : {totalEmission} kg</Text>
+                    <Text fontWeight="bold" fontSize="2xl" color="black" textAlign="center">Votre empreinte carbone liée à la mobilité envisagée : {totalCountryEmissions} kg</Text>
+                    <Text fontWeight="bold" fontSize="2xl" color="black" textAlign="center">Votre empreinte carbone personnelle par an : {totalConsummationEmissions} kg</Text>
 
                     
                     {(overMax) ? (
@@ -851,10 +885,11 @@ const Question = () => {
                 <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Processus du calcul</Text>
                     <Button bgColor="#0C2340" color="white" width="300px" height="60px" fontSize="xl" p={6} gap={3} onClick={checkResponsesCalculation} ><AiFillEye size="60px" />Check the calculation</Button>
+                    {displayResponsesCalculation && <CalculationVisualization latestEmissionDataId={latestEmissionDataId} listForCalculation={listForCalculation} /* totalCountryEmissions={totalCountryEmissions}  totalConsummationEmissions={totalConsummationEmissions}  *//>}
                 </Flex>
             )}
 
-
+            
 
         </Flex>
         
@@ -862,3 +897,4 @@ const Question = () => {
 };
 
 export default Question;
+

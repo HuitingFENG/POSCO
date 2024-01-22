@@ -15,6 +15,37 @@ router.get('/', async (req, res) => {
     }
 });
 
+
+// router.get('/searchByResponses', async (req, res) => {
+//     const responsesString = req.query.responses;
+//     if (!responsesString) {
+//         return res.status(400).send('Responses query parameter is missing');
+//     }
+
+//     try {
+//         // Convert responses to a JSON string for comparison
+//         const responsesArray = JSON.parse(responsesString);
+
+//         const emission = await Emission.findOne({
+//             where: sequelize.where(
+//                 sequelize.fn('JSON_CONTAINS', sequelize.col('responsesList'), sequelize.literal(`'${responsesArray}'`)),
+//                 1
+//             )
+//         });
+
+//         if (emission) {
+//             res.json(emission);
+//         } else {
+//             res.status(404).send('No emission found with the given responses list');
+//         }
+//     } catch (error) {
+//         console.error('Error fetching emission:', error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// });
+
+
+
 router.get('/:id', async (req, res) => {
     try {
         const emission = await Emission.findByPk(req.params.id);

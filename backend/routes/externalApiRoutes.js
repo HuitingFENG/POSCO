@@ -3,12 +3,9 @@ const router = express.Router();
 const axios = require('axios');
 
 // Define the base URL for the impactco2.fr API
-
-
-
-
-
 const baseURL = 'https://impactco2.fr/api/v1';
+
+
 
 // Define a new route to fetch and display data from the impactco2.fr API
 router.get('/fetch-impactco2-data', async (req, res) => {
@@ -42,7 +39,6 @@ async function fetchDataFromImpactCO2(distance) {
     }
 }
 
-
 async function fetchDataFromImpactCO2ByIdThematique(idThematique) {
     try {
         const apiUrl = `${baseURL}/thematiques/ecv/${idThematique}?detail=1`;
@@ -63,6 +59,20 @@ async function fetchDataFromImpactCO2ByIdThematique(idThematique) {
 }
 
 
+router.get('/fetch-impactco2-data/:distance', async (req, res) => {
+    const distance = req.params.distance;
+    try {
+        const apiData = await fetchDataFromImpactCO2(distance);
+        console.log("TEST apiData", apiData);
+        res.json(apiData);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Error occurred');
+    }
+});
+
+
+
 // async function fetchDataFromImpactCO2ByIdThematique(idThematique) {
 //     try {
 //         const apiUrl = `${baseURL}/thematiques/ecv/${idThematique}?detail=1`;
@@ -73,6 +83,7 @@ async function fetchDataFromImpactCO2ByIdThematique(idThematique) {
 //         throw error;
 //     }
 // }
+
 
 // Function to get the ECV value for a specific slug
 async function getEcvForSlug(slug) {
@@ -86,6 +97,25 @@ async function getEcvForSlug(slug) {
     }
 }
 
+
+// async function fetchTransportDataFromImpactCO2(distance, slug) {
+//     try {
+//         const apiUrl = `${baseURL}/thematiques/ecv/${idThematique}?detail=1`;
+
+//         const responseFromApi = await axios.get(apiUrl);
+
+//         // Extract the data from the API response
+//         const apiData = responseFromApi.data;
+
+//         // You can process the 'apiData' here as needed
+
+//         // Return the data
+//         return apiData;
+//     } catch (error) {
+//         // Handle the error appropriately
+//         throw error;
+//     }
+// }
 
 
 
