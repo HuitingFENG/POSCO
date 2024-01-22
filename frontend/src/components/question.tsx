@@ -12,6 +12,11 @@ import TransportData from './transportData';
 import { Select } from "@chakra-ui/react";
 
 
+interface DestinationOption {
+    mobiliteCategoryId: number;
+    options: string[];
+}
+
 interface Question {
     id: number;
     question_text: string;
@@ -44,7 +49,22 @@ const Question = () => {
     const [isPartagerClicked, setIsPartagerClicked] = useState(false);
     const { fromPartager, setFromPartager } = useContext(PartagerContext);
     const currentYear = new Date().getFullYear();
+    const [destinationOptions, setDestinationOptions] = useState<DestinationOption[]>([]);
+    const [answeredNonToQ11, setAnsweredNonToQ11] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
+
+    useEffect(() => {
+        fetch('http://localhost:3001/api/options/')
+            .then(response => response.json())
+            .then(data => {
+                setDestinationOptions(data);
+                console.log("TEST setDestinationOptions: ", destinationOptions);
+            })
+            .catch(error => {
+                console.error('Error fetching destination options:', error);
+            });
+    }, []);
 
     useEffect(() => {
         setResponses([]);
@@ -62,6 +82,10 @@ const Question = () => {
             .then(data => {
                 const sortedData = data.sort((a: {id: number; }, b: {id: number; }) => a.id - b.id);
                 setQuestions(sortedData);
+                console.log("TEST sortedData.length: ", sortedData.length);
+                // const initialQuestions = sortedData.filter((q: { id: number; }) => q.id <= 22); // Load only questions up to ID 22 initially
+                // setQuestions(initialQuestions);
+                // console.log("TEST initialQuestions: ", initialQuestions.length);
                 if (!userId) {
                     setTempId(uuidv4());
                 }
@@ -100,7 +124,15 @@ const Question = () => {
     const [maxCarbonByPromotion, setMaxCarbonByPromotion] = useState(0);
 
     const [totalQuestionsToAnswer, setTotalQuestionsToAnswer] = useState(questions.length);
-  
+    const [selectedMobilityType, setSelectedMobilityType] = useState('');
+    const allQuestionsAnswered = responses.length === questions.length;
+    const [isQuestionnaireFullyLoaded, setIsQuestionnaireFullyLoaded] = useState(false);
+
+
+    useEffect(() => {
+        setTotalQuestionsToAnswer(questions.length);
+    }, [questions]);
+
     useEffect(() => {
         if (responses.length > 0) {
             const newPromotion = responses[0];
@@ -146,17 +178,60 @@ const Question = () => {
     const handleOptionClick = (questionId: number, option: string) => {
         handleResponseChange({ target: { value: option } } as React.ChangeEvent<HTMLInputElement>);
         setSelectedOptions(prev => ({ ...prev, [questionId]: option }));
+        if (questionId === 1) {
+            setSelectedMobilityType(option);
+            
+        }
     };
-
-
-
 
 
     const renderInputField = (question: Question) => {
         const selectedOption = selectedOptions[question.id];
-
         const shouldUseSelectTag = question.options && question.options.length > 5 ;
 
+
+        if (question.options && question.options.length > 5) {
+            let optionsToRender = question.options;
+    
+            if (question.id === 6) {
+                // Special handling for question 6
+                optionsToRender = getOptionsForQuestion6();
+            }
+    
+            return (
+                <Select 
+                    key={`select-${question.id}`} // Unique key for each question
+                    width="50%" bgColor="white" textStyle="bold" textColor="black"
+                    placeholder="Sélectionner un choix"
+                    onChange={(event) => handleOptionClick(question.id, event.target.value)}
+                    value={selectedOption || ''} // Reset value when question changes
+                >
+                    {optionsToRender.map((option, idx) => (
+                        <option key={`${question.id}-${idx}`} value={option}>
+                            {option}
+                        </option>
+                    ))}
+                </Select>
+            );
+        }
+
+        if (question.id === 6) {
+            const question6Options = getOptionsForQuestion6();
+            return (
+                <Select  key={`select-${question.id}`}   
+                    width="50%" bgColor="white" textStyle="bold" textColor="black"
+                    placeholder="Sélectionner un choix"
+                    onChange={(event) => handleOptionClick(question.id, event.target.value)}
+                    value={selectedOption}
+                >
+                    {question6Options.map((option, idx) => (
+                        // <option key={idx} value={option}>{option}</option>
+                        <option key={`${question.id}-${idx}`} value={option}>{option}</option>
+                    ))}
+                </Select>
+            );
+        }
+    
         if (shouldUseSelectTag) {
             return ( 
                 <Select width="50%" bgColor="white" textStyle="bold" textColor="black"
@@ -170,7 +245,6 @@ const Question = () => {
                 </Select>
             );
         }
-
 
 
         switch (question.type) {
@@ -193,6 +267,44 @@ const Question = () => {
             //     </Flex>
             // );
 
+            // return (
+            //     <Flex>
+            //         {question.options?.map((option, idx) => (
+            //             <Button
+            //                 key={idx}
+            //                 onClick={() => handleOptionClick(question.id, option)}
+            //                 style={{
+            //                     margin: '5px',
+            //                     backgroundColor: selectedOption === option ? '#4682B4' : 'white',
+            //                     color: selectedOption === option ? 'white' : 'black'
+            //                 }}
+            //             >
+            //                 {option}
+            //             </Button>
+            //         ))}
+            //     </Flex>
+            // );
+
+            if (question.id === 6) {
+                const question6Options = getOptionsForQuestion6();
+                return (
+                    <Flex>
+                        {question6Options.map((option: string, idx: number) => (
+                            <Button
+                                key={idx}
+                                onClick={() => handleOptionClick(question.id, option)}
+                                style={{
+                                    margin: '5px',
+                                    backgroundColor: selectedOption === option ? '#4682B4' : 'white',
+                                    color: selectedOption === option ? 'white' : 'black'
+                                }}
+                            >
+                                {option}
+                            </Button>
+                        ))}
+                    </Flex>
+                );
+            }
             return (
                 <Flex>
                     {question.options?.map((option, idx) => (
@@ -210,8 +322,6 @@ const Question = () => {
                     ))}
                 </Flex>
             );
-
-
 
           case 'number':
             return  <Input width="250px" type="number" value={responses[currentQuestionIndex] || ''} onChange={handleResponseChange} min={minValue} max={maxValue} step={stepValue} isInvalid={inputError} /> 
@@ -293,8 +403,9 @@ const Question = () => {
             setOverMax(latestEmission.overMax);
             console.log("TEST latestEmission.overMax: ", latestEmission.overMax);
             setSubmissionComplete(true);
-            setCurrentQuestionIndex(0);
             setResponses([]);
+            setCurrentQuestionIndex(0);
+            
         })
         .catch((error) => {
           console.error('Error:', error);
@@ -317,6 +428,7 @@ const Question = () => {
     }
     
 
+
     const displayCalculationResults = () => {
         return responsesCalculation.map((calculation, index) => (
             <Box key={index} p={4} border="1px solid gray" my={2}>
@@ -328,6 +440,21 @@ const Question = () => {
             </Box>
         ));
     };
+
+
+    const loadFullQuestionnaire = () => {
+        fetch('http://localhost:3001/api/questions')
+            .then(response => response.json())
+            .then(data => {
+                const sortedData = data.sort((a: { id: number; }, b: { id: number; }) => a.id - b.id);
+                setQuestions(sortedData); 
+                setIsQuestionnaireFullyLoaded(true);
+                console.log("TEST loadFullQuestionnaire sortedData: ", sortedData); 
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    };
+
+
 
     const handleNextClick = () => {
         const responseToQ8 = responses[7]; 
@@ -360,8 +487,251 @@ const Question = () => {
                 setCloseQuestionnaire(true);
             } 
             setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-        }  
+        } 
+
+
+
+        // const responseToQ6 = responses[5];
+        // const countryOnlyEnAvion = ["Montréal, Canada", "Kuala Lumpur, Malaisie", "Le Cap, Afrique du Sud", "Toronto, Canada", "Irvine, Etats-Unis"];
+
+        // if (countryOnlyEnAvion.includes(responseToQ6)) {
+        //     setResponses(prevResponses => {
+        //         const newResponses = [...prevResponses];
+        //         newResponses[6] = "Avion";
+        //         return newResponses;
+        //     });
+        // }
+
+        // let isFullyLoaded = responses[0] === "PGE_L3_FISE";
+
+        // // Check if the questionnaire should terminate early
+        // const shouldTerminateEarly = responses.some((response, index) => {
+        //     return (index === 7 || index === 10 || index === 13 || index === 16 || index === 19) && response === 'Non';
+        // });
+
+        // const shouldTerminateEarlyFull = isFullyLoaded && responses.some((response, index) => {
+        //     return (index === 24 || index === 27 || index === 30 || index === 33 || index === 36) && response === 'Non';
+        // });
+
+        // if (shouldTerminateEarly || shouldTerminateEarlyFull) {
+        //     setCurrentQuestionIndex(questions.length - 2);
+        //     setCloseQuestionnaire(true);
+        //     return;
+        // }
+
+        // if (currentQuestionIndex === 0 && isFullyLoaded) {
+        //     loadFullQuestionnaire();
+        //     setIsQuestionnaireFullyLoaded(true);
+        // }
+
+        // // Ensure that the next question is within the range of available questions
+        // const nextQuestionIndex = currentQuestionIndex + 1;
+        // if (nextQuestionIndex < questions.length) {
+        //     setCurrentQuestionIndex(nextQuestionIndex);
+        // } else {
+        //     // If no more questions, finalize the questionnaire
+        //     setCloseQuestionnaire(true);
+        // }
+
+
+
+
+        // const isFullyLoaded = responses[0] === "PGE_L3_FISE";
+        // const earlyTerminationResponses = [7, 10, 13, 16, 19];
+        // const fullTerminationResponses = [24, 27, 30, 33, 36];
+
+        // // Check if the questionnaire should terminate early
+        // const shouldTerminateEarly = earlyTerminationResponses.some(index => responses[index] === 'Non');
+        // const shouldTerminateEarlyFull = isFullyLoaded && fullTerminationResponses.some(index => responses[index] === 'Non');
+
+        // console.log("Current Question Index (Before Update):", currentQuestionIndex);
+
+
+        // if (shouldTerminateEarly && !isFullyLoaded) {
+        //     // If the questionnaire is not fully loaded and a termination condition is met
+        //     setCurrentQuestionIndex(questions.length - 2);
+        //     setCloseQuestionnaire(true);
+        //     return;
+        // } else if (shouldTerminateEarlyFull) {
+        //     // If the questionnaire is fully loaded and a termination condition is met
+        //     setCurrentQuestionIndex(questions.length - 2);
+        //     setCloseQuestionnaire(true);
+        //     return;
+        // } else if (shouldTerminateEarly && isFullyLoaded) {
+        //     // If 'Non' is selected in the first part and the questionnaire is fully loaded, jump to SWIM questions
+        //     const swimQuestionStartIndex = questions.findIndex(q => q.id === 23);
+        //     console.log("Jumping to question with id 23, Index:", swimQuestionStartIndex);
+        
+        //     setCurrentQuestionIndex(swimQuestionStartIndex);
+        //     return;
+        // } else {
+        //     // Proceed to the next question
+        //     setCurrentQuestionIndex(currentQuestionIndex + 1);
+        // }
+    
+        // console.log("Current Question Index (After Update):", currentQuestionIndex);
+    
+
+
+
+        // // Check if it's time to load the full questionnaire
+        // if (currentQuestionIndex === 0 && isFullyLoaded && !isQuestionnaireFullyLoaded) {
+        //     loadFullQuestionnaire();
+        //     setIsQuestionnaireFullyLoaded(true);
+        // }
+
+        // // Proceed to the next question
+        // if (currentQuestionIndex < questions.length - 1) {
+        //     setCurrentQuestionIndex(currentQuestionIndex + 1);
+        // } else {
+        //     // No more questions, finalize the questionnaire
+        //     setCloseQuestionnaire(true);
+        // }
+
+
+
+
+
+        // const responseToQ20 = responses[19];
+        // const responseToQ17 = responses[16];
+        // const responseToQ14 = responses[13];
+        // const responseToQ11 = responses[10];
+        // const responseToQ8 = responses[7]; 
+        // const responseToQ6 = responses[5];
+        // const countryOnlyEnAvion = ["Montréal, Canada", "Kuala Lumpur, Malaisie", "Le Cap, Afrique du Sud", "Toronto, Canada", "Irvine, Etats-Unis"];
+        // if (countryOnlyEnAvion.includes(responseToQ6)) {
+        //     setResponses(prevResponses => {
+        //         const newResponses = [...prevResponses];
+        //         newResponses[6] = "Avion";
+        //         return newResponses;
+        //     });
+        // }
+        // if (currentQuestionIndex === 0 && responses[0] === "PGE_L3_FISE") {
+        //     console.log("TEST currentQuestionIndex === 0 && responses[0] === PGE_L3_FISE");
+        //     loadFullQuestionnaire();
+        //     setIsQuestionnaireFullyLoaded(true);
+        // } 
+        // let responseToQ23, responseToQ25, responseToQ28, responseToQ31, responseToQ34, responseToQ37;
+        // if (isQuestionnaireFullyLoaded) {
+        //     console.log("TEST isQuestionnaireFullyLoaded");
+        //     responseToQ23 = responses[22] || null;
+        //     responseToQ25 = responses[24] || null;
+        //     responseToQ28 = responses[27] || null;
+        //     responseToQ31 = responses[30] || null;
+        //     responseToQ34 = responses[33] || null;
+        //     responseToQ37 = responses[36] || null;
+        // }
+        // let isFullyLoaded = responses[0] === "PGE_L3_FISE";
+        // let terminateEarly = responseToQ8 === 'Non' || responseToQ11 === 'Non' || responseToQ14 === 'Non' || responseToQ17 === 'Non' || responseToQ20 === 'Non';
+        // let terminateEarlyFull = isFullyLoaded && (responseToQ25 === 'Non' || responseToQ28 === 'Non' || responseToQ31 === 'Non' || responseToQ34 === 'Non' || responseToQ37 === 'Non');
+        // if ((terminateEarly && !isFullyLoaded) || terminateEarlyFull) {
+        //     console.log("TEST (terminateEarly && !isFullyLoaded) || terminateEarlyFull");
+        //     console.log("TEST setCurrentQuestionIndex(questions.length - 2) : ", questions.length - 2);
+        //     setCurrentQuestionIndex(questions.length - 2);
+        //     setCloseQuestionnaire(true);
+        //     return; 
+        // } else if (terminateEarly && isFullyLoaded) {
+        //     console.log("TEST terminateEarly && isFullyLoaded");
+        //     let questionSwimId = questions.length - 18;
+        //     console.log("TEST setCurrentQuestionIndex(questionSwimId) : ", questionSwimId);
+        //     console.log("TEST questionSwimId: ", questions[questionSwimId].question_text);
+        //     setCurrentQuestionIndex(questionSwimId);
+        // } 
+        // setCurrentQuestionIndex(currentQuestionIndex + 1);
+        // console.log("TEST currentQuestionIndex: ", currentQuestionIndex);
+        
+
+
+
+
+
+
+
+
+        // if ((responseToQ25 === 'Non'|| responseToQ28 === 'Non' || responseToQ31 === 'Non' || responseToQ34 === 'Non' || responseToQ37 === 'Non') && (responses[0] === "PGE_L3_FISE")) {
+        //     setCurrentQuestionIndex(questions.length - 2); 
+        //     setCloseQuestionnaire(true);
+        //     console.log("TEST close questionnaire.");
+        // } else if ((responseToQ8 === 'Non'|| responseToQ11 === 'Non' || responseToQ14 === 'Non' || responseToQ17 === 'Non' || responseToQ20 === 'Non') && (responses[0] === "PGE_L3_FISE")) {
+        //     console.log("TEST skip to question of SWIM.");
+        //     setCurrentQuestionIndex(22); 
+        //     // return;
+        // } else {
+        //     console.log("TEST continue to display questions.");
+        //     setCurrentQuestionIndex(currentQuestionIndex + 1); // Proceed to the next question
+        // }
+
+        // if (currentQuestionIndex === 0) {
+        //     if (isFullyLoaded) {
+        //         loadFullQuestionnaire();
+        //         setIsQuestionnaireFullyLoaded(true);
+        //     } else {
+        //         // Skip to question 23 if not fully loaded
+        //         setCurrentQuestionIndex(22);
+        //         return;
+        //     }
+        // }
+        
+
+        // if (responseToQ11 === 'Oui') {
+        //     console.log("User chose OUI for Question 11. Repeating questions 9, 10, 11.");
+        //     setCurrentQuestionIndex(8); // Set to question 9's index
+        //     return;
+        // }
+    
+        // if (countryOnlyEnAvion.includes(responseToQ6)) {
+        //     console.log("TEST user's option for question 6 (countryOnlyEnAvion): ", responseToQ6);
+        //     const newResponses = [...responses];
+        //     newResponses[6] = "Avion (long courrier >= 6h)";
+        //     setResponses(newResponses);
+        //     setCurrentQuestionIndex(prevIndex => prevIndex + 1); 
+        //     if (responseToQ8 === 'Non') {
+        //         console.log("TEST user chooses NON for question 8.");
+        //         setCurrentQuestionIndex(prevIndex => questions.length - 2);
+        //         setCloseQuestionnaire(true);
+        //     } else if (responseToQ8 === 'Oui') {
+        //         setCurrentQuestionIndex(prevIndex => prevIndex - 1); 
+        //     }
+        //     setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+        // } else {
+        //     console.log("TEST user's option for question 6 (not countryOnlyEnAvion): ", responseToQ6);
+            
+        //     if (responseToQ8 === 'Non') {
+        //         console.log("TEST user chooses NON for question 8.");
+        //         setCurrentQuestionIndex(prevIndex => questions.length - 2);
+        //         setCloseQuestionnaire(true);
+        //     } 
+        //     setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+        // }  
+
+        // if (responseToQ11 === 'Oui') {
+        //     setCurrentQuestionIndex(8); // Redirect to Question 9
+        //     setAnsweredNonToQ11(false);
+        //     return; // Early exit if user chose 'Oui' for Question 11
+        // } else if (responseToQ11 === 'Non') {
+        //     setAnsweredNonToQ11(true);
+        // }
+
+
+        // if (currentQuestionIndex === 10) { // Assuming question 11 has index 10
+        //     console.log("TEST responseToQ11: ", responseToQ11);
+        //     if (responseToQ11 === 'Oui') {
+        //         console.log("TEST responseToQ11 === 'Oui' ");
+        //         setSubmissionComplete(false);
+        //         setCloseQuestionnaire(false);
+        //         // setCurrentQuestionIndex(8); // Redirect to Question 9
+        //         return;
+        //     } else if (responseToQ11 === 'Non') {
+                
+        //         setAnsweredNonToQ11(true);
+        //         setCloseQuestionnaire(true);
+        //         return;
+        //     }
+        // }
     };
+
+
+
 
 
     const handlePartagerClick = () => {
@@ -373,13 +743,43 @@ const Question = () => {
         }
     };
 
+
     
     const progressPercentage = (currentQuestionIndex / totalQuestionsToAnswer) * 100;
+
+
+    const getOptionsForQuestion6 = () => {
+        const mobilityCategoryMapping : {[key: string]: number } = {
+            'PGE_L3_FISE': 1,
+            'PGE_L3_FISA': 1,
+            'PEx_B2': 3,
+            'PEx_M2_Msc_Cyber': 4,
+            'PEx_M2_Optionnelle': 5
+        };
+        console.log("Selected Mobility Type:", selectedMobilityType);
+        if (!selectedMobilityType) {
+            console.warn("No mobility type selected");
+            return [];
+        }
+        const categoryId = mobilityCategoryMapping[selectedMobilityType];
+        console.log("TEST categoryId: ", categoryId);
+        const destinationOption = destinationOptions.find(option => option.mobiliteCategoryId === categoryId);
+        if (!destinationOption) {
+            console.warn(`No options found for category ID: ${categoryId}`);
+            return [];
+        }
+
+        return destinationOption.options;
+    };
+    
+
+
+
 
     return (
         <Flex justify="space-between" align="center" flexDirection="column" gap={10} alignItems="center" justifyContent="center">
             
-            {isQuestionAvailable && (
+            { /* !submissionComplete  &&  */ isQuestionAvailable && (
                 <Flex flex="2" m={10} width="80%" bgColor="#dddddd" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>
                     <Text fontWeight="bold" fontSize="4xl" color="black" textAlign="center">Questionnaire</Text>
                     <Box width="80%" p={4}>
@@ -387,13 +787,13 @@ const Question = () => {
                     </Box>
                     {(currentQuestionIndex <= questions.length - 1 && !closeQuestionnaire) ?  (
                         <>
-                        <Text fontWeight="bold" fontSize="xl"> {currentQuestionIndex+1}. {questions[currentQuestionIndex]?.question_text}</Text>
+                        <Text fontWeight="bold" fontSize="xl"> {/* {currentQuestionIndex+1}. */} {questions[currentQuestionIndex]?.question_text}</Text>
                         {renderInputField(questions[currentQuestionIndex])}
                         </>
                     ) : (
-                        // <Text>Etes-vous sûr de nous envoyer vos réponses ?</Text>   
                         <div></div>
                     )}
+
                     <Flex gap={200} justify="space-between">
                         {(currentQuestionIndex < questions.length - 1 && !closeQuestionnaire)? (
 
@@ -406,11 +806,17 @@ const Question = () => {
                             </Button></>
 
                         ) : (
-                            <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={sendResponses}>Envoyer<FaPaperPlane size="24px" color="white" /></Button>
+                            // <></>
+                            // (!submissionComplete && answeredNonToQ11) && (
+                                <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={sendResponses}>Envoyer<FaPaperPlane size="24px" color="white" /></Button>
+                            // )
+                            // <Button bgColor="#0C2340" color="white" width="180px" height="60px" fontSize="xl" p={6} gap={3} onClick={sendResponses}>Envoyer<FaPaperPlane size="24px" color="white" /></Button>
                         )}
                     </Flex>
                 </Flex>
             )}
+
+            
 
             {/* {submissionComplete && <TransportData />} */}
             {submissionComplete && <ResponseVisualization />}
@@ -439,6 +845,7 @@ const Question = () => {
                 </Flex>
             )}
 
+            
 
             {submissionComplete && (
                 <Flex flex="3" m={10} width="80%" bgColor="skyblue" border="4px" borderColor="#0C2340" borderStyle="dashed" p={10} flexDirection="column" align="center" gap={10}>

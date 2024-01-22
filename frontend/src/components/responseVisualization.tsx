@@ -64,7 +64,7 @@ const generateDistinctRandomColors = (count: number, excludeColors: string[] = [
 
 const ResponseVisualization = () => {
     // const [emissions, setEmissions] = useState<EmissionData[]>([]);
-    const [emissions, setEmissionData] = useState({totalConsummationEmissions: 0, totalCountryEmissions: 0});
+    const [emissions, setEmissionData] = useState({totalConsummationEmissions: 0, totalCountryEmissions: 0, subConsummationEmissions: [], subCountryEmissions: []});
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -77,7 +77,9 @@ const ResponseVisualization = () => {
                     
                 setEmissionData({
                     totalConsummationEmissions: sortedData[0].totalConsummationEmissions,
-                    totalCountryEmissions: sortedData[0].totalCountryEmissions
+                    totalCountryEmissions: sortedData[0].totalCountryEmissions,
+                    subConsummationEmissions: sortedData[0].subConsummationEmissions,
+                    subCountryEmissions: sortedData[0].subCountryEmissions,
                   });
                 setIsLoading(false);
             })
@@ -106,20 +108,20 @@ const ResponseVisualization = () => {
     //     totalCountryEmissions: latestEmission.totalCountryEmissions || 0,
     // };
 
-    const subConsummationEmissions = generateRandomData(emissions.totalConsummationEmissions, subConsummationCount);
-    const subCountryEmissions = generateRandomData(emissions.totalCountryEmissions, subCountryCount);
+    // const subConsummationEmissions = generateRandomData(emissions.totalConsummationEmissions, subConsummationCount);
+    // const subCountryEmissions = generateRandomData(emissions.totalCountryEmissions, subCountryCount);
 
 
-    const consummationColors = generateDistinctRandomColors(subConsummationCount);
-    const countryColors = generateDistinctRandomColors(subCountryCount, consummationColors);
+    const consummationColors = generateDistinctRandomColors(emissions.subConsummationEmissions.length);
+    const countryColors = generateDistinctRandomColors(emissions.subCountryEmissions.length, consummationColors);
 
 
 
     const consummationData = {
-        labels: ['Transports Emissions', 'Foods Emissions', 'Lifestyle Emissions'],
+        labels: ['Transports Emissions', 'Foods Emissions'],
         datasets: [{
             label: 'Sub Consummation Emissions',
-            data: subConsummationEmissions,
+            data: emissions.subConsummationEmissions,
             backgroundColor: consummationColors,
             borderColor: consummationColors.map(color => color.replace('0.2', '1')),
             borderWidth: 1,
@@ -127,10 +129,11 @@ const ResponseVisualization = () => {
       };
     
       const countryData = {
-        labels: ['Total Mobility Emissions', 'Total Swim Emissions', 'Total Double Degree Emissions',  'Total Exchanged Research Emissions', 'Total Oversea Internship Emissions', 'Total Mobility Emissions1', 'Total Swim Emissions1', 'Total Double Degree Emissions1',  'Total Exchanged Research Emissions1', 'Total Oversea Internship Emissions1', 'Total Mobility Emissions2', 'Total Swim Emissions2', 'Total Double Degree Emissions2',  'Total Exchanged Research Emissions2', 'Total Oversea Internship Emissions2'],
+        // labels: ['Total Mobility Emissions', 'Total Swim Emissions', 'Total Double Degree Emissions',  'Total Exchanged Research Emissions', 'Total Oversea Internship Emissions', 'Total Mobility Emissions1', 'Total Swim Emissions1', 'Total Double Degree Emissions1',  'Total Exchanged Research Emissions1', 'Total Oversea Internship Emissions1', 'Total Mobility Emissions2', 'Total Swim Emissions2', 'Total Double Degree Emissions2',  'Total Exchanged Research Emissions2', 'Total Oversea Internship Emissions2'],
+        labels: ['Total Mobility Emissions (Ecole-Destination-Ecole)', 'Total Effet Rebond Emissions (Destination-Voyages-Destination)'],
         datasets: [{
             label: 'Sub Country Emissions',
-            data: subCountryEmissions,
+            data: emissions.subCountryEmissions,
             backgroundColor: countryColors,
             borderColor: countryColors.map(color => color.replace('0.2', '1')),
             borderWidth: 1,
@@ -161,7 +164,6 @@ const ResponseVisualization = () => {
                 //     padding: 20,
                 // },
             },
-            
         },
         maintainAspectRatio: false,
     };
@@ -219,7 +221,7 @@ const ResponseVisualization = () => {
 
 
 
-            
+
         </Flex>
     );
 };

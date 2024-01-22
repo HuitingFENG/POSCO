@@ -16,6 +16,8 @@ const userRoutes = require('./routes/userRoutes');
 const conseilRoutes = require('./routes/conseilRoutes');
 const maxRoutes = require('./routes/maxRoutes');
 const compensationRoutes = require('./routes/compensationRoutes');
+const optionRoutes = require('./routes/optionRoutes');
+
 
 app.use(cors());
 app.use(express.json());
@@ -44,7 +46,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/conseils', conseilRoutes); 
 app.use('/api/maxs', maxRoutes); 
 app.use('/api/compensations', compensationRoutes); 
-
+app.use('/api/options', optionRoutes); 
 
 
 module.exports = app;

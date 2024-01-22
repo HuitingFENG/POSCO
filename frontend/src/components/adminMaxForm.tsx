@@ -3,7 +3,7 @@ import { Box, Button, FormControl, FormLabel, Input, useToast, VStack, Center, F
 
 const AdminMaxForm = () => {
     const currentYear = new Date().getFullYear();
-    const [maxData, setMaxData] = useState({ year: currentYear.toString(), L1: '', L2: '', L3: '', M1: '', M2: '' });
+    const [maxData, setMaxData] = useState({ year: currentYear.toString(), PGE_L3_FISE: '', PGE_L3_FISA: '', PEx_B2: '', PEx_M2_Msc_Cyber: '', PEx_M2_Optionnelle: '' });
     const toast = useToast();
     
     useEffect(() => {
@@ -15,11 +15,11 @@ const AdminMaxForm = () => {
             if (currentMaxData) {
             setMaxData({
                 year: currentMaxData.year.toString(),
-                L1: currentMaxData.L1,
-                L2: currentMaxData.L2,
-                L3: currentMaxData.L3,
-                M1: currentMaxData.M1,
-                M2: currentMaxData.M2
+                PGE_L3_FISE: currentMaxData.PGE_L3_FISE,
+                PGE_L3_FISA: currentMaxData.PGE_L3_FISA,
+                PEx_B2: currentMaxData.PEx_B2,
+                PEx_M2_Msc_Cyber: currentMaxData.PEx_M2_Msc_Cyber,
+                PEx_M2_Optionnelle: currentMaxData.PEx_M2_Optionnelle
             });
             }
         })
@@ -41,11 +41,11 @@ const AdminMaxForm = () => {
                 if (latestMaxData) {
                 setMaxData({
                     year: latestMaxData.year.toString(),
-                    L1: latestMaxData.L1,
-                    L2: latestMaxData.L2,
-                    L3: latestMaxData.L3,
-                    M1: latestMaxData.M1,
-                    M2: latestMaxData.M2
+                    PGE_L3_FISE: latestMaxData.PGE_L3_FISE,
+                    PGE_L3_FISA: latestMaxData.PGE_L3_FISA,
+                    PEx_B2: latestMaxData.PEx_B2,
+                    PEx_M2_Msc_Cyber: latestMaxData.PEx_M2_Msc_Cyber,
+                    PEx_M2_Optionnelle: latestMaxData.PEx_M2_Optionnelle
                 });
                 }
             })
@@ -68,7 +68,7 @@ const AdminMaxForm = () => {
 
         if (response.ok) {
             toast({ title: 'Max list added successfully', status: 'success' });
-            // setMaxData({ year: currentYear.toString(), L1: '', L2: '', L3: '', M1: '', M2: '' });
+            // setMaxData({ year: currentYear.toString(), PGE_PEx_B2_FISE: '', PGE_PEx_B2_FISA: '', PEx_B2: '', PEx_PEx_M2_Optionnelle_Msc_Cyber: '', PEx_M2_Optionnelle: '' });
             fetchMaxData();
             // Reset form or other post-submit actions
         } else {
@@ -84,7 +84,7 @@ const AdminMaxForm = () => {
 
   return (
     <Center width="100%">
-      <Box border="1px solid gray" p={6} my={4} borderRadius="md" boxShadow="md" w="100%" maxW="500px">
+      <Box border="1px solid gray" p={6} my={4} borderRadius="md" boxShadow="md" w="100%" maxW="800px">
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} justify="center">
             <Heading as="h3" size="md" textAlign="center" mb={4} color="#003153" >Max Empreinte Carbon ( Kg / An ) </Heading>
@@ -93,24 +93,24 @@ const AdminMaxForm = () => {
                 <Input id="year" name="year" type="number" value={maxData.year} onChange={handleChange} readOnly width="70%" />
             </Flex>
             <Flex width="100%" justifyContent="space-between" alignItems="center" > 
-                <FormLabel textAlign="center" htmlFor="L1" width="30%" >L1</FormLabel>
-                <Input id="L1" name="L1" type="number" placeholder={`Actuel: ${maxData.L1 || 'Non défini'}`} onChange={handleChange} width="70%" />
+                <FormLabel textAlign="center" htmlFor="PGE_L3_FISE" width="30%" >PGE_L3_FISE</FormLabel>
+                <Input id="PGE_L3_FISE" name="PGE_L3_FISE" type="number" placeholder={`Actuel: ${maxData.PGE_L3_FISE || 'Non défini'}`} onChange={handleChange} width="70%" />
             </Flex>
             <Flex width="100%" justifyContent="space-between" alignItems="center" > 
-                <FormLabel textAlign="center" htmlFor="L2" width="30%" >L2</FormLabel>
-                <Input id="L2" name="L2" type="number" placeholder={`Actuel: ${maxData.L2 || 'Non défini'}`}  onChange={handleChange} width="70%" />
+                <FormLabel textAlign="center" htmlFor="PGE_L3_FISA" width="30%" >PGE_L3_FISA</FormLabel>
+                <Input id="PGE_L3_FISA" name="PGE_L3_FISA" type="number" placeholder={`Actuel: ${maxData.PGE_L3_FISA || 'Non défini'}`}  onChange={handleChange} width="70%" />
             </Flex>
             <Flex width="100%" justifyContent="space-between" alignItems="center" > 
-                <FormLabel textAlign="center" htmlFor="L3" width="30%" >L3</FormLabel>
-                <Input id="L3" name="L3" type="number" placeholder={`Actuel: ${maxData.L3 || 'Non défini'}`}  onChange={handleChange} width="70%" />
+                <FormLabel textAlign="center" htmlFor="PEx_B2" width="30%" >PEx_B2</FormLabel>
+                <Input id="PEx_B2" name="PEx_B2" type="number" placeholder={`Actuel: ${maxData.PEx_B2 || 'Non défini'}`}  onChange={handleChange} width="70%" />
             </Flex>
             <Flex width="100%" justifyContent="space-between" alignItems="center" > 
-                <FormLabel textAlign="center" htmlFor="M1" width="30%" >M1</FormLabel>
-                <Input id="M1" name="M1" type="number" placeholder={`Actuel: ${maxData.M1 || 'Non défini'}`}  onChange={handleChange} width="70%" />
+                <FormLabel textAlign="center" htmlFor="PEx_M2_Msc_Cyber" width="30%" >PEx_M2_Msc_Cyber</FormLabel>
+                <Input id="PEx_M2_Msc_Cyber" name="PEx_M2_Msc_Cyber" type="number" placeholder={`Actuel: ${maxData.PEx_M2_Msc_Cyber || 'Non défini'}`}  onChange={handleChange} width="70%" />
             </Flex>
             <Flex width="100%" justifyContent="space-between" alignItems="center" > 
-                <FormLabel textAlign="center" htmlFor="M2" width="30%" >M2</FormLabel>
-                <Input id="M2" name="M2" type="number" placeholder={`Actuel: ${maxData.M2 || 'Non défini'}`} onChange={handleChange} width="70%" />
+                <FormLabel textAlign="center" htmlFor="PEx_M2_Optionnelle" width="30%" >PEx_M2_Optionnelle</FormLabel>
+                <Input id="PEx_M2_Optionnelle" name="PEx_M2_Optionnelle" type="number" placeholder={`Actuel: ${maxData.PEx_M2_Optionnelle || 'Non défini'}`} onChange={handleChange} width="70%" />
             </Flex>
             <Button type="submit" colorScheme="blue" width="50%">Sauvegarder</Button>
           </VStack>

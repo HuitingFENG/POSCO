@@ -33,6 +33,8 @@ Emission.init({
   totalEmissions: DataTypes.DECIMAL(10,2),
   totalConsummationEmissions: DataTypes.DECIMAL(10,2),
   totalCountryEmissions: DataTypes.DECIMAL(10,2),
+  subConsummationEmissions: DataTypes.JSON,  // [transportsEmissions, foodsEmissions]
+  subCountryEmissions: DataTypes.JSON, // [totalMobilityEmissions, totalEffetRebondEmissions]
   overMax: DataTypes.BOOLEAN,
 }, {
   sequelize,

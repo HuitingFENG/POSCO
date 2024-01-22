@@ -8,7 +8,8 @@ const Emission = require('../models/emission');
 const Question = require('../models/question');
 const Max = require('../models/max');
 const { fetchDataFromImpactCO2, fetchDataFromImpactCO2ByIdThematique, getEcvForSlug, } = require('./externalApiRoutes');
-const { consummationEmissions, countryEmissions, transportOptionsFromImpactCO2LongTrip, transportOptionsFromImpactCO2 } = require('../data/mockData');
+const { consummationEmissions, countryEmissions, transportOptionsFromImpactCO2ShortTrip, transportOptionsFromImpactCO2LongTrip, transportOptionsFromImpactCO2 } = require('../data/mockData');
+const { convertToObject } = require('typescript');
 
 
 
@@ -110,18 +111,36 @@ router.post('/', async (req, res) => {
     // console.log("TEST : responseInstances : ", responseInstances);
     const responseIds = responseInstances.map(instance => instance.id);
     // console.log("TEST responseIds: ", responseIds); 
-    const [total, totalConsummationEmissions, totalCountryEmissions, totalOverMax] = await calculationForAll(responses, countryEmissions, consummationEmissions);
-    console.log("TEST total, totalConsummationEmissions, totalCountryEmissions, totalOverMax: ", total, totalConsummationEmissions, totalCountryEmissions, totalOverMax)
-    const savedTotal = await Emission.create({
+    // const [total, totalConsummationEmissions, totalCountryEmissions, totalOverMax] = await calculationForAll(responses, countryEmissions, consummationEmissions);
+    // console.log("TEST total, totalConsummationEmissions, totalCountryEmissions, totalOverMax: ", total, totalConsummationEmissions, totalCountryEmissions, totalOverMax)
+    // const savedTotal = await Emission.create({
+    //     userId: responses[0].userId, 
+    //     tempId: responses[0].tempId, 
+    //     responsesList: responseIds, 
+    //     totalEmissions: total,
+    //     totalConsummationEmissions: totalConsummationEmissions,
+    //     totalCountryEmissions: totalCountryEmissions,
+    //     overMax: totalOverMax,
+    // });
+    // console.log("TEST savedTotal: ", savedTotal);
+
+    // const [total2, totalConsummationEmissions2, totalCountryEmissions2, totalOverMax2] = await calculationForAllFromImpactCO2(responses);
+    const resultList = await calculationForAllFromImpactCO2(responses);
+    const savedTotal2 = await Emission.create({
         userId: responses[0].userId, 
         tempId: responses[0].tempId, 
         responsesList: responseIds, 
-        totalEmissions: total,
-        totalConsummationEmissions: totalConsummationEmissions,
-        totalCountryEmissions: totalCountryEmissions,
-        overMax: totalOverMax,
+        totalEmissions: resultList[0],
+        totalConsummationEmissions: resultList[1],
+        totalCountryEmissions: resultList[2],
+        subConsummationEmissions: resultList[3],
+        subCountryEmissions: resultList[4],
+        overMax: resultList[5],
     });
-    console.log("TEST savedTotal: ", savedTotal);
+    console.log("TEST savedTotal2 : ", savedTotal2);
+
+
+
 
 
     // const findResponseValue = (responses, questionId) => {
@@ -144,11 +163,11 @@ router.post('/', async (req, res) => {
     //     .catch(error => console.error("Error: ", error));
     // console.log("TEST calculateEmissionsByImpactCO2(4): ", transportEmissions2);
 
-    // transportEmissions2 = calculateTransportEmissionsLongTripPerRound(responses.find(i => i.questionId === 9).answer, responses.find(i => i.questionId === 10).answer)
-    // .then(value => console.log("TEST Emission from ImpactCO2 calculateTransportEmissionsLongTrip: ", value))
-    // .catch(error => console.error("Error: ", error));
-    // console.log("TEST calculateTransportEmissionsLongTrip: ", transportEmissions2);
 
+    // transportEmissions2 = calculateTransportEmissionsLongTripPerRound(responses.find(i => i.questionId === 9).answer, responses.find(i => i.questionId === 10).answer)
+    //     .then(value => console.log("TEST calculateTransportEmissionsLongTripPerRound transportEmissions2 console.log : ", value))
+    //     .catch(error => console.error("Error: ", error));
+    // console.log("TEST calculateTransportEmissionsLongTripPerRound transportEmissions2 : ", transportEmissions2);
 
 
     // console.log("TEST questionsList: ", questionsList);
@@ -156,7 +175,7 @@ router.post('/', async (req, res) => {
     // console.log("TEST transportOptionsFromImpactCO2: ", transportOptionsFromImpactCO2);
 
 
-    console.log("TEST calculateRepasEmissionsPerYear: ", calculateRepasEmissionsPerYear(responses.find(i => i.questionId === 4).answer, responses.find(i => i.questionId === 5).answer).then(value => console.log("TEST calculateRepasEmissionsPerYear: ", value)).catch(error => console.error("Error: ", error)));
+    // console.log("TEST calculateRepasEmissionsPerYear: ", calculateRepasEmissionsPerYear(responses.find(i => i.questionId === 4).answer, responses.find(i => i.questionId === 5).answer).then(value => console.log("TEST calculateRepasEmissionsPerYear: ", value)).catch(error => console.error("Error: ", error)));
 
     res.status(201).json({ message: "Responses saved successfully" });
   } catch (error) {
@@ -473,12 +492,15 @@ async function calculateTransportEmissionsShortTripPerRound(distance, transportT
 
 async function calculateTransportEmissionsLongTripPerRound(distance, transportType) {
     // const transportSlug = transportOptionsFromImpactCO2LongTrip.filter(option => option.name === transportType ).map(item => item.slug);
+    console.log("TEST distance, transportType: ", distance, transportType);
+    console.log("TEST transportOptionsFromImpactCO2: ", transportOptionsFromImpactCO2);
+
     function findSlugByName(name) {
         const option = transportOptionsFromImpactCO2.find(option => option.name === name);
         return option ? option.slug : null;
     }
     const transportSlug = findSlugByName(transportType);
-    // console.log("TEST transportSlug: ", transportSlug);
+    console.log("TEST transportSlug: ", transportSlug);
     
     try {
         const apiData = await fetchDataFromImpactCO2ByIdThematique(4);
@@ -522,13 +544,140 @@ async function calculateRepasEmissionsPerYear(repasType, nbrRepas) {
 
 
 
-function calculateTotalEmissionsFromImpactCO2(responses) {
+async function calculationForAllFromImpactCO2(responses) {
     let totalEmissions = 0;
     let totalCountryEmissions = 0;
     let totalConsummationEmissions = 0;
     let subCountryEmissions = [];
     let subConsummationEmissions = [];
+    let subEmission = [];
+    let transportsEmissions = 0;
+    let foodsEmissions = 0;
+    let totalMobilityEmissions = 0;
+    let totalEffetRebondEmissions = 0;
+    let totalSwimEmissions = 0;
+    let totalDoubleEmissions = 0;
     let totalOverMax = false;
     let resultList = []; 
+
+    const responseByQuestionId = responses.reduce((acc, response) => {
+        acc[response.questionId] = response.answer;
+        return acc;
+    }, {});
+
+
+
+
+
+    
+    // transport maison-école: 40 semaines de cours, 4 jours en présentiel, 2 round = 1 aller-retour chaque jour
+    // transportsEmissions 
+    try {
+        transportsEmissions = await calculateTransportEmissionsShortTripPerRound(
+            responseByQuestionId[2], 
+            responseByQuestionId[3]
+        );
+    } catch (error) {
+        console.error("Error in calculateTransportEmissionsShortTripPerRound: ", error);
+    }
+    transportsEmissions = 40 * 4 * 2 * transportsEmissions;
+    console.log("TEST transportEmissions per year: ", transportsEmissions);
+
+
+    // foodsEmissions 
+    try {
+        foodsEmissions = await calculateRepasEmissionsPerYear(
+            responseByQuestionId[4], 
+            responseByQuestionId[5]
+        );
+    } catch (error) {
+        console.error("Error in calculateTransportEmissionsShortTripPerRound: ", error);
+    }
+    console.log("TEST foodsEmissions: ", foodsEmissions);
+
+
+    // totalConsummationEmissions
+    totalConsummationEmissions = transportsEmissions + foodsEmissions
+    console.log("TEST transportsEmissions, foodsEmissions, totalConsummationEmissions: ", transportsEmissions, foodsEmissions, totalConsummationEmissions);
+
+
+    // totalCountryEmissions
+    const locationEmission = countryEmissions.find(item => item.location === responseByQuestionId[6]);
+    console.log("TEST locationEmission: ", locationEmission);
+    if (locationEmission && locationEmission[responseByQuestionId[7]] !== undefined) {
+        totalMobilityEmissions += locationEmission[responseByQuestionId[7]] * 2; // 2 round = 1 aller-retour
+    };
+    console.log("TEST totalMobilityEmissions: ", totalMobilityEmissions);
+
+
+    // totalEffetRebondEmissions
+    // if (transportOptionsFromImpactCO2ShortTrip.includes(responseByQuestionId[10])) {
+    //     totalEffetRebondEmissions += 2 * calculateTransportEmissionsShortTripPerRound(responseByQuestionId[9], responseByQuestionId[10]).then(value => console.log("TEST Emission from ImpactCO2 calculateTransportEmissionsShortTrip: ", value)).catch(error => console.error("Error: ", error));
+    // } else if (transportOptionsFromImpactCO2LongTrip.includes(responseByQuestionId[10])) {
+        // totalEffetRebondEmissions += 2 * calculateTransportEmissionsLongTripPerRound(responseByQuestionId[9], responseByQuestionId[10]).then(value => console.log("TEST Emission from ImpactCO2 calculateTransportEmissionsLongTrip: ", value)).catch(error => console.error("Error: ", error));
+    // }
+    try {
+        totalEffetRebondEmissions = await calculateTransportEmissionsLongTripPerRound(
+            responseByQuestionId[9], 
+            responseByQuestionId[10]
+        );
+    } catch (error) {
+        console.error("Error in calculateTransportEmissionsLongTripPerRound: ", error);
+    }
+    console.log("TEST totalEffetRebondEmissions1 per mobilite: ", totalEffetRebondEmissions);
+    totalEffetRebondEmissions = 2 * totalEffetRebondEmissions;
+    console.log("TEST totalEffetRebondEmissions2 per mobilite: ", totalEffetRebondEmissions);
+
+
+    // totalCountryEmissions
+    totalCountryEmissions = totalMobilityEmissions + totalEffetRebondEmissions;
+    console.log("TEST totalMobilityEmissions, totalEffetRebondEmissions, totalCountryEmissions : ", totalMobilityEmissions, totalEffetRebondEmissions, totalCountryEmissions);
+
+
+    // totalOverMax:
+    const currentYear = new Date().getFullYear();
+    try {
+        const maxData = await Max.findOne({
+            where: { year: currentYear },
+            order: [['id', 'DESC']]
+        });
+        if (maxData) {
+            const tempAnswer = responseByQuestionId[1];
+            const maxEmission = maxData[tempAnswer];
+
+            if (totalCountryEmissions > maxEmission) {
+                totalOverMax = true;
+            }
+        } else {
+            console.log('No max emission data found for the year', currentYear);
+        }
+    } catch (error) {
+        console.error('Error fetching max emission data:', error);
+    }
+    console.log("TEST totalOverMax: ", totalOverMax);
+
+
+    // totalEmissions
+    totalEmissions = totalConsummationEmissions + totalCountryEmissions;
+
+
+    // resultList
+    subConsummationEmissions.push(transportsEmissions);
+    subConsummationEmissions.push(foodsEmissions);
+    console.log("TEST subConsummationEmissions: ", subConsummationEmissions);
+    subCountryEmissions.push(totalMobilityEmissions);
+    subCountryEmissions.push(totalEffetRebondEmissions);
+    console.log("TEST subCountryEmissions: ", subCountryEmissions);
+    resultList.push(totalEmissions);
+    resultList.push(totalConsummationEmissions);
+    resultList.push(totalCountryEmissions);
+    resultList.push(subConsummationEmissions);
+    resultList.push(subCountryEmissions);
+    resultList.push(totalOverMax);
+    console.log("TEST resultList: ", resultList);
+
+
+    // return [totalEmissions, totalConsummationEmissions, totalCountryEmissions, totalOverMax];
+    return resultList;
 }
 
