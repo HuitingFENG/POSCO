@@ -258,10 +258,10 @@ const CalculationVisualization = ({ latestEmissionDataId, listForCalculation }: 
                         <Text>Total Effet Rebond Emissions (Destination-Voyages-Destination): {emission.subCountryEmissions[1]} Kg</Text>
                         <Text mt={2} fontWeight="bold">Total Mobility Emissions:</Text>
                         <Text>2 trajets (aller-retour) * {emission.refDataImpactCO2List[2]} kg émission carbon/trajet</Text>
-                        <Text>pour la destination {answer[listForCalculation[5]]} avec {answer[listForCalculation[6]]} </Text>
+                        <Text>pour la destination {answer[listForCalculation[5]]} avec {answer[listForCalculation[7]]} </Text>
                         <Text mt={2} fontWeight="bold">Total Effet Rebond Emissions:</Text>
-                        <Text>2 trajets (aller-retour) * {answer[listForCalculation[8]]} km/trajet</Text>
-                        <Text>*{emission.refDataImpactCO2List[3]} kg émission carbon avec {answer[listForCalculation[9]]} par km</Text>
+                        <Text>2 trajets (aller-retour) * {answer[listForCalculation[9]]} km/trajet</Text>
+                        <Text>*{emission.refDataImpactCO2List[3]} kg émission carbon avec {answer[listForCalculation[10]]} par km</Text>
                     </Flex>
                 </>
             ) : (

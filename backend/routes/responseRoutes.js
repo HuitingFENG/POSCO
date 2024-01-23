@@ -635,13 +635,41 @@ async function calculationForAllFromImpactCO2(responses) {
 
 
     // totalCountryEmissions
-    const locationEmission = countryEmissions.find(item => item.location === responseByQuestionId[6]);
-    console.log("TEST locationEmission: ", locationEmission);
-    if (locationEmission && locationEmission[responseByQuestionId[7]] !== undefined) {
-        totalMobilityEmissions += locationEmission[responseByQuestionId[7]] * 2; // 2 round = 1 aller-retour
-        refDataImpactCO2List[2] = locationEmission[responseByQuestionId[7]];
-    };
-    console.log("TEST refDataImpactCO2List[2], totalMobilityEmissions: ", refDataImpactCO2List[2], totalMobilityEmissions);
+    console.log("TEST responseByQuestionId[7]: ", responseByQuestionId[7]);
+    if (responseByQuestionId[6] === "Autres") {
+        const num = parseFloat(responseByQuestionId[7]).toFixed(2);
+        const locationEmission = countryEmissions.find(item => item.location === responseByQuestionId[6]);
+        console.log("TEST locationEmission: ", locationEmission);
+        if (locationEmission && locationEmission[responseByQuestionId[8]] !== undefined) {
+            totalMobilityEmissions += locationEmission[responseByQuestionId[8]] * 2 * num; // 2 round = 1 aller-retour
+            refDataImpactCO2List[2] = locationEmission[responseByQuestionId[8]] * num;
+        };
+        console.log("TEST refDataImpactCO2List[2], totalMobilityEmissions: ", refDataImpactCO2List[2], totalMobilityEmissions);
+
+
+        console.log("TEST num after parseFloat(): ", num);
+        if (responseByQuestionId[7] === undefined) {
+            console.log("TEST responseByQuestionId[6] : ", undefined);
+        } else if (responseByQuestionId[7] === "0") {
+            console.log("TEST responseByQuestionId[6] : 0 ");
+        } else {
+            console.log("TEST responseByQuestionId[6]: ", responseByQuestionId[6]);
+        }
+
+    } else if (responseByQuestionId[6] != "Autres"){
+        
+        const locationEmission = countryEmissions.find(item => item.location === responseByQuestionId[6]);
+        console.log("TEST locationEmission: ", locationEmission);
+        if (locationEmission && locationEmission[responseByQuestionId[8]] !== undefined) {
+            totalMobilityEmissions += locationEmission[responseByQuestionId[8]] * 2; // 2 round = 1 aller-retour
+            refDataImpactCO2List[2] = locationEmission[responseByQuestionId[8]];
+        };
+        console.log("TEST refDataImpactCO2List[2], totalMobilityEmissions: ", refDataImpactCO2List[2], totalMobilityEmissions);
+    }
+        
+
+
+
 
 
     // totalEffetRebondEmissions
@@ -650,17 +678,25 @@ async function calculationForAllFromImpactCO2(responses) {
     // } else if (transportOptionsFromImpactCO2LongTrip.includes(responseByQuestionId[10])) {
         // totalEffetRebondEmissions += 2 * calculateTransportEmissionsLongTripPerRound(responseByQuestionId[9], responseByQuestionId[10]).then(value => console.log("TEST Emission from ImpactCO2 calculateTransportEmissionsLongTrip: ", value)).catch(error => console.error("Error: ", error));
     // }
-    try {
-        totalEffetRebondEmissions = await calculateTransportEmissionsLongTripPerRound(
-            responseByQuestionId[9], 
-            responseByQuestionId[10]
-        );
-    } catch (error) {
-        console.error("Error in calculateTransportEmissionsLongTripPerRound: ", error);
+    if (responseByQuestionId[10] && responseByQuestionId[11]) {
+        try {
+            totalEffetRebondEmissions = await calculateTransportEmissionsLongTripPerRound(
+                responseByQuestionId[10], 
+                responseByQuestionId[11]
+            );
+        } catch (error) {
+            console.error("Error in calculateTransportEmissionsLongTripPerRound: ", error);
+        }
+        refDataImpactCO2List[3] = totalEffetRebondEmissions / responseByQuestionId[10];
+        totalEffetRebondEmissions = 2 * totalEffetRebondEmissions;
+        console.log("TEST refDataImpactCO2List[3], totalEffetRebondEmissions2 per mobilite: ", refDataImpactCO2List[3], totalEffetRebondEmissions);
+    } else {
+        refDataImpactCO2List[3] = 0;
+        totalEffetRebondEmissions = 0;
+        console.log("TEST refDataImpactCO2List[3], totalEffetRebondEmissions2 per mobilite: ", refDataImpactCO2List[3], totalEffetRebondEmissions);
     }
-    refDataImpactCO2List[3] = totalEffetRebondEmissions / responseByQuestionId[9];
-    totalEffetRebondEmissions = 2 * totalEffetRebondEmissions;
-    console.log("TEST refDataImpactCO2List[3], totalEffetRebondEmissions2 per mobilite: ", refDataImpactCO2List[3], totalEffetRebondEmissions);
+
+   
 
 
     // totalCountryEmissions
