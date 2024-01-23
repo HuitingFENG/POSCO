@@ -111,7 +111,7 @@ const Question = () => {
             .then(data => {
                 const sortedData = data.sort((a: {id: number; }, b: {id: number; }) => a.id - b.id);
                 setQuestions(sortedData);
-                console.log("TEST sortedData.length: ", sortedData.length);
+                console.log("TEST http://localhost:3001/api/questions sortedData.length: ", sortedData.length);
                 // const initialQuestions = sortedData.filter((q: { id: number; }) => q.id <= 22); // Load only questions up to ID 22 initially
                 // setQuestions(initialQuestions);
                 // console.log("TEST initialQuestions: ", initialQuestions.length);
@@ -491,38 +491,87 @@ const Question = () => {
 
 
     const handleNextClick = () => {
-        const responseToQ8 = responses[7]; 
+        const responseToQ9 = responses[8]; 
         const responseToQ6 = responses[5];
         const countryOnlyEnAvion = ["Montréal, Canada", "Kuala Lumpur, Malaisie", "Le Cap, Afrique du Sud", "Toronto, Canada", "Irvine, Etats-Unis"];
     
-        console.log("Response to Question 8:", responseToQ8); 
+        console.log("Response to Question 9:", responseToQ9); 
         console.log("Response to Question 6:", responseToQ6); 
     
-        if (countryOnlyEnAvion.includes(responseToQ6)) {
+        if (countryOnlyEnAvion.includes(responseToQ6) && !responseToQ9 && responseToQ6) {
             console.log("TEST user's option for question 6 (countryOnlyEnAvion): ", responseToQ6);
             const newResponses = [...responses];
-            newResponses[6] = "Avion";
+            newResponses[6] = "0";
+            setResponses(newResponses);
+            const newResponses1 = [...responses];
+            newResponses1[7] = "Avion";
+            setResponses(newResponses1);
+            setCurrentQuestionIndex(prevIndex => prevIndex + 3); 
+            // if (responseToQ9 === 'Non') {
+            //     console.log("TEST user chooses NON for question 9.");
+            //     setCurrentQuestionIndex(prevIndex => questions.length - 2);
+            //     setCloseQuestionnaire(true);
+            // } else if (responseToQ9 === 'Oui') {
+            //     setCurrentQuestionIndex(prevIndex => prevIndex - 1); 
+            // }
+            // setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+        } else if (responseToQ6 === "Autres" && !responseToQ9) {
+            console.log("TEST user's option for question 6 (Autres): ", responseToQ6);
+            // if (responseToQ9 === 'Non') {
+            //     console.log("TEST user chooses NON for question 9.");
+            //     setCurrentQuestionIndex(prevIndex => questions.length - 2);
+            //     setCloseQuestionnaire(true);
+            // } 
+            setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+        // } else if (!countryOnlyEnAvion.includes(responseToQ6) && responseToQ6) {
+        //     console.log("TEST user's option for question 6 (not countryOnlyEnAvion): ", responseToQ6);
+        //     const newResponses = [...responses];
+        //     newResponses[6] = "0";
+        //     setResponses(newResponses);
+        //     setCurrentQuestionIndex(prevIndex => prevIndex + 1); 
+        //     if (responseToQ9 === 'Non') {
+        //         console.log("TEST user chooses NON for question 9.");
+        //         setCurrentQuestionIndex(prevIndex => questions.length - 2);
+        //         setCloseQuestionnaire(true);
+        //     } else if (responseToQ9 === 'Oui') {
+        //         setCurrentQuestionIndex(prevIndex => prevIndex - 1); 
+        //     } 
+        //     setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+        } else if (responseToQ9 === 'Non' && countryOnlyEnAvion.includes(responseToQ6) && responseToQ6) {
+            console.log("TEST user chooses NON for question 9.");
+            setCurrentQuestionIndex(prevIndex => questions.length - 1);
+            setCloseQuestionnaire(true);
+        } else if (responseToQ9 === 'Oui' && countryOnlyEnAvion.includes(responseToQ6) && responseToQ6) {
+            setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+        } else if (responseToQ6 === "Autres" && responseToQ9 === "Non") {
+            console.log("TEST user chooses NON for question 9.");
+            setCurrentQuestionIndex(prevIndex => questions.length - 1);
+            setCloseQuestionnaire(true);
+        } else if (responseToQ6 === "Autres" && responseToQ9 === "Oui") {
+            setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+        } else if (!countryOnlyEnAvion.includes(responseToQ6) && !responseToQ9 && responseToQ6) {
+            console.log("TEST user's option for question 6 (not countryOnlyEnAvion): ", responseToQ6);
+            const newResponses = [...responses];
+            // responses[6] = "0";
+            newResponses[6] = "0";
+            console.log("TEST responses[6]: ", responses[6]);
             setResponses(newResponses);
             setCurrentQuestionIndex(prevIndex => prevIndex + 1); 
-            if (responseToQ8 === 'Non') {
-                console.log("TEST user chooses NON for question 8.");
-                setCurrentQuestionIndex(prevIndex => questions.length - 2);
-                setCloseQuestionnaire(true);
-            } else if (responseToQ8 === 'Oui') {
-                setCurrentQuestionIndex(prevIndex => prevIndex - 1); 
-            }
+        } else if (!countryOnlyEnAvion.includes(responseToQ6) && responseToQ9 === "Non" && responseToQ6) {
+            setCurrentQuestionIndex(prevIndex => questions.length - 1);
+            setCloseQuestionnaire(true);
+        } else if (!countryOnlyEnAvion.includes(responseToQ6) && responseToQ9 === "Oui" && responseToQ6) {
             setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-        } else {
-            console.log("TEST user's option for question 6 (not countryOnlyEnAvion): ", responseToQ6);
-            
-            if (responseToQ8 === 'Non') {
-                console.log("TEST user chooses NON for question 8.");
-                setCurrentQuestionIndex(prevIndex => questions.length - 2);
-                setCloseQuestionnaire(true);
-            } 
+        } else if (responseToQ6 === "Autres" && responseToQ9 === "Non") {
+            setCurrentQuestionIndex(prevIndex => questions.length - 1);
+            setCloseQuestionnaire(true);
+        } else if (responseToQ6 === "Autres" && responseToQ9 === "Oui") {
             setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-        } 
-
+        }
+        else  {
+            console.log("TEST user normal choice");
+            setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+        }
 
 
         // const responseToQ6 = responses[5];
@@ -784,11 +833,18 @@ const Question = () => {
 
     const getOptionsForQuestion6 = () => {
         const mobilityCategoryMapping : {[key: string]: number } = {
-            'PGE_L3_FISE': 1,
-            'PGE_L3_FISA': 1,
-            'PEx_B2': 3,
-            'PEx_M2_Msc_Cyber': 4,
-            'PEx_M2_Optionnelle': 5
+            'PGE_L1': 1,
+            'PGE_L2': 2,
+            'PGE_L3': 3,
+            'PGE_M1': 4,
+            'PGE_M2': 5,
+            'PEx_B1': 6,
+            'PEx_B2': 7,
+            'PEx_B3': 8,
+            'PEx_MS1': 9,
+            'PEx_MS2_Cyber': 10,
+            'PEx_MS2_Optionnelle': 11,
+            'Autres': 12,
         };
         console.log("Selected Mobility Type:", selectedMobilityType);
         if (!selectedMobilityType) {
@@ -796,6 +852,7 @@ const Question = () => {
             return [];
         }
         const categoryId = mobilityCategoryMapping[selectedMobilityType];
+        console.log("TEST destinationOptions: ", destinationOptions);
         console.log("TEST categoryId: ", categoryId);
         const destinationOption = destinationOptions.find(option => option.mobiliteCategoryId === categoryId);
         if (!destinationOption) {

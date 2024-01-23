@@ -11,7 +11,8 @@ const countryEmissions = [
     {id: 10, code:"portsmouth", location:"Portsmouth, Angleterre", Train: 3.7, Bus: 17, Avion: 76, Voiture: 122 },
     {id: 11, code:"tallinn", location:"Tallinn, Estonie", Train: 16, Bus: 75, Avion: 332, Voiture: 557 },
     {id: 12, code:"vilnius", location:"Vilnius, Lituanie", Train: 13, Bus: 62, Avion: 303, Voiture: 456 },
-    {id: 13, code:"espagne", location:"Malaga, Espagne", Train: 11, Bus: 53, Avion: 260, Voiture: 391 },
+    {id: 13, code:"espagne", location:"Malaga, Espagne", Train: 11, Bus: 53, Avion: 260, Voiture: 391 }, 
+    {id: 14, code:"autres", location:"Autres", Train: 0.0294, Bus: 0.11, Avion: 0.215, Voiture: 0.125 }, // emission carbon par km en fonction de mode de transport
 ];
 
 const locationOptions = countryEmissions.map(item => item.location);
@@ -151,23 +152,48 @@ const repasOptionsFromImpactCO2 = repasAllOptionsFromImpactCO2.map(item => item.
 
 // category = 1 : PGE (FISE avec SWIM, FISA) 
 // category = 2 : PEx  
+// const mobiliteCategory = [
+//     {id: 1, category: 1, fullName: "Mobilités Programmes Ingéneurs (PGE) - FISE", name: "PGE_L3_FISE" /*  "PGE - L3 FISE" */},
+//     {id: 2, category: 1, fullName: "Mobilités Programmes Ingéneurs (PGE) - FISA", name: "PGE_L3_FISA"},
+//     {id: 3, category: 2, fullName: "Mobilités Programmes Experts (PEx) - Bachelor B2 ", name: "PEx_B2"},
+//     {id: 4, category: 2, fullName: "Mobilités Programmes Experts (PEx) - Mission Msc M2 ", name: "PEx_M2_Msc_Cyber"},
+//     {id: 5, category: 2, fullName: "Mobilités Programmes Experts (PEx) - Mission Ecosystème Digital M2 ", name: "PEx_M2_Optionnelle"},
+// ]; 
+
 const mobiliteCategory = [
-    {id: 1, category: 1, fullName: "Mobilités Programmes Ingéneurs (PGE) - FISE", name: "PGE_L3_FISE" /*  "PGE - L3 FISE" */},
-    {id: 2, category: 1, fullName: "Mobilités Programmes Ingéneurs (PGE) - FISA", name: "PGE_L3_FISA"},
-    {id: 3, category: 2, fullName: "Mobilités Programmes Experts (PEx) - Bachelor B2 ", name: "PEx_B2"},
-    {id: 4, category: 2, fullName: "Mobilités Programmes Experts (PEx) - Mission Msc M2 ", name: "PEx_M2_Msc_Cyber"},
-    {id: 5, category: 2, fullName: "Mobilités Programmes Experts (PEx) - Mission Ecosystème Digital M2 ", name: "PEx_M2_Optionnelle"},
-]; 
+    {id: 1, category: 1, name: "PGE_L1"},
+    {id: 2, category: 1, name: "PGE_L2"},
+    {id: 3, category: 1, name: "PGE_L3"},
+    {id: 4, category: 1, name: "PGE_M1"},
+    {id: 5, category: 1, name: "PGE_M2"},
+    {id: 6, category: 2, name: "PEx_B1"},
+    {id: 7, category: 2, name: "PEx_B2"},
+    {id: 8, category: 2, name: "PEx_B3"},
+    {id: 9, category: 2, name: "PEx_MS1"},
+    {id: 10, category: 2, name: "PEx_MS2_Cyber"},
+    {id: 11, category: 2, name: "PEx_MS2_Optionnelle"},
+    {id: 12, category: 3, name: "Autres"},
+];
+
 const mobiliteCategoryNameList = mobiliteCategory.map(item => item.name);
 const destinationId1 = countryEmissions.filter(item => item.id <= 9).map(item => item.location);
-const destinationId2 = countryEmissions.filter(item => item.id > 9).map(item => item.location);
+const destinationId2 = countryEmissions.filter(item => item.id === 6 || item.id === 8 || item.id === 10 || item.id === 11).map(item => item.location);
 const destinationId3 = countryEmissions.filter(item => item.id === 10 || item.id === 12).map(item => item.location);
 const destinationId4 = countryEmissions.filter(item => item.id === 13).map(item => item.location);
+const destinationId5 = countryEmissions.filter(item => item.id === 14).map(item => item.location);  // Autres
 const destinationOptionsList = [
-    {id: 1, mobiliteCategoryId: 1, options: destinationId1},
-    {id: 2, mobiliteCategoryId: 3, options: destinationId2},
-    {id: 3, mobiliteCategoryId: 4, options: destinationId3},
-    {id: 4, mobiliteCategoryId: 5, options: destinationId4},
+    {id: 1, mobiliteCategoryId: 1, options: destinationId5},  // Les autres
+    {id: 2, mobiliteCategoryId: 2, options: destinationId5},   // Les autres
+    {id: 3, mobiliteCategoryId: 3, options: destinationId1},  // PGE_L3 
+    {id: 4, mobiliteCategoryId: 4, options: destinationId5},   // Les autres
+    {id: 5, mobiliteCategoryId: 5, options: destinationId5},  // Les autres
+    {id: 6, mobiliteCategoryId: 6, options: destinationId5},   // Les autres
+    {id: 7, mobiliteCategoryId: 7, options: destinationId2},  // PEx_B2
+    {id: 8, mobiliteCategoryId: 8, options: destinationId5},   // Les autres
+    {id: 9, mobiliteCategoryId: 9, options: destinationId5},    // Les autres
+    {id: 10, mobiliteCategoryId: 10, options: destinationId3},   // PEx_MS2_cyber
+    {id: 11, mobiliteCategoryId: 11, options: destinationId4},   // PEx_MS2_optionnelle
+    {id: 12, mobiliteCategoryId: 12, options: destinationId5}, 
 ];
 
 
@@ -185,57 +211,58 @@ const allQuestionsList = [
     // { id: 6, category: 2, question_text: "Quelle destination envisagez-vous pour la mobilité L3 ?", type: "mcq", options: locationOptions },
     { id: 6, category: 2, question_text: "Quelle destination envisagez-vous pour cette mobilité ?", type: "text", options: [] },
     // { id: 7, category: 2, question_text: "Par quels moyens comptez-vous y aller ?" , type: "text", options: transportOptionsFromImpactCO2LongTrip },
-    { id: 7, category: 2, question_text: "Par quels moyens comptez-vous y aller ?" , type: "text", options: ["Train", "Bus", "Avion", "Voiture"] },
+    { id: 7, category: 2, question_text: "A quelle distance (en km) entre l'école et votre choix de destination pour cette mobilité ? (Merci de sauter cette question si vous avez indiqué votre destination dans la question précédente)" , type: "number", options: []},
+    { id: 8, category: 2, question_text: "Par quels moyens comptez-vous y aller ?" , type: "text", options: ["Train", "Bus", "Avion", "Voiture"] },
 
-    { id: 8, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité ?" , type: "text", options: ["Oui", "Non"]},
-    { id: 9, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
-    { id: 10, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongTrip },
+    { id: 9, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité ?" , type: "text", options: ["Oui", "Non"]},
+    { id: 10, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
+    { id: 11, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongTrip },
     // { id: 10, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
 
-    { id: 11, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité ?" , type: "text", options: ["Oui", "Non"]},
-    { id: 12, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
-    { id: 13, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
+    { id: 12, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité ?" , type: "text", options: ["Oui", "Non"]},
+    { id: 13, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
+    { id: 14, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
 
-    { id: 14, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité ?" , type: "text", options: ["Oui", "Non"]},
-    { id: 15, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
-    { id: 16, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
+    { id: 15, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité ?" , type: "text", options: ["Oui", "Non"]},
+    { id: 16, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
+    { id: 17, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
 
-    { id: 17, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyagedepuis votre destination de mobilité ?" , type: "text", options: ["Oui", "Non"]},
-    { id: 18, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
-    { id: 19, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
+    { id: 18, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyagedepuis votre destination de mobilité ?" , type: "text", options: ["Oui", "Non"]},
+    { id: 19, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
+    { id: 20, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
 
-    { id: 20, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité ?" , type: "text", options: ["Oui", "Non"]},
-    { id: 21, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
-    { id: 22, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
+    { id: 21, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité ?" , type: "text", options: ["Oui", "Non"]},
+    { id: 22, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
+    { id: 23, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
 
 
-    { id: 23, category: 2, question_text: "Pour la destination de votre SWIM, à quelle distance (en km) de notre école ?", type: "number", options: [] },
-    { id: 24, category: 2, question_text: "Par quels moyens comptez-vous y aller ?" , type: "text", options: transportOptionsFromImpactCO2LongTrip },
+    { id: 24, category: 2, question_text: "Pour la destination de votre SWIM, à quelle distance (en km) de notre école ?", type: "number", options: [] },
+    { id: 25, category: 2, question_text: "Par quels moyens comptez-vous y aller ?" , type: "text", options: transportOptionsFromImpactCO2LongTrip },
 
-    { id: 25, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité (SWIM) ?" , type: "text", options: ["Oui", "Non"]},
-    { id: 26, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
-    { id: 27, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
+    { id: 26, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité (SWIM) ?" , type: "text", options: ["Oui", "Non"]},
+    { id: 27, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
+    { id: 28, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
     // { id: 11, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité ?" , type: "text", options: ["Oui", "Non"]},
 
-    { id: 28, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité (SWIM) ?" , type: "text", options: ["Oui", "Non"]},
-    { id: 29, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
-    { id: 30, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
+    { id: 29, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité (SWIM) ?" , type: "text", options: ["Oui", "Non"]},
+    { id: 30, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
+    { id: 31, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
 
-    { id: 31, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité (SWIM) ?" , type: "text", options: ["Oui", "Non"]},
-    { id: 32, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
-    { id: 33, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
+    { id: 32, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité (SWIM) ?" , type: "text", options: ["Oui", "Non"]},
+    { id: 33, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
+    { id: 34, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
 
-    { id: 34, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyagedepuis votre destination de mobilité (SWIM) ?" , type: "text", options: ["Oui", "Non"]},
-    { id: 35, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
-    { id: 36, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
+    { id: 35, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyagedepuis votre destination de mobilité (SWIM) ?" , type: "text", options: ["Oui", "Non"]},
+    { id: 36, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
+    { id: 37, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
 
-    { id: 37, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité (SWIM) ?" , type: "text", options: ["Oui", "Non"]},
-    { id: 38, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
-    { id: 39, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
+    { id: 38, category: 2, question_text: "Envisagez-vous de réaliser un autre long voyage depuis votre destination de mobilité (SWIM) ?" , type: "text", options: ["Oui", "Non"]},
+    { id: 39, category: 2, question_text: "A quelle distance (en km) du lieu officiel de votre choix de mobilité ?" , type: "number", options: []},
+    { id: 40, category: 2, question_text: "Comment comptez-vous vous y rendre ?" , type: "text", options: transportOptionsFromImpactCO2LongShortTrip },
 ];
 
 
-const questionsList = allQuestionsList.filter(item => item.id >= 1 && item.id <= 10);
+const questionsList = allQuestionsList.filter(item => item.id >= 1 && item.id <= 11);
 
 
 
@@ -286,14 +313,13 @@ const compensationsList = [
 // ]
 
 
+// const maxMobiliteCarbonEmissionList0 = [
+//     {id: 1, year: 2024, PGE_L3_FISE: 100, PGE_L3_FISA: 100, PEx_B2: 200, PEx_M2_Msc_Cyber: 200, PEx_M2_Optionnelle: 200},
+// ];
+
 const maxMobiliteCarbonEmissionList = [
-    {id: 1, year: 2022, PGE_L3_FISE: 100, PGE_L3_FISA: 100, PEx_B2: 200, PEx_M2_Msc_Cyber: 200, PEx_M2_Optionnelle: 200},
-    {id: 2, year: 2023, PGE_L3_FISE: 100, PGE_L3_FISA: 100, PEx_B2: 200, PEx_M2_Msc_Cyber: 200, PEx_M2_Optionnelle: 200},
-    {id: 3, year: 2024, PGE_L3_FISE: 200, PGE_L3_FISA: 200, PEx_B2: 300, PEx_M2_Msc_Cyber: 300, PEx_M2_Optionnelle: 300},
-    {id: 4, year: 2024, PGE_L3_FISE: 250, PGE_L3_FISA: 250, PEx_B2: 350, PEx_M2_Msc_Cyber: 350, PEx_M2_Optionnelle: 350},
+    {id: 1, year: 2024, PGE_L1: 200, PGE_L2:200, PGE_L3:200, PGE_M1:200, PGE_M2:200, PEx_B1: 300, PEx_B2: 300,  PEx_B3: 300, PEx_MS1: 300, PEx_MS2_Cyber: 300, PEx_MS2_Optionnelle: 300, Autres: 300},
 ];
-
-
 
 
 module.exports = {
