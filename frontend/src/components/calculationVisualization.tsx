@@ -30,6 +30,7 @@ interface Emission {
     totalCountryEmissions: number;
     subConsummationEmissions: number[];
     subCountryEmissions: number[];
+    refDataImpactCO2List: number[];
     createdAt: string; 
 }
 
@@ -245,10 +246,10 @@ const CalculationVisualization = ({ latestEmissionDataId, listForCalculation }: 
                         <Text>Foods Emissions: {emission.subConsummationEmissions[1]} Kg</Text>
                         <Text mt={2} fontWeight="bold">Transports Emission d'un an:</Text>
                         <Text>40 semaines de cours * 4 jours en présentiel/semaine * 2 trajets/jour * {answer[listForCalculation[1]]} km/trajet</Text>
-                        <Text>* kg émission carbon avec {answer[listForCalculation[2]]} par km</Text>
+                        <Text>* {emission.refDataImpactCO2List[0]} kg émission carbon avec {answer[listForCalculation[2]]} par km</Text>
                         <Text mt={2} fontWeight="bold">Foods Emissions d'un an:</Text>
                         <Text>{answer[listForCalculation[4]]} repas/semaine * 52 semaines</Text>
-                        <Text>* kg émission carbon avec {answer[listForCalculation[3]]}</Text>
+                        <Text>* {emission.refDataImpactCO2List[1]} kg émission carbon avec {answer[listForCalculation[3]]}</Text>
                     </Flex>
                     
                     <Flex flexDir="column" p= {2} bgColor="white" border="4px" borderColor="#0C2340" >
@@ -256,11 +257,11 @@ const CalculationVisualization = ({ latestEmissionDataId, listForCalculation }: 
                         <Text mt={2}>Total Mobility Emissions (Ecole-Destination-Ecole): {emission.subCountryEmissions[0]} Kg</Text>
                         <Text>Total Effet Rebond Emissions (Destination-Voyages-Destination): {emission.subCountryEmissions[1]} Kg</Text>
                         <Text mt={2} fontWeight="bold">Total Mobility Emissions:</Text>
-                        <Text>2 trajets (aller-retour) * kg émission carbon/trajet</Text>
+                        <Text>2 trajets (aller-retour) * {emission.refDataImpactCO2List[2]} kg émission carbon/trajet</Text>
                         <Text>pour la destination {answer[listForCalculation[5]]} avec {answer[listForCalculation[6]]} </Text>
                         <Text mt={2} fontWeight="bold">Total Effet Rebond Emissions:</Text>
                         <Text>2 trajets (aller-retour) * {answer[listForCalculation[8]]} km/trajet</Text>
-                        <Text>* kg émission carbon avec {answer[listForCalculation[9]]} par km</Text>
+                        <Text>*{emission.refDataImpactCO2List[3]} kg émission carbon avec {answer[listForCalculation[9]]} par km</Text>
                     </Flex>
                 </>
             ) : (

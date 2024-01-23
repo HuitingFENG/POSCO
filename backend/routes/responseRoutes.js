@@ -136,10 +136,13 @@ router.post('/', async (req, res) => {
         subConsummationEmissions: resultList[3],
         subCountryEmissions: resultList[4],
         overMax: resultList[5],
+        refDataImpactCO2List: resultList[6],
     });
     console.log("TEST savedTotal2 : ", savedTotal2);
 
 
+
+    
 
 
 
@@ -175,7 +178,7 @@ router.post('/', async (req, res) => {
     // console.log("TEST transportOptionsFromImpactCO2: ", transportOptionsFromImpactCO2);
 
 
-    // console.log("TEST calculateRepasEmissionsPerYear: ", calculateRepasEmissionsPerYear(responses.find(i => i.questionId === 4).answer, responses.find(i => i.questionId === 5).answer).then(value => console.log("TEST calculateRepasEmissionsPerYear: ", value)).catch(error => console.error("Error: ", error)));
+    // console.log("TEST calculateRepasEmissionsPerYear2: ", calculateRepasEmissionsPerYear2(responses.find(i => i.questionId === 4).answer, responses.find(i => i.questionId === 5).answer).then(value => console.log("TEST calculateRepasEmissionsPerYear: ", value[0])).catch(error => console.error("Error: ", error)));
 
     res.status(201).json({ message: "Responses saved successfully" });
   } catch (error) {
@@ -462,6 +465,7 @@ async function calculateTransportEmissionsShortTripPerRound(distance, transportT
     }
 }
 
+
 // async function calculateEmissionsByImpactCO2(idThematique, value) {
 //     try {
 //         const apiData = await fetchDataFromImpactCO2ByIdThematique(idThematique);
@@ -541,7 +545,26 @@ async function calculateRepasEmissionsPerYear(repasType, nbrRepas) {
 };
 
 
+async function calculateRepasEmissionsPerYear2(repasType, nbrRepas) {
 
+    try {
+        const apiData = await fetchDataFromImpactCO2ByIdThematique(2);
+        console.log("TEST fetchDataFromImpactCO2ByIdThematique: ", apiData);
+        const tempData = apiData.data.find(item => item.name === repasType);
+        const resultData = tempData ? tempData.ecv : null;
+
+        if (resultData) {
+            // console.log("TEST resultData: ", resultData); 
+            return [resultData, resultData * nbrRepas * 52]; // 52 weeks = 1 year 
+        } else {
+            console.log("TEST calculateTransportEmissions() data not found");
+        }
+
+    } catch (error) {
+        console.error('Error fetching data from the external API:', error);
+        throw error;
+    }
+};
 
 
 async function calculationForAllFromImpactCO2(responses) {
@@ -559,15 +582,12 @@ async function calculationForAllFromImpactCO2(responses) {
     let totalDoubleEmissions = 0;
     let totalOverMax = false;
     let resultList = []; 
+    let refDataImpactCO2List = []; 
 
     const responseByQuestionId = responses.reduce((acc, response) => {
         acc[response.questionId] = response.answer;
         return acc;
     }, {});
-
-
-
-
 
     
     // transport maison-école: 40 semaines de cours, 4 jours en présentiel, 2 round = 1 aller-retour chaque jour
@@ -580,20 +600,33 @@ async function calculationForAllFromImpactCO2(responses) {
     } catch (error) {
         console.error("Error in calculateTransportEmissionsShortTripPerRound: ", error);
     }
+    refDataImpactCO2List[0] = transportsEmissions / responseByQuestionId[2];
     transportsEmissions = 40 * 4 * 2 * transportsEmissions;
-    console.log("TEST transportEmissions per year: ", transportsEmissions);
+    console.log("TEST refDataImpactCO2List[0], transportEmissions per year: ", refDataImpactCO2List[0], transportsEmissions);
 
 
     // foodsEmissions 
+    // try {
+    //     foodsEmissions = await calculateRepasEmissionsPerYear(
+    //         responseByQuestionId[4], 
+    //         responseByQuestionId[5]
+    //     );
+    // } catch (error) {
+    //     console.error("Error in calculateTransportEmissionsShortTripPerRound: ", error);
+    // }
+    // console.log("TEST foodsEmissions: ", foodsEmissions);
+
+
     try {
-        foodsEmissions = await calculateRepasEmissionsPerYear(
+        [refDataImpactCO2List[1], foodsEmissions] = await calculateRepasEmissionsPerYear2(
             responseByQuestionId[4], 
             responseByQuestionId[5]
         );
     } catch (error) {
-        console.error("Error in calculateTransportEmissionsShortTripPerRound: ", error);
+        console.error("Error in refDataImpactCO2List: ", error);
     }
-    console.log("TEST foodsEmissions: ", foodsEmissions);
+    console.log("TEST [refDataImpactCO2List[1], foodsEmissions]: ", refDataImpactCO2List[1], foodsEmissions);
+
 
 
     // totalConsummationEmissions
@@ -606,8 +639,9 @@ async function calculationForAllFromImpactCO2(responses) {
     console.log("TEST locationEmission: ", locationEmission);
     if (locationEmission && locationEmission[responseByQuestionId[7]] !== undefined) {
         totalMobilityEmissions += locationEmission[responseByQuestionId[7]] * 2; // 2 round = 1 aller-retour
+        refDataImpactCO2List[2] = locationEmission[responseByQuestionId[7]];
     };
-    console.log("TEST totalMobilityEmissions: ", totalMobilityEmissions);
+    console.log("TEST refDataImpactCO2List[2], totalMobilityEmissions: ", refDataImpactCO2List[2], totalMobilityEmissions);
 
 
     // totalEffetRebondEmissions
@@ -624,9 +658,9 @@ async function calculationForAllFromImpactCO2(responses) {
     } catch (error) {
         console.error("Error in calculateTransportEmissionsLongTripPerRound: ", error);
     }
-    console.log("TEST totalEffetRebondEmissions1 per mobilite: ", totalEffetRebondEmissions);
+    refDataImpactCO2List[3] = totalEffetRebondEmissions / responseByQuestionId[9];
     totalEffetRebondEmissions = 2 * totalEffetRebondEmissions;
-    console.log("TEST totalEffetRebondEmissions2 per mobilite: ", totalEffetRebondEmissions);
+    console.log("TEST refDataImpactCO2List[3], totalEffetRebondEmissions2 per mobilite: ", refDataImpactCO2List[3], totalEffetRebondEmissions);
 
 
     // totalCountryEmissions
@@ -674,6 +708,8 @@ async function calculationForAllFromImpactCO2(responses) {
     resultList.push(subConsummationEmissions);
     resultList.push(subCountryEmissions);
     resultList.push(totalOverMax);
+    resultList.push(refDataImpactCO2List);
+    console.log("TEST refDataImpactCO2List: ", refDataImpactCO2List);
     console.log("TEST resultList: ", resultList);
 
 

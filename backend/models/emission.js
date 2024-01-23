@@ -36,6 +36,7 @@ Emission.init({
   subConsummationEmissions: DataTypes.JSON,  // [transportsEmissions, foodsEmissions]
   subCountryEmissions: DataTypes.JSON, // [totalMobilityEmissions, totalEffetRebondEmissions]
   overMax: DataTypes.BOOLEAN,
+  refDataImpactCO2List: DataTypes.JSON,
 }, {
   sequelize,
   modelName: 'emission'
