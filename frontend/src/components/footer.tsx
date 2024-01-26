@@ -31,7 +31,6 @@ const Footer = () => {
           <Flex align="center"><Icon as={FiLink} boxSize={6} mr={2} color="white" /><a href="https://offset.climateneutralnow.org/footprintcalc" target="_blank" rel="noopener noreferrer"><Text fontWeight="bold" fontSize="md" color="white">United Nations - Plate forme de compensation carbone</Text></a></Flex>
         </Flex>
     </Flex>
-
   );
 };
 
