@@ -1,5 +1,5 @@
 import React, { useState, useEffect }  from "react";
-import { Box,Flex,Text,Image,Button,Stack,Center,Icon, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
+import { Box,Flex,Text,Image,Button,Stack,Center,Icon, Table, Thead, Tbody, Tr, Th, Td, useMediaQuery } from "@chakra-ui/react";
 import {Link as RouterLink, BrowserRouter as Router, Routes, Route, Link,useNavigate } from "react-router-dom";
 import { FaQuestionCircle, FaBook, FaCog, FaUser, FaEdit, FaBookReader } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
@@ -41,7 +41,7 @@ interface Response {
 }
 
 const UserProfil = () => {
-
+  const [isLargerThan768px] = useMediaQuery("(min-width: 768px)");
   const userContext = useUser(); 
   const userId = userContext?.user?.userId;
   const clearTempId = () => setTempId(null);
@@ -146,7 +146,7 @@ const UserProfil = () => {
             <Text fontWeight="bold" fontSize="2xl" color="black">Votre nom : {user.name}</Text>
             <Text fontWeight="bold" fontSize="2xl" color="black">Votre email : {user.email}</Text>
             
-            <Flex flexDirection="row" align="center" justify="space-between" gap={10} pt={10}>
+            <Flex flexDirection="column" align="center" justify="space-between" gap={10} pt={10}>
               <LogoutButton /> 
                 {(userId != 1) ? (
                 <>
@@ -167,7 +167,7 @@ const UserProfil = () => {
 
           {userId === 1 && (
             <Flex flex="3" flexDirection="column" alignItems="center" gap={5}>
-              <Flex gap={10} justifyContent="center" my={5}>
+              <Flex gap={10} justifyContent="center" flexDirection="column" my={5}>
                 <Button
                   bgColor="#003153"
                   color="white"

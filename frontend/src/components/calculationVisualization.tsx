@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, } from 'chart.js';
-import { Box, Text, Flex, Button } from '@chakra-ui/react';
+import { Box, Text, Flex, Button, useMediaQuery } from '@chakra-ui/react';
 
 ChartJS.register(ArcElement, Tooltip, Legend );
 

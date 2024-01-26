@@ -1,5 +1,5 @@
 import React from "react";
-import { Box,Flex,Link,Text,Image,Button,Stack,Center,Icon } from "@chakra-ui/react";
+import { Box,Flex,Link,Text,Image,Button,Stack,Center,Icon,useMediaQuery } from "@chakra-ui/react";
 import {Link as RouterLink, BrowserRouter as Router, Routes, Route, } from "react-router-dom";
 import { FaQuestionCircle, FaBook, FaCog, FaUser, FaMobileAlt, FaPhone, FaComment, FaEnvelope, FaRegCommentDots } from "react-icons/fa";
 import { AiOutlineCopyright, AiOutlineMail } from "react-icons/ai";
@@ -7,9 +7,10 @@ import { FiLink } from "react-icons/fi";
 import { GiEarthAmerica } from "react-icons/gi";
 
 const Footer = () => {
+  const [isLargerThan768px] = useMediaQuery("(min-width: 768px)");
 
   return (
-    <Flex p={10} align="center" justify="space-between" bg="#0C2340" as="footer" /* position="fixed" bottom="0" width="100%" left="0" */>
+    <Flex p={10} align="center" justify="space-between" bg="#0C2340" as="footer" direction={isLargerThan768px ? "row" : "column"} wrap="wrap">
         <Flex justify="space-between"  align="center" flexDirection="column" gap={4}>
             <a href="https://www.efrei.fr" target="_blank" rel="noopener noreferrer"><Image src="../../../assets/efrei.png" alt="efrei.png" w="150px" /></a>
             <Flex align="center" justify="center">

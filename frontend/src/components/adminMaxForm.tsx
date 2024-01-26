@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, FormControl, FormLabel, Input, useToast, VStack, Center, Flex, Text, Heading  } from "@chakra-ui/react";
+import { Box, Button, FormControl, FormLabel, Input, useToast, VStack, Center, Flex, Text, Heading, useMediaQuery  } from "@chakra-ui/react";
 
 const AdminMaxForm = () => {
+    const [isLargerThan768px] = useMediaQuery("(min-width: 768px)");
     const currentYear = new Date().getFullYear();
     const [maxData, setMaxData] = useState({ year: currentYear.toString(), PGE_L1: '', PGE_L2: '', PGE_L3: '', PGE_M1: '', PGE_M2: '', PEx_B1: '', PEx_B2: '', PEx_B3: '', PEx_MS1: '', PEx_MS2_Cyber: '', PEx_MS2_Optionnelle: '', Autres: '' });
     const toast = useToast();
@@ -95,62 +96,61 @@ const AdminMaxForm = () => {
     };
 
 
-
   return (
     <Center width="100%">
-      <Box border="1px solid gray" p={6} my={4} borderRadius="md" boxShadow="md" w="100%" maxW="800px">
+      <Box border="1px solid gray" p={6} my={4} borderRadius="md" boxShadow="md" w="100%" maxW={isLargerThan768px ? "800px" : "100%"}>
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} justify="center">
-            <Heading as="h3" size="md" textAlign="center" mb={4} color="#003153" >Max Empreinte Carbon ( Kg / An ) </Heading>
-            <Flex width="100%" justifyContent="space-between" alignItems="center" > 
+            <Heading as="h3" size={["sm", "md", "md"]} textAlign="center" mb={[2, 4, 4]} color="#003153" >Max Empreinte Carbon ( Kg / An ) </Heading>
+            <Flex direction={["column", "column", "row"]} width="100%" justifyContent="space-between" alignItems="center" > 
                 <FormLabel textAlign="center" htmlFor="year" width="30%" >Année</FormLabel>
                 <Input id="year" name="year" type="number" value={maxData.year} onChange={handleChange} readOnly width="70%" />
             </Flex>
-            <Flex width="100%" justifyContent="space-between" alignItems="center" > 
+            <Flex direction={["column", "column", "row"]} width="100%" justifyContent="space-between" alignItems="center" > 
                 <FormLabel textAlign="center" htmlFor="PGE_L1" width="30%" >PGE_L1</FormLabel>
                 <Input id="PGE_L1" name="PGE_L1" type="number" placeholder={`Actuel: ${maxData.PGE_L1 || 'Non défini'}`} onChange={handleChange} width="70%" />
             </Flex>
-            <Flex width="100%" justifyContent="space-between" alignItems="center" > 
+            <Flex direction={["column", "column", "row"]} width="100%" justifyContent="space-between" alignItems="center" > 
                 <FormLabel textAlign="center" htmlFor="PGE_L2" width="30%" >PGE_L2</FormLabel>
                 <Input id="PGE_L2" name="PGE_L2" type="number" placeholder={`Actuel: ${maxData.PGE_L2 || 'Non défini'}`}  onChange={handleChange} width="70%" />
             </Flex>
-            <Flex width="100%" justifyContent="space-between" alignItems="center" > 
+            <Flex direction={["column", "column", "row"]} width="100%" justifyContent="space-between" alignItems="center" > 
                 <FormLabel textAlign="center" htmlFor="PGE_L3" width="30%" >PGE_L3</FormLabel>
                 <Input id="PGE_L3" name="PGE_L3" type="number" placeholder={`Actuel: ${maxData.PGE_L3 || 'Non défini'}`}  onChange={handleChange} width="70%" />
             </Flex>
-            <Flex width="100%" justifyContent="space-between" alignItems="center" > 
+            <Flex direction={["column", "column", "row"]} width="100%" justifyContent="space-between" alignItems="center" > 
                 <FormLabel textAlign="center" htmlFor="PGE_M1" width="30%" >PGE_M1</FormLabel>
                 <Input id="PGE_M1" name="PGE_M1" type="number" placeholder={`Actuel: ${maxData.PGE_M1 || 'Non défini'}`}  onChange={handleChange} width="70%" />
             </Flex>
-            <Flex width="100%" justifyContent="space-between" alignItems="center" > 
+            <Flex direction={["column", "column", "row"]} width="100%" justifyContent="space-between" alignItems="center" > 
                 <FormLabel textAlign="center" htmlFor="PGE_M2" width="30%" >PGE_M2</FormLabel>
                 <Input id="PGE_M2" name="PGE_M2" type="number" placeholder={`Actuel: ${maxData.PGE_M2 || 'Non défini'}`} onChange={handleChange} width="70%" />
             </Flex>
-            <Flex width="100%" justifyContent="space-between" alignItems="center" > 
+            <Flex direction={["column", "column", "row"]} width="100%" justifyContent="space-between" alignItems="center" > 
                 <FormLabel textAlign="center" htmlFor="PEx_B1" width="30%" >PEx_B1</FormLabel>
                 <Input id="PEx_B1" name="PEx_B1" type="number" placeholder={`Actuel: ${maxData.PEx_B1 || 'Non défini'}`} onChange={handleChange} width="70%" />
             </Flex>
-            <Flex width="100%" justifyContent="space-between" alignItems="center" > 
+            <Flex direction={["column", "column", "row"]} width="100%" justifyContent="space-between" alignItems="center" > 
                 <FormLabel textAlign="center" htmlFor="PEx_B2" width="30%" >PEx_B2</FormLabel>
                 <Input id="PEx_B2" name="PEx_B2" type="number" placeholder={`Actuel: ${maxData.PEx_B2 || 'Non défini'}`}  onChange={handleChange} width="70%" />
             </Flex>
-            <Flex width="100%" justifyContent="space-between" alignItems="center" > 
+            <Flex direction={["column", "column", "row"]} width="100%" justifyContent="space-between" alignItems="center" > 
                 <FormLabel textAlign="center" htmlFor="PEx_B3" width="30%" >PEx_B3</FormLabel>
                 <Input id="PEx_B3" name="PEx_B3" type="number" placeholder={`Actuel: ${maxData.PEx_B3 || 'Non défini'}`}  onChange={handleChange} width="70%" />
             </Flex>
-            <Flex width="100%" justifyContent="space-between" alignItems="center" > 
+            <Flex direction={["column", "column", "row"]} width="100%" justifyContent="space-between" alignItems="center" > 
                 <FormLabel textAlign="center" htmlFor="PEx_MS1" width="30%" >PEx_MS1</FormLabel>
                 <Input id="PEx_MS1" name="PEx_MS1" type="number" placeholder={`Actuel: ${maxData.PEx_MS1 || 'Non défini'}`}  onChange={handleChange} width="70%" />
             </Flex>
-            <Flex width="100%" justifyContent="space-between" alignItems="center" > 
+            <Flex direction={["column", "column", "row"]} width="100%" justifyContent="space-between" alignItems="center" > 
                 <FormLabel textAlign="center" htmlFor="PEx_MS2_Cyber" width="30%" >PEx_MS2_Cyber</FormLabel>
                 <Input id="PEx_MS2_Cyber" name="PEx_MS2_Cyber" type="number" placeholder={`Actuel: ${maxData.PEx_MS2_Cyber || 'Non défini'}`} onChange={handleChange} width="70%" />
             </Flex>
-            <Flex width="100%" justifyContent="space-between" alignItems="center" > 
+            <Flex direction={["column", "column", "row"]} width="100%" justifyContent="space-between" alignItems="center" > 
                 <FormLabel textAlign="center" htmlFor="PEx_MS2_Optionnelle" width="30%" >PEx_MS2_Optionnelle</FormLabel>
                 <Input id="PEx_MS2_Optionnelle" name="PEx_MS2_Optionnelle" type="number" placeholder={`Actuel: ${maxData.PEx_MS2_Optionnelle || 'Non défini'}`} onChange={handleChange} width="70%" />
             </Flex>
-            <Flex width="100%" justifyContent="space-between" alignItems="center" > 
+            <Flex direction={["column", "column", "row"]} width="100%" justifyContent="space-between" alignItems="center" > 
                 <FormLabel textAlign="center" htmlFor="Autres" width="30%" >Autres</FormLabel>
                 <Input id="Autres" name="Autres" type="number" placeholder={`Actuel: ${maxData.Autres || 'Non défini'}`} onChange={handleChange} width="70%" />
             </Flex>
