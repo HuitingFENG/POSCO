@@ -48,4 +48,4 @@
     curl http://localhost:3001/api/questions
 
 - use the application directly on browser by going to: http://localhost:3000/
-- host the website using Heroku and Netlify
+- host the website using Heroku and Netlify (fail)
