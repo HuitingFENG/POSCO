@@ -18,7 +18,7 @@ const ReferencesData = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/references/")
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/references/`)
       .then(response => response.json())
       .then((data) => {
         const sortedData = data.sort((a: { location: string; }, b: { location: string; }) => a.location.localeCompare(b.location));

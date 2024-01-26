@@ -81,7 +81,7 @@ const UserActions= () => {
 
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/emissions/')
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/emissions/`)
         .then(response => response.json())
         .then(data => {
           console.log("TEST data : ", data);
@@ -97,14 +97,14 @@ const UserActions= () => {
           console.log("TEST filteredEmissions : ", filteredEmissions);
         })
         .catch(error => console.error('Error fetching emissions:', error));
-      fetch(`http://localhost:3001/api/users/`)
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/users/`)
         .then(response => response.json())
         .then(data => {
           console.log("TEST data : ", data);
           setUsers(data);
         })
         .catch(error => console.error('Error fetching users:', error));
-      fetch(`http://localhost:3001/api/conseils/`)
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/conseils/`)
         .then(response => response.json())
         .then(data => {
           console.log("TEST data : ", data);

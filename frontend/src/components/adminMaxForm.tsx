@@ -8,7 +8,7 @@ const AdminMaxForm = () => {
     const toast = useToast();
     
     useEffect(() => {
-        fetch(`http://localhost:3001/api/maxs/years/${currentYear}`)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/maxs/years/${currentYear}`)
         .then(response => response.json())
         .then(data => {
             const sortedData = data.sort((a: { id: number; }, b: { id: number; }) => a.id - b.id );
@@ -42,7 +42,7 @@ const AdminMaxForm = () => {
     };
 
     const fetchMaxData = () => {
-            fetch(`http://localhost:3001/api/maxs/years/${currentYear}`)
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/maxs/years/${currentYear}`)
             .then(response => response.json())
             .then(data => {
                 const latestMaxData = data.sort((a: { id: number; }, b: { id: number; }) => b.id - a.id )[0]; // Sort by id and take the latest one
@@ -75,7 +75,7 @@ const AdminMaxForm = () => {
     const handleSubmit = async ( e: React.FormEvent<HTMLFormElement> ) => {
         e.preventDefault();
         try {
-        const response = await fetch('http://localhost:3001/api/maxs', {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/maxs`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(maxData),

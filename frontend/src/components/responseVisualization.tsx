@@ -69,7 +69,7 @@ const ResponseVisualization = () => {
 
     useEffect(() => {
         setIsLoading(true);
-        fetch('http://localhost:3001/api/emissions')
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/emissions`)
             .then(response => response.json())
             .then(data => {
                 // setEmissions(data);

@@ -84,7 +84,7 @@ const Question = () => {
 
 
     useEffect(() => {
-        fetch('http://localhost:3001/api/options/')
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/options/`)
             .then(response => response.json())
             .then(data => {
                 setDestinationOptions(data);
@@ -106,12 +106,12 @@ const Question = () => {
         setDisplayResponsesCalculation(false);
 
         setIsLoading(true);
-        fetch('http://localhost:3001/api/questions')
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/questions`)
             .then(response => response.json())
             .then(data => {
                 const sortedData = data.sort((a: {id: number; }, b: {id: number; }) => a.id - b.id);
                 setQuestions(sortedData);
-                console.log("TEST http://localhost:3001/api/questions sortedData.length: ", sortedData.length);
+                console.log("TEST ${process.env.REACT_APP_BACKEND_URL}/api/questions sortedData.length: ", sortedData.length);
                 // const initialQuestions = sortedData.filter((q: { id: number; }) => q.id <= 22); // Load only questions up to ID 22 initially
                 // setQuestions(initialQuestions);
                 // console.log("TEST initialQuestions: ", initialQuestions.length);
@@ -174,7 +174,7 @@ const Question = () => {
 
     useEffect(() => {
         if (promotion) {
-            fetch(`http://localhost:3001/api/maxs/years/${currentYear}`)
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/maxs/years/${currentYear}`)
                 .then(response => response.json())
                 .then(data => {
                     const sortedData = data.sort((a: { id: number; }, b: { id: number; }) => b.id - a.id);
@@ -398,7 +398,7 @@ const Question = () => {
             answer: answer
         }));
         
-        fetch('http://localhost:3001/api/responses', {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/responses`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -421,7 +421,7 @@ const Question = () => {
               emissionsEndpoint = `/api/emissions/temporary/${tempIdToUse}`; 
           }
       
-          return fetch(`http://localhost:3001${emissionsEndpoint}`);
+          return fetch(`${process.env.REACT_APP_BACKEND_URL}${emissionsEndpoint}`);
         })
         .then(response => response.json())
         .then(emissionData => {
@@ -477,7 +477,7 @@ const Question = () => {
 
 
     const loadFullQuestionnaire = () => {
-        fetch('http://localhost:3001/api/questions')
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/questions`)
             .then(response => response.json())
             .then(data => {
                 const sortedData = data.sort((a: { id: number; }, b: { id: number; }) => a.id - b.id);

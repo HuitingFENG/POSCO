@@ -15,7 +15,7 @@ const CompensationActions = () => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:3001/api/compensations/`)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/compensations/`)
         .then(response => response.json())
         .then(data => {
           console.log("TEST data : ", data);

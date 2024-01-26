@@ -58,7 +58,7 @@ const UserProfil = () => {
   };
 
   useEffect(() => {
-      /* fetch(`http://localhost:3001/api/emissions/user/${userId}`) 
+      /* fetch(`${process.env.REACT_APP_BACKEND_URL}/api/emissions/user/${userId}`) 
           .then(response => response.json())
           // .then(data => setEmissions(data))
           .then(data => {
@@ -67,7 +67,7 @@ const UserProfil = () => {
             setEmissions(sortedData);
           })
           .catch(error => console.error('Error:', error));
-      fetch(`http://localhost:3001/api/responses/user/${userId}`)
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/responses/user/${userId}`)
           // .then(response => response.json())
           // .then(data => setResponses(data))
           .then(data => {
@@ -77,7 +77,7 @@ const UserProfil = () => {
           })
           .catch(error => console.error('Error fetching responses:', error)); */
           if (userId) {
-            fetch(`http://localhost:3001/api/emissions/user/${userId}`) 
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/emissions/user/${userId}`) 
                 .then(response => response.json())
                 .then( (data: any[]) => {
                     // Sort data by date in descending order
@@ -91,7 +91,7 @@ const UserProfil = () => {
                 })
                 .catch(error => console.error('Error:', error));
     
-            fetch(`http://localhost:3001/api/responses/user/${userId}`)
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/responses/user/${userId}`)
                 .then(response => response.json())
                 .then(data => {
                     // Sort data by date in descending order

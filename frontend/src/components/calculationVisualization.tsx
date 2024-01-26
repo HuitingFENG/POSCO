@@ -72,7 +72,7 @@ const CalculationVisualization = ({ latestEmissionDataId, listForCalculation }: 
     useEffect(() => {
         console.log("TEST imported parameters from parent component: ", latestEmissionDataId, listForCalculation);
         setIsLoading(true);
-        fetch(`http://localhost:3001/api/emissions/${latestEmissionDataId}`)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/emissions/${latestEmissionDataId}`)
             .then(response => response.json())
             .then(data => {
                 // const sortedData = data.sort((a: Emission, b: Emission) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
@@ -102,7 +102,7 @@ const CalculationVisualization = ({ latestEmissionDataId, listForCalculation }: 
     const fetchDataByResponseId = async (responseId: any) => {
         setIsLoading(true);
         try {
-            const response = await fetch(`http://localhost:3001/api/responses/${responseId}`);
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/responses/${responseId}`);
             const data = await response.json();
             setAnswer((prevAnswers: any) => ({...prevAnswers, [responseId]: data.answer}));
         } catch (error) {
@@ -156,7 +156,7 @@ const CalculationVisualization = ({ latestEmissionDataId, listForCalculation }: 
     // const fetchDataFromBackend = async (endpoint: string, params = {}) => {
     //     try {
     //         const queryString = new URLSearchParams(params).toString();
-    //         const url = `http://localhost:3001/api/${endpoint}?${queryString}`;
+    //         const url = `${process.env.REACT_APP_BACKEND_URL}/api/${endpoint}?${queryString}`;
     //         const response = await fetch(url);
     //         if (!response.ok) {
     //             throw new Error('Network response was not ok');

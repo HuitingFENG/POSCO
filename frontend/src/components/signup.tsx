@@ -35,7 +35,7 @@ const Signup = () => {
         }
 
 
-        fetch('http://localhost:3001/api/users/signup', {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/users/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

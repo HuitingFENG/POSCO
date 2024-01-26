@@ -47,7 +47,7 @@ const Login = () => {
         console.log("TEST password: ", password);
         console.log("TEST tempId: ", tempIdToUse);
 
-        fetch('http://localhost:3001/api/users/login', {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/users/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
